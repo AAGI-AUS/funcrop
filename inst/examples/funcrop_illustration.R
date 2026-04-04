@@ -422,8 +422,10 @@ if (HAS_ASREML) {
   cat("\nReconstructing variety curves from ASReml BLUPs...\n")
 
   # Population mean curve (fixed effect B-spline coefficients)
-  fixed_coef <- coef(m2_asr)$fixed
-  beta_spline <- fixed_coef[grep("^B[0-9]", names(fixed_coef))]
+  # ASReml v4.2: coef()$fixed is a matrix; rownames are coefficient names
+  fixed_mat <- coef(m2_asr)$fixed
+  b_rows <- grep("^B[0-9]", rownames(fixed_mat))
+  beta_spline <- fixed_mat[b_rows, 1]
 
   # Mean curve on fine grid
   B_fine <- bspline_basis(t_fine, n_knots = 4, degree = 3,
@@ -431,20 +433,15 @@ if (HAS_ASREML) {
   mean_curve <- as.numeric(B_fine %*% beta_spline)
 
   # Variety deviations: parse random coefficients
-  rand_coef <- coef(m2_asr)$random
+  # ASReml v4.2: coef()$random is a matrix with rownames "variety_V01:B1", etc.
+  rand_mat <- coef(m2_asr)$random
+  rand_names <- rownames(rand_mat)
   var_curves <- data.table()
 
   for (v in levels(dt$variety)) {
-    # Extract this variety's B-spline deviation coefficients
-    pattern <- paste0("^variety_", v, ":B[0-9]")
-    # ASReml names: variety_V01:B1, variety_V01:B2, ...
-    v_idx <- grep(paste0("variety_", v, ":"), names(rand_coef))
-    if (length(v_idx) == 0) {
-      # Try alternative naming: variety:B with variety level
-      v_idx <- grep(paste0(v, ":B"), names(rand_coef))
-    }
+    v_idx <- grep(paste0("variety_", v, ":B"), rand_names)
     if (length(v_idx) == n_basis) {
-      u_v <- rand_coef[v_idx]
+      u_v <- rand_mat[v_idx, 1]
       variety_curve <- mean_curve + as.numeric(B_fine %*% u_v)
       var_curves <- rbind(var_curves,
                           data.table(time = t_fine, fitted = variety_curve,
@@ -576,7 +573,9 @@ if (HAS_ASREML) {
   cat("Converged:", m3_asr$converge, "\n")
 
   # Extract beta(t) coefficient function
-  b_hat_asr <- coef(m3_asr)$fixed[paste0("C", 1:n_basis)]
+  # ASReml v4.2: coef()$fixed is a matrix with rownames
+  m3_fixed <- coef(m3_asr)$fixed
+  b_hat_asr <- m3_fixed[paste0("C", 1:n_basis), 1]
   beta_t_asr <- as.numeric(B_fine %*% b_hat_asr)
 
   cat("\nFixed effects (B-spline coefficients for beta(t)):\n")
@@ -744,8 +743,10 @@ if (HAS_ASREML) {
   print(vc4_asr)
 
   # Reconstruct beta(t) from fixed + random parts
-  b_null_asr  <- coef(m4_asr)$fixed[paste0("Cnull", 1:ncol(C_null))]
-  b_range_asr <- coef(m4_asr)$random[paste0("Crange", 1:ncol(C_range))]
+  m4_fixed <- coef(m4_asr)$fixed
+  m4_random <- coef(m4_asr)$random
+  b_null_asr  <- m4_fixed[paste0("Cnull", 1:ncol(C_null)), 1]
+  b_range_asr <- m4_random[paste0("Crange", 1:ncol(C_range)), 1]
 
   if (length(b_null_asr) > 0 && length(b_range_asr) > 0) {
     # Transform back to original basis: b = T_X %*% b_null + T_Z %*% b_range
