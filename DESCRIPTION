@@ -1,0 +1,58 @@
+Package: funcrop
+Title: Functional Data Analysis for Crop Variety Trials
+Version: 0.1.0
+Authors@R: c(
+    person("Maksym", "Gaidashenko", role = c("aut", "cre"),
+           email = "maksym.gaidashenko@adelaide.edu.au",
+           comment = c(ORCID = "")),
+    person("Joanne", "De Faveri", role = "aut"),
+    person("Ari", "Verbyla", role = "aut"),
+    person("AAGI", role = "fnd"),
+    person("Claude", "Anthropic", role = "ctb",
+           comment = "AI-assisted development")
+    )
+Description: Functional data analysis methods for crop variety trials using
+    B-spline basis functions integrated with linear mixed models. Supports
+    scalar-on-function regression relating primary traits (e.g., yield) to
+    secondary functional traits (e.g., grain-fill rate, stay-green) measured
+    over time. Handles two-dimensional functional traits (time x depth,
+    time x wavelength) via tensor product B-splines, and multi-environment
+    trial (MET) analyses with genotype-by-environment (GxE) interaction.
+    Provides a dual-backend architecture: ASReml-R (REML estimation) and
+    bayesreml (Bayesian MCMC via greta), with pedigree and genomic
+    relationship matrix support. Includes publication-ready visualisation
+    tools for functional profiles, coefficient functions, and GxE patterns.
+License: GPL (>= 3)
+URL: https://github.com/max578/funcrop
+BugReports: https://github.com/max578/funcrop/issues
+Depends:
+    R (>= 4.1.0)
+Imports:
+    data.table (>= 1.14.0),
+    Matrix,
+    splines,
+    stats,
+    methods,
+    graphics,
+    grDevices
+Suggests:
+    asreml (>= 4.2.0),
+    bayesreml (>= 0.1.0),
+    greta (>= 0.4.0),
+    ggplot2 (>= 3.4.0),
+    viridis,
+    plotly,
+    testthat (>= 3.0.0),
+    knitr,
+    rmarkdown,
+    covr,
+    emmeans,
+    marginaleffects,
+    sommer,
+    lme4
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.3
+VignetteBuilder: knitr
+LazyData: true
+Config/testthat/edition: 3

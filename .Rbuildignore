@@ -1,0 +1,16 @@
+^.*\.Rproj$
+^\.Rproj\.user$
+^LICENSE\.md$
+^README\.Rmd$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
+^\.github$
+^codecov\.yml$
+^data-raw$
+^renv$
+^renv\.lock$
+^PROJECT_LOG\.md$
+^PROJECT_LOG_ARCHIVE\.md$
+^IMPLEMENTATION_PLAN\.md$
+^\.DS_Store$

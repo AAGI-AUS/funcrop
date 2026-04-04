@@ -1,0 +1,14 @@
+citHeader("To cite funcrop in publications use:")
+
+bibentry(
+  bibtype  = "Manual",
+  title    = "funcrop: Functional Data Analysis for Crop Variety Trials",
+  author   = c(
+    person("Maksym", "Gaidashenko"),
+    person("Joanne", "De Faveri"),
+    person("Ari", "Verbyla")
+  ),
+  year     = "2025",
+  note     = "R package version 0.1.0",
+  url      = "https://github.com/max578/funcrop"
+)

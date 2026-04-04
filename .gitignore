@@ -1,0 +1,36 @@
+# R package build artefacts
+*.Rproj.user
+.Rproj.user/
+*.Rhistory
+.RData
+.Ruserdata
+src/*.o
+src/*.so
+src/*.dll
+
+# Package build
+*.tar.gz
+*.Rcheck/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# renv
+renv/library/
+renv/local/
+renv/cellar/
+renv/lock/
+renv/python/
+renv/staging/
+
+# Misc
+.httr-oauth
+.Renviron
+inst/doc
