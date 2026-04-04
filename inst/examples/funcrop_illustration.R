@@ -459,7 +459,7 @@ if (HAS_ASREML) {
       geom_line(data = mean_dt, aes(x = time, y = fitted),
                 colour = "black", linewidth = 1.2, linetype = "dashed") +
       # Overlay raw data
-      geom_point(data = dt[variety %in% show_vars],
+      geom_point(data = dt[variety %in% show_vars, .(time, grain_weight, variety)],
                  aes(x = time, y = grain_weight, colour = variety),
                  alpha = 0.4, size = 1) +
       scale_colour_viridis_d() +
