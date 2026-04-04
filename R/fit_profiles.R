@@ -468,13 +468,41 @@ fit_functional_profiles <- function(
   )
 
   # -- Extract variety-specific spline coefficient BLUPs --
-  spline_blups <- .extract_variety_spline_blups(
-    std_result  = std_result,
-    n_varieties = n_varieties,
-    n_z_cols    = n_z_cols,
-    variety_levels = variety_levels,
-    engine      = engine
-  )
+  # Direct extraction from raw model (bypasses .standardise_result which may
+  # not recognise the variety_f:Bsp_k naming convention)
+  spline_blups <- tryCatch({
+    model_obj <- raw_result[["model"]]
+    if (engine == "asreml" && !is.null(model_obj)) {
+      co <- coef(model_obj)$random
+      rn <- rownames(co)
+      # Pattern: variety_f_VNAME:Bsp_K
+      bsp_idx <- grep("Bsp_", rn)
+      if (length(bsp_idx) > 0) {
+        # Parse into variety x basis coefficient matrix
+        parts <- strsplit(rn[bsp_idx], ":", fixed = TRUE)
+        var_ids <- sub("^variety_f_", "", vapply(parts, `[`, character(1), 1L))
+        bsp_ids <- as.integer(sub("^Bsp_", "", vapply(parts, `[`, character(1), 2L)))
+        mat <- matrix(0, nrow = n_varieties, ncol = n_basis)
+        rownames(mat) <- variety_levels
+        for (i in seq_along(bsp_idx)) {
+          v_row <- match(var_ids[i], variety_levels)
+          if (!is.na(v_row) && bsp_ids[i] <= n_basis) {
+            mat[v_row, bsp_ids[i]] <- co[bsp_idx[i], 1]
+          }
+        }
+        mat
+      } else {
+        .extract_variety_spline_blups(std_result, n_varieties, n_z_cols,
+                                      variety_levels, engine)
+      }
+    } else {
+      .extract_variety_spline_blups(std_result, n_varieties, n_z_cols,
+                                    variety_levels, engine)
+    }
+  }, error = function(e) {
+    warning("BLUP extraction failed: ", e$message, call. = FALSE)
+    matrix(0, nrow = n_varieties, ncol = n_basis)
+  })
 
   # -- Reconstruct fitted curves on a fine grid --
   fitted_curves <- .reconstruct_variety_curves(
