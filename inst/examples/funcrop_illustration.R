@@ -272,7 +272,7 @@ for (i in seq_along(show_plots)) {
     geom_point(data = obs_dt, aes(x = time, y = grain_weight, colour = variety),
                size = 2)
 }
-print(p1)
+tryCatch(print(p1), error = function(e) cat("Plot 1 error:", e$message, "\n"))
 cat("Plot 1 rendered.\n")
 
 
@@ -454,20 +454,25 @@ if (HAS_ASREML) {
     show_dt <- var_curves[variety %in% show_vars]
     mean_dt <- data.table(time = t_fine, fitted = mean_curve)
 
-    p2 <- ggplot(show_dt, aes(x = time, y = fitted, colour = variety)) +
+    # Rename to avoid conflict with base::time
+    setnames(show_dt, "time", "t_val")
+    setnames(mean_dt, "time", "t_val")
+    obs_plot_dt <- dt[variety %in% show_vars, .(t_val = time, grain_weight, variety)]
+
+    p2 <- ggplot(show_dt, aes(x = t_val, y = fitted, colour = variety)) +
       geom_line(linewidth = 0.8) +
-      geom_line(data = mean_dt, aes(x = time, y = fitted),
-                colour = "black", linewidth = 1.2, linetype = "dashed") +
-      # Overlay raw data
-      geom_point(data = dt[variety %in% show_vars, .(time, grain_weight, variety)],
-                 aes(x = time, y = grain_weight, colour = variety),
+      geom_line(data = mean_dt, aes(x = t_val, y = fitted),
+                colour = "black", linewidth = 1.2, linetype = "dashed",
+                inherit.aes = FALSE) +
+      geom_point(data = obs_plot_dt,
+                 aes(x = t_val, y = grain_weight, colour = variety),
                  alpha = 0.4, size = 1) +
       scale_colour_viridis_d() +
       theme_minimal(base_size = 12) +
       labs(title = "Model 2: Variety-Specific Grain-Fill Curves (ASReml)",
            subtitle = "Dashed = population mean; solid = variety curve",
            x = "Days after anthesis", y = "Grain weight (g)")
-    print(p2)
+    tryCatch(print(p2), error = function(e) cat("Plot 2 error:", e$message, "\n"))
     cat("Plot 2 rendered.\n")
   }
 }
@@ -661,7 +666,7 @@ if (exists("beta_t_asr") || exists("beta_t_bay")) {
          x = "Days after anthesis",
          y = expression(beta(t)),
          colour = "Method")
-  print(p3)
+  tryCatch(print(p3), error = function(e) cat("Plot 3 error:", e$message, "\n"))
   cat("Plot 3 rendered.\n")
 }
 
@@ -829,7 +834,7 @@ if (nrow(p4_dt) > 0) {
     labs(title = "Model 4: Penalised vs Unpenalised beta(t)",
          subtitle = "Penalty smooths out spurious wiggles",
          x = "Days after anthesis", y = expression(beta(t)))
-  print(p4)
+  tryCatch(print(p4), error = function(e) cat("Plot 4 error:", e$message, "\n"))
   cat("Plot 4 rendered.\n")
 }
 
