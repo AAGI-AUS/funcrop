@@ -1,5 +1,5 @@
 Loading required package: viridisLite
-Online License checked out Sat Apr  4 19:44:47 2026
+Online License checked out Sat Apr  4 20:27:51 2026
 Loading ASReml-R version 4.2
 
 bayesreml 0.1.0 -- Bayesian mixed models with ASReml syntax
@@ -37,18 +37,18 @@ Top 5 varieties (BLUPs):
 
 
 Variance components (posterior):
-      component  estimate        sd      q2.5       q50    q97.5
-1 sigma_variety 1.8862373 0.3431486 1.3283441 1.8467510 2.712094
-2   sigma_e_atg 0.9094516 0.1070076 0.7307223 0.8980383 1.155491
+      component  estimate        sd     q2.5       q50    q97.5
+1 sigma_variety 1.8871968 0.3155435 1.359134 1.8433242 2.592853
+2   sigma_e_atg 0.9111929 0.1177740 0.681840 0.9122964 1.175776
 
 Top 5 varieties (posterior means):
    variety predicted.value
     <char>           <num>
-1:     V12        3.107344
-2:     V03        2.949582
-3:     V08        2.596871
-4:     V19        1.345304
-5:     V05        1.277634
+1:     V12        3.203633
+2:     V03        3.063553
+3:     V08        2.635172
+4:     V19        1.419745
+5:     V05        1.371817
 
  ====================================================================== 
 MODEL 1: B-spline smoothing of grain-fill curves
@@ -81,19 +81,18 @@ Random coefficients extracted: 160
 --- bayesreml ---
 
 Variance components (posterior):
-            component  estimate        sd       q2.5       q50      q97.5
-1 sigma_B1_in_variety 6.1313980 3.5123513 2.42845014 4.4864190 12.1675571
-2 sigma_B2_in_variety 2.2904095 1.3577812 0.33326815 2.4747551  4.5122739
-3 sigma_B3_in_variety 2.7855358 3.6659649 0.12719020 0.8178608  9.1471064
-4 sigma_B4_in_variety 0.6828433 0.4079469 0.11380044 0.5606721  1.4252723
-5 sigma_B5_in_variety 0.4733547 0.2154604 0.10167637 0.5013716  0.8330682
-6 sigma_B6_in_variety 0.2639050 0.1271804 0.08158922 0.2116596  0.5847839
-7 sigma_B7_in_variety 0.8084273 0.3592715 0.20591182 0.7926928  1.5381797
-8 sigma_B8_in_variety 0.9474490 0.5057932 0.28628692 0.7515728  2.2068384
-9         sigma_e_atg 1.8922807 0.1605584 1.68249294 1.8359316  2.1609932
+            component  estimate         sd      q2.5       q50     q97.5
+1 sigma_B1_in_variety 2.4811501 0.87054478 1.5487377 2.3436725 3.5047349
+2 sigma_B2_in_variety 8.3861935 0.51301133 7.7100750 8.4717599 9.0562731
+3 sigma_B3_in_variety 5.4123003 0.80921459 4.5229476 5.3911164 6.4351871
+4 sigma_B4_in_variety 1.1959074 0.32204157 0.8173413 1.1552284 1.5999182
+5 sigma_B5_in_variety 0.5988821 0.12345527 0.4619378 0.5480557 0.7928025
+6 sigma_B6_in_variety 0.3202063 0.08978104 0.1733270 0.3258126 0.4637460
+7 sigma_B7_in_variety 0.4397512 0.12170151 0.3225896 0.3939837 0.6400990
+8 sigma_B8_in_variety 1.4752645 0.47269433 0.8656736 1.4877448 2.0072405
+9         sigma_e_atg 1.8439727 0.05839898 1.7882143 1.8341927 1.9798969
 
 Reconstructing variety curves from ASReml BLUPs...
-Plot 2 error: Discrete value supplied to a continuous scale. 
 Plot 2 rendered.
 
  ====================================================================== 
@@ -120,7 +119,7 @@ Fitted yield RMSE: 1.111
 
 Beta(t) coefficients (posterior means):
 beta_C1 beta_C2 beta_C3 beta_C4 beta_C5 beta_C6 beta_C7 beta_C8 
- 0.3878 -0.1440 -0.0189 -0.1637  0.1792  0.1034 -0.1019 -0.0278 
+-0.0032 -0.0461 -0.0768 -0.0886  0.1648  0.0423 -0.0018 -0.1072 
 Plot 3 rendered.
 
  ====================================================================== 
@@ -151,14 +150,14 @@ Warning messages:
 --- bayesreml ---
 
 Variance components:
-      component  estimate        sd       q2.5       q50    q97.5
-1 sigma_Crange1 0.6931575 0.4697761 0.08102586 0.5919674 1.904385
-2 sigma_Crange2 0.5747000 0.3815207 0.09081926 0.4827835 1.521295
-3 sigma_Crange3 0.8422315 0.5065227 0.16719206 0.7610941 2.011545
-4 sigma_Crange4 0.5653717 0.4407336 0.08910602 0.4324824 1.584378
-5 sigma_Crange5 0.5627426 0.3983779 0.06675318 0.4790599 1.692402
-6 sigma_Crange6 0.7107429 0.5158578 0.15165131 0.5441070 1.930664
-7   sigma_e_atg 1.1280800 0.4031520 0.63384358 1.0232051 2.152305
+      component  estimate        sd      q2.5       q50    q97.5
+1 sigma_Crange1 0.9201870 0.2057189 0.6087848 0.9352530 1.332453
+2 sigma_Crange2 1.0358489 0.1581276 0.7880540 1.0653272 1.284802
+3 sigma_Crange3 1.2797420 0.5470332 0.3743482 1.2291045 2.615626
+4 sigma_Crange4 1.1009199 0.2937231 0.5932352 1.0851642 1.699198
+5 sigma_Crange5 0.3726167 0.2688102 0.1029752 0.2653342 1.043681
+6 sigma_Crange6 0.5723129 0.2167322 0.3192627 0.5126700 1.023496
+7   sigma_e_atg 1.3721968 0.2780382 0.9075463 1.3477830 2.015676
 Plot 4 rendered.
 
  ====================================================================== 
@@ -172,16 +171,215 @@ Engine: ASReml if available, else bayesreml
 Constructing B-spline basis: 4 knots, degree 3, penalty order 2.
 Dispatching to 'asreml' engine...
 Fitting model using 'asreml' engine...
+Terms with zero df listed in attribute 'zerodf' of the wald table.
+Terms with zero df listed in attribute 'zerodf' of the wald table.
+Terms with zero df listed in attribute 'zerodf' of the wald table.
+Terms with zero df listed in attribute 'zerodf' of the wald table.
+Terms with zero df listed in attribute 'zerodf' of the wald table.
+Terms with zero df listed in attribute 'zerodf' of the wald table.
+Terms with zero df listed in attribute 'zerodf' of the wald table.
+Terms with zero df listed in attribute 'zerodf' of the wald table.
+Terms with zero df listed in attribute 'zerodf' of the wald table.
+No spline random effect terms found; skipping fitted curves.
+Stage 1 complete. Engine: asreml 
+Functional covariates in Z-space: treating as fixed effects.
+Fitting scalar-on-function model via 'asreml' engine...
+Fitting model using 'asreml' engine...
 Error with engine ' asreml ': ASReml fitting failed with error:
-  object 'spline_coef' not found 
+  no terms component nor attribute 
 
 --- funcrop with engine = 'bayesreml' ---
 Constructing B-spline basis: 4 knots, degree 3, penalty order 2.
 Dispatching to 'bayesreml' engine...
 Fitting model using 'bayesreml' engine...
 Running bayesreml MCMC: 2000 samples, 1000 warmup, 4 chains...
-Error with engine ' bayesreml ': bayesreml fitting failed with error:
-  unused argument (nsamples = 2000) 
+
+-- bayesreml: generated greta code ----------------------------------------
+# -- Fixed effects -------------------------------------------
+mu_atg <- normal(0, 10)
+tau_block <- normal(0, 10, dim = n_block)
+beta_Bsp_1 <- normal(0, 2)
+beta_Bsp_2 <- normal(0, 2)
+beta_Bsp_3 <- normal(0, 2)
+beta_Bsp_4 <- normal(0, 2)
+beta_Bsp_5 <- normal(0, 2)
+beta_Bsp_6 <- normal(0, 2)
+beta_Bsp_7 <- normal(0, 2)
+beta_Bsp_8 <- normal(0, 2)
+# -- Random effects ------------------------------------------
+sigma_Bsp_1_in_variety_f <- greta::lognormal(0, 1)
+Bsp_1_in_variety_f_raw <- normal(0, 1, dim = n_Bsp_1_in_variety_f)
+u_Bsp_1_in_variety_f <- Bsp_1_in_variety_f_raw * sigma_Bsp_1_in_variety_f
+sigma_Bsp_2_in_variety_f <- greta::lognormal(0, 1)
+Bsp_2_in_variety_f_raw <- normal(0, 1, dim = n_Bsp_2_in_variety_f)
+u_Bsp_2_in_variety_f <- Bsp_2_in_variety_f_raw * sigma_Bsp_2_in_variety_f
+sigma_Bsp_3_in_variety_f <- greta::lognormal(0, 1)
+Bsp_3_in_variety_f_raw <- normal(0, 1, dim = n_Bsp_3_in_variety_f)
+u_Bsp_3_in_variety_f <- Bsp_3_in_variety_f_raw * sigma_Bsp_3_in_variety_f
+sigma_Bsp_4_in_variety_f <- greta::lognormal(0, 1)
+Bsp_4_in_variety_f_raw <- normal(0, 1, dim = n_Bsp_4_in_variety_f)
+u_Bsp_4_in_variety_f <- Bsp_4_in_variety_f_raw * sigma_Bsp_4_in_variety_f
+sigma_Bsp_5_in_variety_f <- greta::lognormal(0, 1)
+Bsp_5_in_variety_f_raw <- normal(0, 1, dim = n_Bsp_5_in_variety_f)
+u_Bsp_5_in_variety_f <- Bsp_5_in_variety_f_raw * sigma_Bsp_5_in_variety_f
+sigma_Bsp_6_in_variety_f <- greta::lognormal(0, 1)
+Bsp_6_in_variety_f_raw <- normal(0, 1, dim = n_Bsp_6_in_variety_f)
+u_Bsp_6_in_variety_f <- Bsp_6_in_variety_f_raw * sigma_Bsp_6_in_variety_f
+sigma_Bsp_7_in_variety_f <- greta::lognormal(0, 1)
+Bsp_7_in_variety_f_raw <- normal(0, 1, dim = n_Bsp_7_in_variety_f)
+u_Bsp_7_in_variety_f <- Bsp_7_in_variety_f_raw * sigma_Bsp_7_in_variety_f
+sigma_Bsp_8_in_variety_f <- greta::lognormal(0, 1)
+Bsp_8_in_variety_f_raw <- normal(0, 1, dim = n_Bsp_8_in_variety_f)
+u_Bsp_8_in_variety_f <- Bsp_8_in_variety_f_raw * sigma_Bsp_8_in_variety_f
+# -- Residual ------------------------------------------------
+sigma_e_atg <- greta::lognormal(0, 1)
+# -- Linear predictor ----------------------------------------
+mu_i_atg <- mu_atg + tau_block[block_id] + beta_Bsp_1 * as_data(Bsp_1) + beta_Bsp_2 * as_data(Bsp_2) + beta_Bsp_3 * as_data(Bsp_3) + beta_Bsp_4 * as_data(Bsp_4) + beta_Bsp_5 * as_data(Bsp_5) + beta_Bsp_6 * as_data(Bsp_6) + beta_Bsp_7 * as_data(Bsp_7) + beta_Bsp_8 * as_data(Bsp_8) + u_Bsp_1_in_variety_f[nested_id_Bsp_1_in_variety_f] + u_Bsp_2_in_variety_f[nested_id_Bsp_2_in_variety_f] + u_Bsp_3_in_variety_f[nested_id_Bsp_3_in_variety_f] + u_Bsp_4_in_variety_f[nested_id_Bsp_4_in_variety_f] + u_Bsp_5_in_variety_f[nested_id_Bsp_5_in_variety_f] + u_Bsp_6_in_variety_f[nested_id_Bsp_6_in_variety_f] + u_Bsp_7_in_variety_f[nested_id_Bsp_7_in_variety_f] + u_Bsp_8_in_variety_f[nested_id_Bsp_8_in_variety_f]
+# -- Likelihood ----------------------------------------------
+y_atg_obs <- as_data(y_atg)
+distribution(y_atg_obs) <- normal(mu_i_atg, sigma_e_atg)
+# -- Model and MCMC -----------------------------------------
+atg_model <- greta::model(mu_atg, tau_block, beta_Bsp_1, beta_Bsp_2, beta_Bsp_3, beta_Bsp_4, beta_Bsp_5, beta_Bsp_6, beta_Bsp_7, beta_Bsp_8, sigma_Bsp_1_in_variety_f, sigma_Bsp_2_in_variety_f, sigma_Bsp_3_in_variety_f, sigma_Bsp_4_in_variety_f, sigma_Bsp_5_in_variety_f, sigma_Bsp_6_in_variety_f, sigma_Bsp_7_in_variety_f, sigma_Bsp_8_in_variety_f, sigma_e_atg)
+atg_draws <- greta::mcmc(atg_model, n_samples = 2000, warmup = 1000, chains = 4, verbose = TRUE) 
+------------------------------------------------------------ 
+
+WARNING:tensorflow:5 out of the last 9 calls to <function wrap_fn.<locals>.fn at 0x3980fa660> triggered tf.function retracing. Tracing is expensive and the excessive number of tracings could be due to (1) creating @tf.function repeatedly in a loop, (2) passing tensors with different shapes, (3) passing Python objects instead of tensors. For (1), please define your @tf.function outside of the loop. For (2), @tf.function has reduce_retracing=True option that can avoid unnecessary retracing. For (3), please refer to https://www.tensorflow.org/guide/function#controlling_retracing and https://www.tensorflow.org/api_docs/python/tf/function for  more details.
+running 4 chains simultaneously on up to 2 CPU cores
+
+    warmup                                           0/1000 | eta:  ?s              warmup ==                                       50/1000 | eta:  2m              warmup ====                                    100/1000 | eta:  1m              warmup ======                                  150/1000 | eta: 38s              warmup ========                                200/1000 | eta: 29s              warmup ==========                              250/1000 | eta: 24s              warmup ===========                             300/1000 | eta: 19s              warmup =============                           350/1000 | eta: 16s              warmup ===============                         400/1000 | eta: 14s              warmup =================                       450/1000 | eta: 12s | 3% bad     warmup ===================                     500/1000 | eta: 11s | 2% bad     warmup =====================                   550/1000 | eta:  9s | 2% bad     warmup =======================                 600/1000 | eta:  8s | 2% bad     warmup =========================               650/1000 | eta:  7s | 2% bad     warmup ===========================             700/1000 | eta:  6s | 2% bad     warmup ============================            750/1000 | eta:  5s | 2% bad     warmup ==============================          800/1000 | eta:  4s | 1% bad     warmup ================================        850/1000 | eta:  3s | 1% bad     warmup ==================================      900/1000 | eta:  2s | 1% bad     warmup ====================================    950/1000 | eta:  1s | 1% bad     warmup ====================================== 1000/1000 | eta:  0s | 1% bad 
+  sampling                                           0/2000 | eta:  ?s            sampling =                                        50/2000 | eta: 17s            sampling ==                                      100/2000 | eta: 19s            sampling ===                                     150/2000 | eta: 17s            sampling ====                                    200/2000 | eta: 16s            sampling =====                                   250/2000 | eta: 17s            sampling ======                                  300/2000 | eta: 16s            sampling =======                                 350/2000 | eta: 16s            sampling ========                                400/2000 | eta: 16s            sampling =========                               450/2000 | eta: 16s            sampling ==========                              500/2000 | eta: 15s            sampling ==========                              550/2000 | eta: 14s            sampling ===========                             600/2000 | eta: 14s            sampling ============                            650/2000 | eta: 13s            sampling =============                           700/2000 | eta: 13s            sampling ==============                          750/2000 | eta: 12s            sampling ===============                         800/2000 | eta: 12s            sampling ================                        850/2000 | eta: 12s            sampling =================                       900/2000 | eta: 11s            sampling ==================                      950/2000 | eta: 11s            sampling ===================                    1000/2000 | eta: 10s            sampling ====================                   1050/2000 | eta: 10s            sampling =====================                  1100/2000 | eta:  9s            sampling ======================                 1150/2000 | eta:  9s            sampling =======================                1200/2000 | eta:  8s            sampling ========================               1250/2000 | eta:  8s            sampling =========================              1300/2000 | eta:  7s            sampling ==========================             1350/2000 | eta:  7s            sampling ===========================            1400/2000 | eta:  6s            sampling ============================           1450/2000 | eta:  6s            sampling ============================           1500/2000 | eta:  5s            sampling =============================          1550/2000 | eta:  5s            sampling ==============================         1600/2000 | eta:  4s            sampling ===============================        1650/2000 | eta:  4s            sampling ================================       1700/2000 | eta:  3s            sampling =================================      1750/2000 | eta:  3s            sampling ==================================     1800/2000 | eta:  2s            sampling ===================================    1850/2000 | eta:  2s            sampling ====================================   1900/2000 | eta:  1s            sampling =====================================  1950/2000 | eta:  1s            sampling ====================================== 2000/2000 | eta:  0s          
+Bayesian mixed model summary  [bayesreml]
+============================================================ 
+  Fixed  : grain_weight ~ 1 + block + Bsp_1 + Bsp_2 + Bsp_3 + Bsp_4 + Bsp_5 +      Bsp_6 + Bsp_7 + Bsp_8 
+  Random : ~variety_f:Bsp_1 + variety_f:Bsp_2 + variety_f:Bsp_3 + variety_f:Bsp_4 +      variety_f:Bsp_5 + variety_f:Bsp_6 + variety_f:Bsp_7 + variety_f:Bsp_8 
+  Family : gaussian / identity 
+  N = 480 , chains = 4 , samples = 2000 
+
+-- Fixed effects (posterior)  --------------------------------- 
+            Estimate Post.SD     2.5%   97.5%
+(Intercept)  14.4336  4.5024   8.2464 22.1978
+blockB1       1.3075  2.5804  -4.4234  4.3079
+blockB2       0.0051  2.5845  -5.6857  3.0045
+blockB3       3.4604  2.6063  -2.3045  6.4141
+Bsp_1        -7.3329  4.1012 -13.2793 -1.2380
+Bsp_2        -5.0889  2.4136  -9.0566 -1.3814
+Bsp_3        -5.9124  3.2740 -12.3920 -1.3570
+Bsp_4        -4.2825  4.6767 -12.3450  1.1648
+Bsp_5         2.5392  2.1454  -0.3621  6.3902
+Bsp_6         5.4765  3.1559   0.4871 10.2663
+Bsp_7         7.6527  2.5795   3.8329 11.8495
+Bsp_8         8.9018  2.8704   4.4498 12.9004
+
+-- Variance components  -------------------------------------- 
+                 Component Estimate     SD   2.5%   97.5%
+1 sigma_Bsp_1_in_variety_f   2.7425 2.0572 0.3324  6.8477
+2 sigma_Bsp_2_in_variety_f   4.3205 3.5391 0.3238 10.0608
+3 sigma_Bsp_3_in_variety_f   3.4022 2.0104 0.2519  6.1917
+4 sigma_Bsp_4_in_variety_f   0.8452 0.4317 0.2230  2.1018
+5 sigma_Bsp_5_in_variety_f   0.2668 0.1476 0.0845  0.6324
+6 sigma_Bsp_6_in_variety_f   0.4808 0.2833 0.1100  0.9336
+7 sigma_Bsp_7_in_variety_f   0.4518 0.3011 0.1321  1.3622
+8 sigma_Bsp_8_in_variety_f   0.8492 0.5121 0.1199  1.7000
+9              sigma_e_atg   1.8190 0.0646 1.6855  1.9572
+
+-- Convergence  --------------------------------------------- 
+  Rhat range: 1.077 - 9.386 
+  ESS  range: 17 - 755 
+  Run time  : 47.1 sec
+No spline random effect terms found; skipping fitted curves.
+Stage 1 complete. Engine: bayesreml 
+Functional covariates in Z-space: treating as fixed effects.
+Fitting scalar-on-function model via 'bayesreml' engine...
+Fitting model using 'bayesreml' engine...
+Running bayesreml MCMC: 2000 samples, 1000 warmup, 4 chains...
+
+-- bayesreml: generated greta code ----------------------------------------
+# -- Fixed effects -------------------------------------------
+mu_atg <- normal(0, 10)
+beta_C_1 <- normal(0, 2)
+beta_C_2 <- normal(0, 2)
+beta_C_3 <- normal(0, 2)
+beta_C_4 <- normal(0, 2)
+beta_C_5 <- normal(0, 2)
+beta_C_6 <- normal(0, 2)
+# -- Residual ------------------------------------------------
+sigma_e_atg <- greta::lognormal(0, 1)
+# -- Linear predictor ----------------------------------------
+mu_i_atg <- mu_atg + beta_C_1 * as_data(C_1) + beta_C_2 * as_data(C_2) + beta_C_3 * as_data(C_3) + beta_C_4 * as_data(C_4) + beta_C_5 * as_data(C_5) + beta_C_6 * as_data(C_6)
+# -- Likelihood ----------------------------------------------
+y_atg_obs <- as_data(y_atg)
+distribution(y_atg_obs) <- normal(mu_i_atg, sigma_e_atg)
+# -- Model and MCMC -----------------------------------------
+atg_model <- greta::model(mu_atg, beta_C_1, beta_C_2, beta_C_3, beta_C_4, beta_C_5, beta_C_6, sigma_e_atg)
+atg_draws <- greta::mcmc(atg_model, n_samples = 2000, warmup = 1000, chains = 4, verbose = TRUE) 
+------------------------------------------------------------ 
+
+WARNING:tensorflow:5 out of the last 11 calls to <function wrap_fn.<locals>.fn at 0x3ad4bd080> triggered tf.function retracing. Tracing is expensive and the excessive number of tracings could be due to (1) creating @tf.function repeatedly in a loop, (2) passing tensors with different shapes, (3) passing Python objects instead of tensors. For (1), please define your @tf.function outside of the loop. For (2), @tf.function has reduce_retracing=True option that can avoid unnecessary retracing. For (3), please refer to https://www.tensorflow.org/guide/function#controlling_retracing and https://www.tensorflow.org/api_docs/python/tf/function for  more details.
+running 4 chains simultaneously on up to 2 CPU cores
+
+    warmup                                           0/1000 | eta:  ?s              warmup ==                                       50/1000 | eta: 31s | 1% bad     warmup ====                                    100/1000 | eta: 16s | <1% bad    warmup ======                                  150/1000 | eta: 11s | <1% bad    warmup ========                                200/1000 | eta:  8s | <1% bad    warmup ==========                              250/1000 | eta:  7s | <1% bad    warmup ===========                             300/1000 | eta:  5s | <1% bad    warmup =============                           350/1000 | eta:  5s | <1% bad    warmup ===============                         400/1000 | eta:  4s | <1% bad    warmup =================                       450/1000 | eta:  3s | <1% bad    warmup ===================                     500/1000 | eta:  3s | <1% bad    warmup =====================                   550/1000 | eta:  2s | <1% bad    warmup =======================                 600/1000 | eta:  2s | <1% bad    warmup =========================               650/1000 | eta:  2s | <1% bad    warmup ===========================             700/1000 | eta:  1s | <1% bad    warmup ============================            750/1000 | eta:  1s | <1% bad    warmup ==============================          800/1000 | eta:  1s | <1% bad    warmup ================================        850/1000 | eta:  1s | <1% bad    warmup ==================================      900/1000 | eta:  0s | <1% bad    warmup ====================================    950/1000 | eta:  0s | <1% bad    warmup ====================================== 1000/1000 | eta:  0s | <1% bad
+  sampling                                           0/2000 | eta:  ?s            sampling =                                        50/2000 | eta:  4s            sampling ==                                      100/2000 | eta:  4s            sampling ===                                     150/2000 | eta:  4s            sampling ====                                    200/2000 | eta:  4s            sampling =====                                   250/2000 | eta:  4s            sampling ======                                  300/2000 | eta:  4s            sampling =======                                 350/2000 | eta:  4s            sampling ========                                400/2000 | eta:  4s            sampling =========                               450/2000 | eta:  4s            sampling ==========                              500/2000 | eta:  4s            sampling ==========                              550/2000 | eta:  4s            sampling ===========                             600/2000 | eta:  4s            sampling ============                            650/2000 | eta:  3s            sampling =============                           700/2000 | eta:  3s            sampling ==============                          750/2000 | eta:  3s            sampling ===============                         800/2000 | eta:  3s            sampling ================                        850/2000 | eta:  3s            sampling =================                       900/2000 | eta:  3s            sampling ==================                      950/2000 | eta:  3s            sampling ===================                    1000/2000 | eta:  2s            sampling ====================                   1050/2000 | eta:  2s            sampling =====================                  1100/2000 | eta:  2s            sampling ======================                 1150/2000 | eta:  2s            sampling =======================                1200/2000 | eta:  2s            sampling ========================               1250/2000 | eta:  2s            sampling =========================              1300/2000 | eta:  2s            sampling ==========================             1350/2000 | eta:  2s            sampling ===========================            1400/2000 | eta:  1s            sampling ============================           1450/2000 | eta:  1s            sampling ============================           1500/2000 | eta:  1s            sampling =============================          1550/2000 | eta:  1s            sampling ==============================         1600/2000 | eta:  1s            sampling ===============================        1650/2000 | eta:  1s            sampling ================================       1700/2000 | eta:  1s            sampling =================================      1750/2000 | eta:  1s            sampling ==================================     1800/2000 | eta:  0s            sampling ===================================    1850/2000 | eta:  0s            sampling ====================================   1900/2000 | eta:  0s            sampling =====================================  1950/2000 | eta:  0s            sampling ====================================== 2000/2000 | eta:  0s          
+Bayesian mixed model summary  [bayesreml]
+============================================================ 
+  Fixed  : yield ~ C_1 + C_2 + C_3 + C_4 + C_5 + C_6 
+  Family : gaussian / identity 
+  N = 20 , chains = 4 , samples = 2000 
+
+-- Fixed effects (posterior)  --------------------------------- 
+            Estimate Post.SD    2.5%   97.5%
+(Intercept)  16.2646  0.4601 15.3754 17.1745
+C_1           0.0035  1.9850 -3.9222  3.8170
+C_2          -0.0514  1.9985 -4.0092  3.7674
+C_3           0.0096  2.0353 -3.9652  4.0462
+C_4           0.0096  1.9475 -3.7701  3.8087
+C_5           0.0132  2.0198 -3.9415  3.9674
+C_6           0.0390  2.0086 -4.0085  3.9441
+
+-- Variance components  -------------------------------------- 
+    Component Estimate     SD   2.5%  97.5%
+1 sigma_e_atg   1.9901 0.3234 1.4718 2.7183
+
+-- Convergence  --------------------------------------------- 
+  Rhat range: 1 - 1.004 
+  ESS  range: 1991 - 6363 
+  Run time  : 10.4 sec
+No spline random effect terms found; skipping fitted curves.
+Bayesian mixed model summary  [bayesreml]
+============================================================ 
+  Fixed  : yield ~ C_1 + C_2 + C_3 + C_4 + C_5 + C_6 
+  Family : gaussian / identity 
+  N = 20 , chains = 4 , samples = 2000 
+
+-- Fixed effects (posterior)  --------------------------------- 
+            Estimate Post.SD    2.5%   97.5%
+(Intercept)  16.2646  0.4601 15.3754 17.1745
+C_1           0.0035  1.9850 -3.9222  3.8170
+C_2          -0.0514  1.9985 -4.0092  3.7674
+C_3           0.0096  2.0353 -3.9652  4.0462
+C_4           0.0096  1.9475 -3.7701  3.8087
+C_5           0.0132  2.0198 -3.9415  3.9674
+C_6           0.0390  2.0086 -4.0085  3.9441
+
+-- Variance components  -------------------------------------- 
+    Component Estimate     SD   2.5%  97.5%
+1 sigma_e_atg   1.9901 0.3234 1.4718 2.7183
+
+-- Convergence  --------------------------------------------- 
+  Rhat range: 1 - 1.004 
+  ESS  range: 1991 - 6363 
+  Run time  : 10.4 sec
+Stage 2 complete.
+Warning messages:
+1: Insufficient basis information for coefficient function evaluation. 
+2: Z_fine has 6 columns but BLUPs have 0 coefficients per variety. Using min. 
+3: Z-space inner product matrix has 6 columns but alpha_matrix has 0. Using truncated/padded version. 
+4: Could not extract Rhat values from bayesreml summary. Convergence status unknown. 
+5: Insufficient basis information for coefficient function evaluation. 
+6: No BLUPs could be extracted. Returning zero coefficient matrix. 
+7: Could not extract Rhat values from bayesreml summary. Convergence status unknown. 
+8: Insufficient basis information for coefficient function evaluation. 
+9: Removed 800 rows containing missing values or values outside the scale range
+(`geom_ribbon()`). 
 
  ====================================================================== 
 MODEL 6: MET-FDA with GxE (using sim_met_fda)
@@ -207,12 +405,51 @@ Constructing shared B-spline basis: 3 knots, degree 3, penalty order 2.
   Environment 1/4: 'E1'
 Dispatching to 'asreml' engine...
 Fitting model using 'asreml' engine...
+Terms with zero df listed in attribute 'zerodf' of the wald table.
+Terms with zero df listed in attribute 'zerodf' of the wald table.
+Terms with zero df listed in attribute 'zerodf' of the wald table.
+Terms with zero df listed in attribute 'zerodf' of the wald table.
+Terms with zero df listed in attribute 'zerodf' of the wald table.
+Terms with zero df listed in attribute 'zerodf' of the wald table.
+Terms with zero df listed in attribute 'zerodf' of the wald table.
+Terms with zero df listed in attribute 'zerodf' of the wald table.
+No spline random effect terms found; skipping fitted curves.
   Environment 2/4: 'E2'
 Dispatching to 'asreml' engine...
 Fitting model using 'asreml' engine...
+Terms with zero df listed in attribute 'zerodf' of the wald table.
+Terms with zero df listed in attribute 'zerodf' of the wald table.
+Terms with zero df listed in attribute 'zerodf' of the wald table.
+Terms with zero df listed in attribute 'zerodf' of the wald table.
+Terms with zero df listed in attribute 'zerodf' of the wald table.
+Terms with zero df listed in attribute 'zerodf' of the wald table.
+Terms with zero df listed in attribute 'zerodf' of the wald table.
+Terms with zero df listed in attribute 'zerodf' of the wald table.
+No spline random effect terms found; skipping fitted curves.
   Environment 3/4: 'E3'
 Dispatching to 'asreml' engine...
 Fitting model using 'asreml' engine...
+Terms with zero df listed in attribute 'zerodf' of the wald table.
+Terms with zero df listed in attribute 'zerodf' of the wald table.
+Terms with zero df listed in attribute 'zerodf' of the wald table.
+Terms with zero df listed in attribute 'zerodf' of the wald table.
+Terms with zero df listed in attribute 'zerodf' of the wald table.
+Terms with zero df listed in attribute 'zerodf' of the wald table.
+Terms with zero df listed in attribute 'zerodf' of the wald table.
+Terms with zero df listed in attribute 'zerodf' of the wald table.
+No spline random effect terms found; skipping fitted curves.
+  Environment 4/4: 'E4'
+Dispatching to 'asreml' engine...
+Fitting model using 'asreml' engine...
+Terms with zero df listed in attribute 'zerodf' of the wald table.
+Terms with zero df listed in attribute 'zerodf' of the wald table.
+Terms with zero df listed in attribute 'zerodf' of the wald table.
+Terms with zero df listed in attribute 'zerodf' of the wald table.
+Terms with zero df listed in attribute 'zerodf' of the wald table.
+Terms with zero df listed in attribute 'zerodf' of the wald table.
+Terms with zero df listed in attribute 'zerodf' of the wald table.
+Terms with zero df listed in attribute 'zerodf' of the wald table.
+No spline random effect terms found; skipping fitted curves.
 Error: subscript out of bounds 
 
 funcrop MET-FDA with engine = 'bayesreml'
@@ -222,28 +459,397 @@ Constructing shared B-spline basis: 3 knots, degree 3, penalty order 2.
 Dispatching to 'bayesreml' engine...
 Fitting model using 'bayesreml' engine...
 Running bayesreml MCMC: 2000 samples, 1000 warmup, 4 chains...
+
+-- bayesreml: generated greta code ----------------------------------------
+# -- Fixed effects -------------------------------------------
+mu_atg <- normal(0, 10)
+tau_rep <- normal(0, 10, dim = n_rep)
+beta_Bsp_1 <- normal(0, 2)
+beta_Bsp_2 <- normal(0, 2)
+beta_Bsp_3 <- normal(0, 2)
+beta_Bsp_4 <- normal(0, 2)
+beta_Bsp_5 <- normal(0, 2)
+beta_Bsp_6 <- normal(0, 2)
+beta_Bsp_7 <- normal(0, 2)
+# -- Random effects ------------------------------------------
+sigma_Bsp_1_in_variety_f <- greta::lognormal(0, 1)
+Bsp_1_in_variety_f_raw <- normal(0, 1, dim = n_Bsp_1_in_variety_f)
+u_Bsp_1_in_variety_f <- Bsp_1_in_variety_f_raw * sigma_Bsp_1_in_variety_f
+sigma_Bsp_2_in_variety_f <- greta::lognormal(0, 1)
+Bsp_2_in_variety_f_raw <- normal(0, 1, dim = n_Bsp_2_in_variety_f)
+u_Bsp_2_in_variety_f <- Bsp_2_in_variety_f_raw * sigma_Bsp_2_in_variety_f
+sigma_Bsp_3_in_variety_f <- greta::lognormal(0, 1)
+Bsp_3_in_variety_f_raw <- normal(0, 1, dim = n_Bsp_3_in_variety_f)
+u_Bsp_3_in_variety_f <- Bsp_3_in_variety_f_raw * sigma_Bsp_3_in_variety_f
+sigma_Bsp_4_in_variety_f <- greta::lognormal(0, 1)
+Bsp_4_in_variety_f_raw <- normal(0, 1, dim = n_Bsp_4_in_variety_f)
+u_Bsp_4_in_variety_f <- Bsp_4_in_variety_f_raw * sigma_Bsp_4_in_variety_f
+sigma_Bsp_5_in_variety_f <- greta::lognormal(0, 1)
+Bsp_5_in_variety_f_raw <- normal(0, 1, dim = n_Bsp_5_in_variety_f)
+u_Bsp_5_in_variety_f <- Bsp_5_in_variety_f_raw * sigma_Bsp_5_in_variety_f
+sigma_Bsp_6_in_variety_f <- greta::lognormal(0, 1)
+Bsp_6_in_variety_f_raw <- normal(0, 1, dim = n_Bsp_6_in_variety_f)
+u_Bsp_6_in_variety_f <- Bsp_6_in_variety_f_raw * sigma_Bsp_6_in_variety_f
+sigma_Bsp_7_in_variety_f <- greta::lognormal(0, 1)
+Bsp_7_in_variety_f_raw <- normal(0, 1, dim = n_Bsp_7_in_variety_f)
+u_Bsp_7_in_variety_f <- Bsp_7_in_variety_f_raw * sigma_Bsp_7_in_variety_f
+# -- Residual ------------------------------------------------
+sigma_e_atg <- greta::lognormal(0, 1)
+# -- Linear predictor ----------------------------------------
+mu_i_atg <- mu_atg + tau_rep[rep_id] + beta_Bsp_1 * as_data(Bsp_1) + beta_Bsp_2 * as_data(Bsp_2) + beta_Bsp_3 * as_data(Bsp_3) + beta_Bsp_4 * as_data(Bsp_4) + beta_Bsp_5 * as_data(Bsp_5) + beta_Bsp_6 * as_data(Bsp_6) + beta_Bsp_7 * as_data(Bsp_7) + u_Bsp_1_in_variety_f[nested_id_Bsp_1_in_variety_f] + u_Bsp_2_in_variety_f[nested_id_Bsp_2_in_variety_f] + u_Bsp_3_in_variety_f[nested_id_Bsp_3_in_variety_f] + u_Bsp_4_in_variety_f[nested_id_Bsp_4_in_variety_f] + u_Bsp_5_in_variety_f[nested_id_Bsp_5_in_variety_f] + u_Bsp_6_in_variety_f[nested_id_Bsp_6_in_variety_f] + u_Bsp_7_in_variety_f[nested_id_Bsp_7_in_variety_f]
+# -- Likelihood ----------------------------------------------
+y_atg_obs <- as_data(y_atg)
+distribution(y_atg_obs) <- normal(mu_i_atg, sigma_e_atg)
+# -- Model and MCMC -----------------------------------------
+atg_model <- greta::model(mu_atg, tau_rep, beta_Bsp_1, beta_Bsp_2, beta_Bsp_3, beta_Bsp_4, beta_Bsp_5, beta_Bsp_6, beta_Bsp_7, sigma_Bsp_1_in_variety_f, sigma_Bsp_2_in_variety_f, sigma_Bsp_3_in_variety_f, sigma_Bsp_4_in_variety_f, sigma_Bsp_5_in_variety_f, sigma_Bsp_6_in_variety_f, sigma_Bsp_7_in_variety_f, sigma_e_atg)
+atg_draws <- greta::mcmc(atg_model, n_samples = 2000, warmup = 1000, chains = 4, verbose = TRUE) 
+------------------------------------------------------------ 
+
+running 4 chains simultaneously on up to 2 CPU cores
+
+    warmup                                           0/1000 | eta:  ?s              warmup ==                                       50/1000 | eta:  2m              warmup ====                                    100/1000 | eta: 47s              warmup ======                                  150/1000 | eta: 32s              warmup ========                                200/1000 | eta: 25s              warmup ==========                              250/1000 | eta: 20s              warmup ===========                             300/1000 | eta: 17s              warmup =============                           350/1000 | eta: 14s              warmup ===============                         400/1000 | eta: 12s              warmup =================                       450/1000 | eta: 11s              warmup ===================                     500/1000 | eta:  9s              warmup =====================                   550/1000 | eta:  8s              warmup =======================                 600/1000 | eta:  7s              warmup =========================               650/1000 | eta:  6s              warmup ===========================             700/1000 | eta:  5s              warmup ============================            750/1000 | eta:  4s              warmup ==============================          800/1000 | eta:  3s              warmup ================================        850/1000 | eta:  2s              warmup ==================================      900/1000 | eta:  2s              warmup ====================================    950/1000 | eta:  1s              warmup ====================================== 1000/1000 | eta:  0s          
+  sampling                                           0/2000 | eta:  ?s            sampling =                                        50/2000 | eta: 14s            sampling ==                                      100/2000 | eta: 12s            sampling ===                                     150/2000 | eta: 12s            sampling ====                                    200/2000 | eta: 11s            sampling =====                                   250/2000 | eta: 13s            sampling ======                                  300/2000 | eta: 13s            sampling =======                                 350/2000 | eta: 12s            sampling ========                                400/2000 | eta: 12s            sampling =========                               450/2000 | eta: 12s            sampling ==========                              500/2000 | eta: 12s            sampling ==========                              550/2000 | eta: 12s            sampling ===========                             600/2000 | eta: 12s            sampling ============                            650/2000 | eta: 12s            sampling =============                           700/2000 | eta: 11s            sampling ==============                          750/2000 | eta: 11s            sampling ===============                         800/2000 | eta: 11s            sampling ================                        850/2000 | eta: 10s            sampling =================                       900/2000 | eta: 10s            sampling ==================                      950/2000 | eta:  9s            sampling ===================                    1000/2000 | eta:  9s            sampling ====================                   1050/2000 | eta:  9s            sampling =====================                  1100/2000 | eta:  8s            sampling ======================                 1150/2000 | eta:  8s            sampling =======================                1200/2000 | eta:  7s            sampling ========================               1250/2000 | eta:  7s            sampling =========================              1300/2000 | eta:  6s            sampling ==========================             1350/2000 | eta:  6s            sampling ===========================            1400/2000 | eta:  5s            sampling ============================           1450/2000 | eta:  5s            sampling ============================           1500/2000 | eta:  4s            sampling =============================          1550/2000 | eta:  4s            sampling ==============================         1600/2000 | eta:  4s            sampling ===============================        1650/2000 | eta:  3s            sampling ================================       1700/2000 | eta:  3s            sampling =================================      1750/2000 | eta:  2s            sampling ==================================     1800/2000 | eta:  2s            sampling ===================================    1850/2000 | eta:  1s            sampling ====================================   1900/2000 | eta:  1s            sampling =====================================  1950/2000 | eta:  0s            sampling ====================================== 2000/2000 | eta:  0s          
+Bayesian mixed model summary  [bayesreml]
+============================================================ 
+  Fixed  : ndvi ~ 1 + rep + Bsp_1 + Bsp_2 + Bsp_3 + Bsp_4 + Bsp_5 + Bsp_6 +      Bsp_7 
+  Random : ~variety_f:Bsp_1 + variety_f:Bsp_2 + variety_f:Bsp_3 + variety_f:Bsp_4 +      variety_f:Bsp_5 + variety_f:Bsp_6 + variety_f:Bsp_7 
+  Family : gaussian / identity 
+  N = 540 , chains = 4 , samples = 2000 
+
+-- Fixed effects (posterior)  --------------------------------- 
+            Estimate Post.SD    2.5%  97.5%
+(Intercept)   0.1285  0.4760 -0.6157 0.9819
+repR1         0.3708  0.4530 -0.4412 1.1000
+repR2         0.3770  0.4530 -0.4353 1.1058
+repR3         0.3783  0.4530 -0.4346 1.1065
+Bsp_1         0.3069  0.1358  0.1464 0.6335
+Bsp_2         0.5182  0.2616  0.0792 0.9212
+Bsp_3         0.1697  0.1717 -0.1762 0.5275
+Bsp_4         0.3387  0.2237 -0.0372 0.6616
+Bsp_5        -0.2092  0.1700 -0.5526 0.1394
+Bsp_6         0.0932  0.2207 -0.2767 0.4325
+Bsp_7        -0.2352  0.1372 -0.3995 0.0843
+
+-- Variance components  -------------------------------------- 
+                 Component Estimate     SD   2.5%  97.5%
+1 sigma_Bsp_1_in_variety_f   0.0202 0.0075 0.0080 0.0367
+2 sigma_Bsp_2_in_variety_f   0.0181 0.0057 0.0096 0.0309
+3 sigma_Bsp_3_in_variety_f   0.0161 0.0076 0.0026 0.0321
+4 sigma_Bsp_4_in_variety_f   0.0195 0.0059 0.0111 0.0332
+5 sigma_Bsp_5_in_variety_f   0.0278 0.0079 0.0162 0.0451
+6 sigma_Bsp_6_in_variety_f   0.0358 0.0086 0.0208 0.0526
+7 sigma_Bsp_7_in_variety_f   0.0825 0.0141 0.0606 0.1157
+8              sigma_e_atg   0.0288 0.0010 0.0270 0.0309
+
+-- Convergence  --------------------------------------------- 
+  Rhat range: 1.037 - 12.286 
+  ESS  range: 11 - 592 
+  Run time  : 39.1 sec
+No spline random effect terms found; skipping fitted curves.
   Environment 2/4: 'E2'
 Dispatching to 'bayesreml' engine...
 Fitting model using 'bayesreml' engine...
 Running bayesreml MCMC: 2000 samples, 1000 warmup, 4 chains...
+
+-- bayesreml: generated greta code ----------------------------------------
+# -- Fixed effects -------------------------------------------
+mu_atg <- normal(0, 10)
+tau_rep <- normal(0, 10, dim = n_rep)
+beta_Bsp_1 <- normal(0, 2)
+beta_Bsp_2 <- normal(0, 2)
+beta_Bsp_3 <- normal(0, 2)
+beta_Bsp_4 <- normal(0, 2)
+beta_Bsp_5 <- normal(0, 2)
+beta_Bsp_6 <- normal(0, 2)
+beta_Bsp_7 <- normal(0, 2)
+# -- Random effects ------------------------------------------
+sigma_Bsp_1_in_variety_f <- greta::lognormal(0, 1)
+Bsp_1_in_variety_f_raw <- normal(0, 1, dim = n_Bsp_1_in_variety_f)
+u_Bsp_1_in_variety_f <- Bsp_1_in_variety_f_raw * sigma_Bsp_1_in_variety_f
+sigma_Bsp_2_in_variety_f <- greta::lognormal(0, 1)
+Bsp_2_in_variety_f_raw <- normal(0, 1, dim = n_Bsp_2_in_variety_f)
+u_Bsp_2_in_variety_f <- Bsp_2_in_variety_f_raw * sigma_Bsp_2_in_variety_f
+sigma_Bsp_3_in_variety_f <- greta::lognormal(0, 1)
+Bsp_3_in_variety_f_raw <- normal(0, 1, dim = n_Bsp_3_in_variety_f)
+u_Bsp_3_in_variety_f <- Bsp_3_in_variety_f_raw * sigma_Bsp_3_in_variety_f
+sigma_Bsp_4_in_variety_f <- greta::lognormal(0, 1)
+Bsp_4_in_variety_f_raw <- normal(0, 1, dim = n_Bsp_4_in_variety_f)
+u_Bsp_4_in_variety_f <- Bsp_4_in_variety_f_raw * sigma_Bsp_4_in_variety_f
+sigma_Bsp_5_in_variety_f <- greta::lognormal(0, 1)
+Bsp_5_in_variety_f_raw <- normal(0, 1, dim = n_Bsp_5_in_variety_f)
+u_Bsp_5_in_variety_f <- Bsp_5_in_variety_f_raw * sigma_Bsp_5_in_variety_f
+sigma_Bsp_6_in_variety_f <- greta::lognormal(0, 1)
+Bsp_6_in_variety_f_raw <- normal(0, 1, dim = n_Bsp_6_in_variety_f)
+u_Bsp_6_in_variety_f <- Bsp_6_in_variety_f_raw * sigma_Bsp_6_in_variety_f
+sigma_Bsp_7_in_variety_f <- greta::lognormal(0, 1)
+Bsp_7_in_variety_f_raw <- normal(0, 1, dim = n_Bsp_7_in_variety_f)
+u_Bsp_7_in_variety_f <- Bsp_7_in_variety_f_raw * sigma_Bsp_7_in_variety_f
+# -- Residual ------------------------------------------------
+sigma_e_atg <- greta::lognormal(0, 1)
+# -- Linear predictor ----------------------------------------
+mu_i_atg <- mu_atg + tau_rep[rep_id] + beta_Bsp_1 * as_data(Bsp_1) + beta_Bsp_2 * as_data(Bsp_2) + beta_Bsp_3 * as_data(Bsp_3) + beta_Bsp_4 * as_data(Bsp_4) + beta_Bsp_5 * as_data(Bsp_5) + beta_Bsp_6 * as_data(Bsp_6) + beta_Bsp_7 * as_data(Bsp_7) + u_Bsp_1_in_variety_f[nested_id_Bsp_1_in_variety_f] + u_Bsp_2_in_variety_f[nested_id_Bsp_2_in_variety_f] + u_Bsp_3_in_variety_f[nested_id_Bsp_3_in_variety_f] + u_Bsp_4_in_variety_f[nested_id_Bsp_4_in_variety_f] + u_Bsp_5_in_variety_f[nested_id_Bsp_5_in_variety_f] + u_Bsp_6_in_variety_f[nested_id_Bsp_6_in_variety_f] + u_Bsp_7_in_variety_f[nested_id_Bsp_7_in_variety_f]
+# -- Likelihood ----------------------------------------------
+y_atg_obs <- as_data(y_atg)
+distribution(y_atg_obs) <- normal(mu_i_atg, sigma_e_atg)
+# -- Model and MCMC -----------------------------------------
+atg_model <- greta::model(mu_atg, tau_rep, beta_Bsp_1, beta_Bsp_2, beta_Bsp_3, beta_Bsp_4, beta_Bsp_5, beta_Bsp_6, beta_Bsp_7, sigma_Bsp_1_in_variety_f, sigma_Bsp_2_in_variety_f, sigma_Bsp_3_in_variety_f, sigma_Bsp_4_in_variety_f, sigma_Bsp_5_in_variety_f, sigma_Bsp_6_in_variety_f, sigma_Bsp_7_in_variety_f, sigma_e_atg)
+atg_draws <- greta::mcmc(atg_model, n_samples = 2000, warmup = 1000, chains = 4, verbose = TRUE) 
+------------------------------------------------------------ 
+
+running 4 chains simultaneously on up to 2 CPU cores
+
+    warmup                                           0/1000 | eta:  ?s              warmup ==                                       50/1000 | eta:  1m              warmup ====                                    100/1000 | eta: 46s              warmup ======                                  150/1000 | eta: 31s              warmup ========                                200/1000 | eta: 24s              warmup ==========                              250/1000 | eta: 19s              warmup ===========                             300/1000 | eta: 16s              warmup =============                           350/1000 | eta: 14s              warmup ===============                         400/1000 | eta: 12s              warmup =================                       450/1000 | eta: 10s              warmup ===================                     500/1000 | eta:  9s              warmup =====================                   550/1000 | eta:  8s              warmup =======================                 600/1000 | eta:  7s              warmup =========================               650/1000 | eta:  6s              warmup ===========================             700/1000 | eta:  5s              warmup ============================            750/1000 | eta:  4s              warmup ==============================          800/1000 | eta:  3s              warmup ================================        850/1000 | eta:  2s              warmup ==================================      900/1000 | eta:  1s              warmup ====================================    950/1000 | eta:  1s              warmup ====================================== 1000/1000 | eta:  0s          
+  sampling                                           0/2000 | eta:  ?s            sampling =                                        50/2000 | eta: 17s            sampling ==                                      100/2000 | eta: 18s            sampling ===                                     150/2000 | eta: 16s            sampling ====                                    200/2000 | eta: 16s            sampling =====                                   250/2000 | eta: 15s            sampling ======                                  300/2000 | eta: 14s            sampling =======                                 350/2000 | eta: 14s            sampling ========                                400/2000 | eta: 14s            sampling =========                               450/2000 | eta: 13s            sampling ==========                              500/2000 | eta: 13s            sampling ==========                              550/2000 | eta: 12s            sampling ===========                             600/2000 | eta: 12s            sampling ============                            650/2000 | eta: 11s            sampling =============                           700/2000 | eta: 11s            sampling ==============                          750/2000 | eta: 11s            sampling ===============                         800/2000 | eta: 10s            sampling ================                        850/2000 | eta: 10s            sampling =================                       900/2000 | eta: 10s            sampling ==================                      950/2000 | eta:  9s            sampling ===================                    1000/2000 | eta:  9s            sampling ====================                   1050/2000 | eta:  8s            sampling =====================                  1100/2000 | eta:  8s            sampling ======================                 1150/2000 | eta:  7s            sampling =======================                1200/2000 | eta:  7s            sampling ========================               1250/2000 | eta:  6s            sampling =========================              1300/2000 | eta:  6s            sampling ==========================             1350/2000 | eta:  6s            sampling ===========================            1400/2000 | eta:  5s            sampling ============================           1450/2000 | eta:  5s            sampling ============================           1500/2000 | eta:  4s            sampling =============================          1550/2000 | eta:  4s            sampling ==============================         1600/2000 | eta:  3s            sampling ===============================        1650/2000 | eta:  3s            sampling ================================       1700/2000 | eta:  3s            sampling =================================      1750/2000 | eta:  2s            sampling ==================================     1800/2000 | eta:  2s            sampling ===================================    1850/2000 | eta:  1s            sampling ====================================   1900/2000 | eta:  1s            sampling =====================================  1950/2000 | eta:  0s            sampling ====================================== 2000/2000 | eta:  0s          
+Bayesian mixed model summary  [bayesreml]
+============================================================ 
+  Fixed  : ndvi ~ 1 + rep + Bsp_1 + Bsp_2 + Bsp_3 + Bsp_4 + Bsp_5 + Bsp_6 +      Bsp_7 
+  Random : ~variety_f:Bsp_1 + variety_f:Bsp_2 + variety_f:Bsp_3 + variety_f:Bsp_4 +      variety_f:Bsp_5 + variety_f:Bsp_6 + variety_f:Bsp_7 
+  Family : gaussian / identity 
+  N = 540 , chains = 4 , samples = 2000 
+
+-- Fixed effects (posterior)  --------------------------------- 
+            Estimate Post.SD    2.5%  97.5%
+(Intercept)   0.5228  0.4881 -0.4222 1.3010
+repR1         0.0790  0.3711 -0.5492 0.6047
+repR2         0.0831  0.3712 -0.5452 0.6085
+repR3         0.0799  0.3711 -0.5473 0.6054
+Bsp_1         0.2123  0.2934 -0.2840 0.6910
+Bsp_2         0.2824  0.3952 -0.5127 0.9085
+Bsp_3         0.1767  0.5834 -0.6810 1.2653
+Bsp_4         0.1302  0.3078 -0.4314 0.7032
+Bsp_5        -0.1560  0.5892 -1.0348 0.9426
+Bsp_6        -0.1848  0.4035 -0.9477 0.4550
+Bsp_7        -0.2989  0.2911 -0.7987 0.1505
+
+-- Variance components  -------------------------------------- 
+                 Component Estimate     SD   2.5%  97.5%
+1 sigma_Bsp_1_in_variety_f   0.0119 0.0030 0.0068 0.0189
+2 sigma_Bsp_2_in_variety_f   0.0087 0.0030 0.0035 0.0149
+3 sigma_Bsp_3_in_variety_f   0.0099 0.0031 0.0043 0.0168
+4 sigma_Bsp_4_in_variety_f   0.0127 0.0052 0.0038 0.0218
+5 sigma_Bsp_5_in_variety_f   0.0135 0.0047 0.0055 0.0239
+6 sigma_Bsp_6_in_variety_f   0.0268 0.0096 0.0125 0.0474
+7 sigma_Bsp_7_in_variety_f   0.0456 0.0087 0.0322 0.0613
+8              sigma_e_atg   0.0400 0.0015 0.0372 0.0430
+
+-- Convergence  --------------------------------------------- 
+  Rhat range: 1.093 - 10.018 
+  ESS  range: 7 - 372 
+  Run time  : 37.6 sec
+No spline random effect terms found; skipping fitted curves.
   Environment 3/4: 'E3'
 Dispatching to 'bayesreml' engine...
 Fitting model using 'bayesreml' engine...
 Running bayesreml MCMC: 2000 samples, 1000 warmup, 4 chains...
-Error: subscript out of bounds 
-Warning messages:
-1: Stage 1 fit failed for environment 'E1': ASReml fitting failed with error:
-  object 'spline_coef' not found 
-2: Stage 1 fit failed for environment 'E2': ASReml fitting failed with error:
-  object 'spline_coef' not found 
-3: Stage 1 fit failed for environment 'E3': ASReml fitting failed with error:
-  object 'spline_coef' not found 
-4: Stage 1 fit failed for environment 'E1': bayesreml fitting failed with error:
-  unused argument (nsamples = 2000) 
-5: Stage 1 fit failed for environment 'E2': bayesreml fitting failed with error:
-  unused argument (nsamples = 2000) 
-6: Stage 1 fit failed for environment 'E3': bayesreml fitting failed with error:
-  unused argument (nsamples = 2000) 
+
+-- bayesreml: generated greta code ----------------------------------------
+# -- Fixed effects -------------------------------------------
+mu_atg <- normal(0, 10)
+tau_rep <- normal(0, 10, dim = n_rep)
+beta_Bsp_1 <- normal(0, 2)
+beta_Bsp_2 <- normal(0, 2)
+beta_Bsp_3 <- normal(0, 2)
+beta_Bsp_4 <- normal(0, 2)
+beta_Bsp_5 <- normal(0, 2)
+beta_Bsp_6 <- normal(0, 2)
+beta_Bsp_7 <- normal(0, 2)
+# -- Random effects ------------------------------------------
+sigma_Bsp_1_in_variety_f <- greta::lognormal(0, 1)
+Bsp_1_in_variety_f_raw <- normal(0, 1, dim = n_Bsp_1_in_variety_f)
+u_Bsp_1_in_variety_f <- Bsp_1_in_variety_f_raw * sigma_Bsp_1_in_variety_f
+sigma_Bsp_2_in_variety_f <- greta::lognormal(0, 1)
+Bsp_2_in_variety_f_raw <- normal(0, 1, dim = n_Bsp_2_in_variety_f)
+u_Bsp_2_in_variety_f <- Bsp_2_in_variety_f_raw * sigma_Bsp_2_in_variety_f
+sigma_Bsp_3_in_variety_f <- greta::lognormal(0, 1)
+Bsp_3_in_variety_f_raw <- normal(0, 1, dim = n_Bsp_3_in_variety_f)
+u_Bsp_3_in_variety_f <- Bsp_3_in_variety_f_raw * sigma_Bsp_3_in_variety_f
+sigma_Bsp_4_in_variety_f <- greta::lognormal(0, 1)
+Bsp_4_in_variety_f_raw <- normal(0, 1, dim = n_Bsp_4_in_variety_f)
+u_Bsp_4_in_variety_f <- Bsp_4_in_variety_f_raw * sigma_Bsp_4_in_variety_f
+sigma_Bsp_5_in_variety_f <- greta::lognormal(0, 1)
+Bsp_5_in_variety_f_raw <- normal(0, 1, dim = n_Bsp_5_in_variety_f)
+u_Bsp_5_in_variety_f <- Bsp_5_in_variety_f_raw * sigma_Bsp_5_in_variety_f
+sigma_Bsp_6_in_variety_f <- greta::lognormal(0, 1)
+Bsp_6_in_variety_f_raw <- normal(0, 1, dim = n_Bsp_6_in_variety_f)
+u_Bsp_6_in_variety_f <- Bsp_6_in_variety_f_raw * sigma_Bsp_6_in_variety_f
+sigma_Bsp_7_in_variety_f <- greta::lognormal(0, 1)
+Bsp_7_in_variety_f_raw <- normal(0, 1, dim = n_Bsp_7_in_variety_f)
+u_Bsp_7_in_variety_f <- Bsp_7_in_variety_f_raw * sigma_Bsp_7_in_variety_f
+# -- Residual ------------------------------------------------
+sigma_e_atg <- greta::lognormal(0, 1)
+# -- Linear predictor ----------------------------------------
+mu_i_atg <- mu_atg + tau_rep[rep_id] + beta_Bsp_1 * as_data(Bsp_1) + beta_Bsp_2 * as_data(Bsp_2) + beta_Bsp_3 * as_data(Bsp_3) + beta_Bsp_4 * as_data(Bsp_4) + beta_Bsp_5 * as_data(Bsp_5) + beta_Bsp_6 * as_data(Bsp_6) + beta_Bsp_7 * as_data(Bsp_7) + u_Bsp_1_in_variety_f[nested_id_Bsp_1_in_variety_f] + u_Bsp_2_in_variety_f[nested_id_Bsp_2_in_variety_f] + u_Bsp_3_in_variety_f[nested_id_Bsp_3_in_variety_f] + u_Bsp_4_in_variety_f[nested_id_Bsp_4_in_variety_f] + u_Bsp_5_in_variety_f[nested_id_Bsp_5_in_variety_f] + u_Bsp_6_in_variety_f[nested_id_Bsp_6_in_variety_f] + u_Bsp_7_in_variety_f[nested_id_Bsp_7_in_variety_f]
+# -- Likelihood ----------------------------------------------
+y_atg_obs <- as_data(y_atg)
+distribution(y_atg_obs) <- normal(mu_i_atg, sigma_e_atg)
+# -- Model and MCMC -----------------------------------------
+atg_model <- greta::model(mu_atg, tau_rep, beta_Bsp_1, beta_Bsp_2, beta_Bsp_3, beta_Bsp_4, beta_Bsp_5, beta_Bsp_6, beta_Bsp_7, sigma_Bsp_1_in_variety_f, sigma_Bsp_2_in_variety_f, sigma_Bsp_3_in_variety_f, sigma_Bsp_4_in_variety_f, sigma_Bsp_5_in_variety_f, sigma_Bsp_6_in_variety_f, sigma_Bsp_7_in_variety_f, sigma_e_atg)
+atg_draws <- greta::mcmc(atg_model, n_samples = 2000, warmup = 1000, chains = 4, verbose = TRUE) 
+------------------------------------------------------------ 
+
+running 4 chains simultaneously on up to 2 CPU cores
+
+    warmup                                           0/1000 | eta:  ?s              warmup ==                                       50/1000 | eta:  1m              warmup ====                                    100/1000 | eta: 44s              warmup ======                                  150/1000 | eta: 30s              warmup ========                                200/1000 | eta: 23s              warmup ==========                              250/1000 | eta: 19s              warmup ===========                             300/1000 | eta: 15s              warmup =============                           350/1000 | eta: 13s              warmup ===============                         400/1000 | eta: 11s              warmup =================                       450/1000 | eta: 10s              warmup ===================                     500/1000 | eta:  8s              warmup =====================                   550/1000 | eta:  7s              warmup =======================                 600/1000 | eta:  6s              warmup =========================               650/1000 | eta:  5s              warmup ===========================             700/1000 | eta:  4s              warmup ============================            750/1000 | eta:  4s              warmup ==============================          800/1000 | eta:  3s              warmup ================================        850/1000 | eta:  2s              warmup ==================================      900/1000 | eta:  1s              warmup ====================================    950/1000 | eta:  1s              warmup ====================================== 1000/1000 | eta:  0s          
+  sampling                                           0/2000 | eta:  ?s            sampling =                                        50/2000 | eta: 20s            sampling ==                                      100/2000 | eta: 18s            sampling ===                                     150/2000 | eta: 16s            sampling ====                                    200/2000 | eta: 16s            sampling =====                                   250/2000 | eta: 16s            sampling ======                                  300/2000 | eta: 15s            sampling =======                                 350/2000 | eta: 15s            sampling ========                                400/2000 | eta: 15s            sampling =========                               450/2000 | eta: 14s            sampling ==========                              500/2000 | eta: 14s            sampling ==========                              550/2000 | eta: 13s            sampling ===========                             600/2000 | eta: 13s            sampling ============                            650/2000 | eta: 13s            sampling =============                           700/2000 | eta: 12s            sampling ==============                          750/2000 | eta: 12s            sampling ===============                         800/2000 | eta: 11s            sampling ================                        850/2000 | eta: 11s            sampling =================                       900/2000 | eta: 10s            sampling ==================                      950/2000 | eta: 10s            sampling ===================                    1000/2000 | eta:  9s            sampling ====================                   1050/2000 | eta:  9s            sampling =====================                  1100/2000 | eta:  8s            sampling ======================                 1150/2000 | eta:  8s            sampling =======================                1200/2000 | eta:  7s            sampling ========================               1250/2000 | eta:  7s            sampling =========================              1300/2000 | eta:  6s            sampling ==========================             1350/2000 | eta:  6s            sampling ===========================            1400/2000 | eta:  5s            sampling ============================           1450/2000 | eta:  5s            sampling ============================           1500/2000 | eta:  4s            sampling =============================          1550/2000 | eta:  4s            sampling ==============================         1600/2000 | eta:  4s            sampling ===============================        1650/2000 | eta:  3s            sampling ================================       1700/2000 | eta:  3s            sampling =================================      1750/2000 | eta:  2s            sampling ==================================     1800/2000 | eta:  2s            sampling ===================================    1850/2000 | eta:  1s            sampling ====================================   1900/2000 | eta:  1s            sampling =====================================  1950/2000 | eta:  0s            sampling ====================================== 2000/2000 | eta:  0s          
+Bayesian mixed model summary  [bayesreml]
+============================================================ 
+  Fixed  : ndvi ~ 1 + rep + Bsp_1 + Bsp_2 + Bsp_3 + Bsp_4 + Bsp_5 + Bsp_6 +      Bsp_7 
+  Random : ~variety_f:Bsp_1 + variety_f:Bsp_2 + variety_f:Bsp_3 + variety_f:Bsp_4 +      variety_f:Bsp_5 + variety_f:Bsp_6 + variety_f:Bsp_7 
+  Family : gaussian / identity 
+  N = 540 , chains = 4 , samples = 2000 
+
+-- Fixed effects (posterior)  --------------------------------- 
+            Estimate Post.SD    2.5%   97.5%
+(Intercept)   0.1975  0.2938 -0.5547  0.6864
+repR1         0.3977  0.3483 -0.0668  1.3851
+repR2         0.3924  0.3484 -0.0729  1.3809
+repR3         0.3956  0.3484 -0.0697  1.3850
+Bsp_1         0.2516  0.1517 -0.0248  0.4336
+Bsp_2         0.2851  0.1689  0.0108  0.6180
+Bsp_3         0.2277  0.2396 -0.2205  0.6194
+Bsp_4         0.1318  0.1474 -0.0726  0.4330
+Bsp_5        -0.1108  0.2370 -0.5433  0.2916
+Bsp_6        -0.1977  0.1878 -0.4839  0.2029
+Bsp_7        -0.2821  0.1578 -0.5686 -0.0948
+
+-- Variance components  -------------------------------------- 
+                 Component Estimate     SD   2.5%  97.5%
+1 sigma_Bsp_1_in_variety_f   0.0149 0.0042 0.0082 0.0241
+2 sigma_Bsp_2_in_variety_f   0.0118 0.0034 0.0065 0.0196
+3 sigma_Bsp_3_in_variety_f   0.0121 0.0049 0.0046 0.0231
+4 sigma_Bsp_4_in_variety_f   0.0130 0.0037 0.0057 0.0206
+5 sigma_Bsp_5_in_variety_f   0.0161 0.0054 0.0071 0.0259
+6 sigma_Bsp_6_in_variety_f   0.0212 0.0068 0.0118 0.0394
+7 sigma_Bsp_7_in_variety_f   0.0418 0.0081 0.0329 0.0626
+8              sigma_e_atg   0.0339 0.0013 0.0315 0.0364
+
+-- Convergence  --------------------------------------------- 
+  Rhat range: 1.138 - 8.067 
+  ESS  range: 11 - 216 
+  Run time  : 37.9 sec
+No spline random effect terms found; skipping fitted curves.
+  Environment 4/4: 'E4'
+Dispatching to 'bayesreml' engine...
+Fitting model using 'bayesreml' engine...
+Running bayesreml MCMC: 2000 samples, 1000 warmup, 4 chains...
+
+-- bayesreml: generated greta code ----------------------------------------
+# -- Fixed effects -------------------------------------------
+mu_atg <- normal(0, 10)
+tau_rep <- normal(0, 10, dim = n_rep)
+beta_Bsp_1 <- normal(0, 2)
+beta_Bsp_2 <- normal(0, 2)
+beta_Bsp_3 <- normal(0, 2)
+beta_Bsp_4 <- normal(0, 2)
+beta_Bsp_5 <- normal(0, 2)
+beta_Bsp_6 <- normal(0, 2)
+beta_Bsp_7 <- normal(0, 2)
+# -- Random effects ------------------------------------------
+sigma_Bsp_1_in_variety_f <- greta::lognormal(0, 1)
+Bsp_1_in_variety_f_raw <- normal(0, 1, dim = n_Bsp_1_in_variety_f)
+u_Bsp_1_in_variety_f <- Bsp_1_in_variety_f_raw * sigma_Bsp_1_in_variety_f
+sigma_Bsp_2_in_variety_f <- greta::lognormal(0, 1)
+Bsp_2_in_variety_f_raw <- normal(0, 1, dim = n_Bsp_2_in_variety_f)
+u_Bsp_2_in_variety_f <- Bsp_2_in_variety_f_raw * sigma_Bsp_2_in_variety_f
+sigma_Bsp_3_in_variety_f <- greta::lognormal(0, 1)
+Bsp_3_in_variety_f_raw <- normal(0, 1, dim = n_Bsp_3_in_variety_f)
+u_Bsp_3_in_variety_f <- Bsp_3_in_variety_f_raw * sigma_Bsp_3_in_variety_f
+sigma_Bsp_4_in_variety_f <- greta::lognormal(0, 1)
+Bsp_4_in_variety_f_raw <- normal(0, 1, dim = n_Bsp_4_in_variety_f)
+u_Bsp_4_in_variety_f <- Bsp_4_in_variety_f_raw * sigma_Bsp_4_in_variety_f
+sigma_Bsp_5_in_variety_f <- greta::lognormal(0, 1)
+Bsp_5_in_variety_f_raw <- normal(0, 1, dim = n_Bsp_5_in_variety_f)
+u_Bsp_5_in_variety_f <- Bsp_5_in_variety_f_raw * sigma_Bsp_5_in_variety_f
+sigma_Bsp_6_in_variety_f <- greta::lognormal(0, 1)
+Bsp_6_in_variety_f_raw <- normal(0, 1, dim = n_Bsp_6_in_variety_f)
+u_Bsp_6_in_variety_f <- Bsp_6_in_variety_f_raw * sigma_Bsp_6_in_variety_f
+sigma_Bsp_7_in_variety_f <- greta::lognormal(0, 1)
+Bsp_7_in_variety_f_raw <- normal(0, 1, dim = n_Bsp_7_in_variety_f)
+u_Bsp_7_in_variety_f <- Bsp_7_in_variety_f_raw * sigma_Bsp_7_in_variety_f
+# -- Residual ------------------------------------------------
+sigma_e_atg <- greta::lognormal(0, 1)
+# -- Linear predictor ----------------------------------------
+mu_i_atg <- mu_atg + tau_rep[rep_id] + beta_Bsp_1 * as_data(Bsp_1) + beta_Bsp_2 * as_data(Bsp_2) + beta_Bsp_3 * as_data(Bsp_3) + beta_Bsp_4 * as_data(Bsp_4) + beta_Bsp_5 * as_data(Bsp_5) + beta_Bsp_6 * as_data(Bsp_6) + beta_Bsp_7 * as_data(Bsp_7) + u_Bsp_1_in_variety_f[nested_id_Bsp_1_in_variety_f] + u_Bsp_2_in_variety_f[nested_id_Bsp_2_in_variety_f] + u_Bsp_3_in_variety_f[nested_id_Bsp_3_in_variety_f] + u_Bsp_4_in_variety_f[nested_id_Bsp_4_in_variety_f] + u_Bsp_5_in_variety_f[nested_id_Bsp_5_in_variety_f] + u_Bsp_6_in_variety_f[nested_id_Bsp_6_in_variety_f] + u_Bsp_7_in_variety_f[nested_id_Bsp_7_in_variety_f]
+# -- Likelihood ----------------------------------------------
+y_atg_obs <- as_data(y_atg)
+distribution(y_atg_obs) <- normal(mu_i_atg, sigma_e_atg)
+# -- Model and MCMC -----------------------------------------
+atg_model <- greta::model(mu_atg, tau_rep, beta_Bsp_1, beta_Bsp_2, beta_Bsp_3, beta_Bsp_4, beta_Bsp_5, beta_Bsp_6, beta_Bsp_7, sigma_Bsp_1_in_variety_f, sigma_Bsp_2_in_variety_f, sigma_Bsp_3_in_variety_f, sigma_Bsp_4_in_variety_f, sigma_Bsp_5_in_variety_f, sigma_Bsp_6_in_variety_f, sigma_Bsp_7_in_variety_f, sigma_e_atg)
+atg_draws <- greta::mcmc(atg_model, n_samples = 2000, warmup = 1000, chains = 4, verbose = TRUE) 
+------------------------------------------------------------ 
+
+running 4 chains simultaneously on up to 2 CPU cores
+
+    warmup                                           0/1000 | eta:  ?s              warmup ==                                       50/1000 | eta:  1m              warmup ====                                    100/1000 | eta: 45s              warmup ======                                  150/1000 | eta: 30s              warmup ========                                200/1000 | eta: 23s              warmup ==========                              250/1000 | eta: 18s              warmup ===========                             300/1000 | eta: 15s              warmup =============                           350/1000 | eta: 13s              warmup ===============                         400/1000 | eta: 11s              warmup =================                       450/1000 | eta: 10s              warmup ===================                     500/1000 | eta:  8s              warmup =====================                   550/1000 | eta:  7s              warmup =======================                 600/1000 | eta:  6s              warmup =========================               650/1000 | eta:  5s              warmup ===========================             700/1000 | eta:  4s              warmup ============================            750/1000 | eta:  4s              warmup ==============================          800/1000 | eta:  3s              warmup ================================        850/1000 | eta:  2s              warmup ==================================      900/1000 | eta:  1s              warmup ====================================    950/1000 | eta:  1s              warmup ====================================== 1000/1000 | eta:  0s          
+  sampling                                           0/2000 | eta:  ?s            sampling =                                        50/2000 | eta: 15s            sampling ==                                      100/2000 | eta: 14s            sampling ===                                     150/2000 | eta: 15s            sampling ====                                    200/2000 | eta: 15s            sampling =====                                   250/2000 | eta: 14s            sampling ======                                  300/2000 | eta: 15s            sampling =======                                 350/2000 | eta: 14s            sampling ========                                400/2000 | eta: 13s            sampling =========                               450/2000 | eta: 13s            sampling ==========                              500/2000 | eta: 13s            sampling ==========                              550/2000 | eta: 12s            sampling ===========                             600/2000 | eta: 12s            sampling ============                            650/2000 | eta: 12s            sampling =============                           700/2000 | eta: 11s            sampling ==============                          750/2000 | eta: 11s            sampling ===============                         800/2000 | eta: 10s            sampling ================                        850/2000 | eta: 10s            sampling =================                       900/2000 | eta: 10s            sampling ==================                      950/2000 | eta:  9s            sampling ===================                    1000/2000 | eta:  9s            sampling ====================                   1050/2000 | eta:  8s            sampling =====================                  1100/2000 | eta:  8s            sampling ======================                 1150/2000 | eta:  8s            sampling =======================                1200/2000 | eta:  7s            sampling ========================               1250/2000 | eta:  7s            sampling =========================              1300/2000 | eta:  6s            sampling ==========================             1350/2000 | eta:  6s            sampling ===========================            1400/2000 | eta:  5s            sampling ============================           1450/2000 | eta:  5s            sampling ============================           1500/2000 | eta:  4s            sampling =============================          1550/2000 | eta:  4s            sampling ==============================         1600/2000 | eta:  3s            sampling ===============================        1650/2000 | eta:  3s            sampling ================================       1700/2000 | eta:  3s            sampling =================================      1750/2000 | eta:  2s            sampling ==================================     1800/2000 | eta:  2s            sampling ===================================    1850/2000 | eta:  1s            sampling ====================================   1900/2000 | eta:  1s            sampling =====================================  1950/2000 | eta:  0s            sampling ====================================== 2000/2000 | eta:  0s          
+Bayesian mixed model summary  [bayesreml]
+============================================================ 
+  Fixed  : ndvi ~ 1 + rep + Bsp_1 + Bsp_2 + Bsp_3 + Bsp_4 + Bsp_5 + Bsp_6 +      Bsp_7 
+  Random : ~variety_f:Bsp_1 + variety_f:Bsp_2 + variety_f:Bsp_3 + variety_f:Bsp_4 +      variety_f:Bsp_5 + variety_f:Bsp_6 + variety_f:Bsp_7 
+  Family : gaussian / identity 
+  N = 540 , chains = 4 , samples = 2000 
+
+-- Fixed effects (posterior)  --------------------------------- 
+            Estimate Post.SD    2.5%  97.5%
+(Intercept)   1.1108  0.4705  0.3806 2.1740
+repR1        -0.1819  0.3513 -0.7765 0.5119
+repR2        -0.1799  0.3512 -0.7732 0.5137
+repR3        -0.1762  0.3512 -0.7697 0.5164
+Bsp_1        -0.1285  0.5020 -1.0279 0.6035
+Bsp_2         0.3053  0.8081 -1.3506 1.5684
+Bsp_3        -0.4469  0.5692 -1.3395 0.6089
+Bsp_4         0.0615  0.7016 -1.3550 1.1503
+Bsp_5        -0.7952  0.5749 -1.6835 0.2752
+Bsp_6        -0.1773  0.7928 -1.7954 1.0959
+Bsp_7        -0.6634  0.4989 -1.5556 0.0676
+
+-- Variance components  -------------------------------------- 
+                 Component Estimate     SD   2.5%  97.5%
+1 sigma_Bsp_1_in_variety_f   0.0131 0.0044 0.0057 0.0228
+2 sigma_Bsp_2_in_variety_f   0.0117 0.0037 0.0058 0.0203
+3 sigma_Bsp_3_in_variety_f   0.0097 0.0037 0.0035 0.0174
+4 sigma_Bsp_4_in_variety_f   0.0111 0.0033 0.0053 0.0182
+5 sigma_Bsp_5_in_variety_f   0.0117 0.0032 0.0060 0.0182
+6 sigma_Bsp_6_in_variety_f   0.0183 0.0049 0.0089 0.0274
+7 sigma_Bsp_7_in_variety_f   0.0261 0.0039 0.0189 0.0342
+8              sigma_e_atg   0.0506 0.0017 0.0475 0.0540
+
+-- Convergence  --------------------------------------------- 
+  Rhat range: 1.038 - 11.561 
+  ESS  range: 10 - 483 
+  Run time  : 36.3 sec
+No spline random effect terms found; skipping fitted curves.
+=== Stage 2: MET model on B-spline coefficients ===
+Dispatching Stage 2 to 'bayesreml' engine...
+Fitting model using 'bayesreml' engine...
+Running bayesreml MCMC: 2000 samples, 1000 warmup, 4 chains...
+
+-- bayesreml: generated greta code ----------------------------------------
+# -- Fixed effects -------------------------------------------
+mu_atg <- normal(0, 10)
+tau_coef_f <- normal(0, 10, dim = n_coef_f)
+# -- Random effects ------------------------------------------
+sigma_variety_in_diag(environment) <- greta::lognormal(0, 1)
+variety_in_diag(environment)_raw <- normal(0, 1, dim = n_variety_in_diag(environment))
+u_variety_in_diag(environment) <- variety_in_diag(environment)_raw * sigma_variety_in_diag(environment)
+# -- Residual ------------------------------------------------
+sigma_e_atg <- greta::lognormal(0, 1)
+# -- Linear predictor ----------------------------------------
+mu_i_atg <- mu_atg + tau_coef_f[coef_f_id] + u_variety_in_diag(environment)[nested_id_variety_in_diag(environment)]
+# -- Likelihood ----------------------------------------------
+y_atg_obs <- as_data(y_atg)
+distribution(y_atg_obs) <- normal(mu_i_atg, sigma_e_atg)
+# -- Model and MCMC -----------------------------------------
+atg_model <- greta::model(mu_atg, tau_coef_f, sigma_variety_in_diag(environment), sigma_e_atg)
+atg_draws <- greta::mcmc(atg_model, n_samples = 2000, warmup = 1000, chains = 4, verbose = TRUE) 
+------------------------------------------------------------ 
+
+Error: bayesreml fitting failed with error:
+  bayesreml evaluation error: <text>:6:29: unexpected input
+5: sigma_variety_in_diag(environment) <- greta::lognormal(0, 1)
+6: variety_in_diag(environment)_
+                               ^ 
+There were 20 warnings (use warnings() to see them)
 
 
  ====================================================================== 
@@ -251,24 +857,24 @@ COMPARISON: ASReml (REML) vs bayesreml (Bayesian)
 ====================================================================== 
 
 --- Model 0: Baseline RCBD for Yield ---
-  sigma_variety^2:  ASReml = 3.5098  |  bayesreml = 1.8862
-  sigma_resid^2:    ASReml = 0.7828  |  bayesreml = NA
-  BLUP correlation: r = 1.0000
+  sigma_variety^2:  ASReml = 3.5098  |  bayesreml SD = 1.8872 (var = 3.5615)
+  sigma_resid^2:    ASReml = 0.7828  |  bayesreml SD = 0.9112 (var = 0.8303)
+  BLUP correlation: r = 0.9999
 
 --- Model 3: Unpenalised Scalar-on-Function ---
   B-spline coefficient comparison:
     basis   ASReml bayesreml     diff
    <char>    <num>     <num>    <num>
-1:     b1 -0.54251   0.38780 -0.93031
-2:     b2  0.42821  -0.14398  0.57218
-3:     b3 -0.33360  -0.01894 -0.31465
-4:     b4  0.03189  -0.16366  0.19555
-5:     b5  0.13077   0.17916 -0.04839
-6:     b6 -0.13083   0.10345 -0.23428
-7:     b7  0.26976  -0.10189  0.37166
-8:     b8 -0.42047  -0.02782 -0.39265
-  Max absolute difference: 0.93031
-  Correlation: -0.5773
+1:     b1 -0.54251  -0.00316 -0.53935
+2:     b2  0.42821  -0.04609  0.47430
+3:     b3 -0.33360  -0.07683 -0.25677
+4:     b4  0.03189  -0.08863  0.12051
+5:     b5  0.13077   0.16483 -0.03406
+6:     b6 -0.13083   0.04230 -0.17313
+7:     b7  0.26976  -0.00185  0.27161
+8:     b8 -0.42047  -0.10723 -0.31324
+  Max absolute difference: 0.53935
+  Correlation: 0.2676
 
 
 ====================================================================== 
@@ -351,7 +957,7 @@ RECONCILIATION: Expected Differences Between REML and Bayesian
      bayesreml for final inference with full uncertainty.
 
 ===== Script complete =====
-Timestamp: 2026-04-04 19:46:13 
+Timestamp: 2026-04-04 20:32:03 
 Session info:
 R version 4.5.2 (2025-10-31)
 Platform: aarch64-apple-darwin20
