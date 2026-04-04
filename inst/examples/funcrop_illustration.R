@@ -523,7 +523,7 @@ cat("\n", strrep("=", 70), "\nMODEL 3: Scalar-on-function -- yield ~ grain-fill 
 
 # Use per-variety mean curves (averaged over blocks) from OLS (Model 1)
 # alpha_hat is plots x basis. Average over blocks to get variety means.
-plot_var_map <- unique(dt[, .(plot_id, variety)])
+plot_var_map <- unique(dt[, c("plot_id", "variety"), with = FALSE])
 alpha_variety <- matrix(NA, nrow = n_var, ncol = n_basis)
 rownames(alpha_variety) <- levels(dt$variety)
 
