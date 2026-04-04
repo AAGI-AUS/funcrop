@@ -546,15 +546,23 @@ fit_fda_met <- function(
   stage2_dt[, coef_f := factor(coef_idx)]
 
   # Build random term based on GxE structure
-  gxe_random_term <- .build_gxe_random_term(
-    gxe_structure   = gxe_structure,
-    environment_col = "environment",
-    group_col       = "variety",
-    fa_k            = fa_k,
-    genomic_matrix  = genomic_matrix,
-    pedigree_matrix = pedigree_matrix,
-    env_levels      = env_levels
-  )
+  # Build GxE random term — bayesreml needs simpler syntax than ASReml
+  # for heterogeneous variance structures
+  if (engine == "bayesreml" && gxe_structure == "diag") {
+    # bayesreml: use simple environment:variety interaction
+    # (each env gets its own variety variance via the interaction)
+    gxe_random_term <- "environment:variety"
+  } else {
+    gxe_random_term <- .build_gxe_random_term(
+      gxe_structure   = gxe_structure,
+      environment_col = "environment",
+      group_col       = "variety",
+      fa_k            = fa_k,
+      genomic_matrix  = genomic_matrix,
+      pedigree_matrix = pedigree_matrix,
+      env_levels      = env_levels
+    )
+  }
 
   fixed_formula  <- stats::as.formula("blup_value ~ coef_f")
   random_formula <- stats::as.formula(paste("~", gxe_random_term))

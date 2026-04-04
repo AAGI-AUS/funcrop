@@ -104,25 +104,23 @@
   on.exit(asreml::asreml.options(old_opts), add = TRUE)
 
   # Execute the ASReml call with error trapping.
-  # Suppress verbose ASReml messages (e.g., "Terms with zero df") by
-  # temporarily redirecting output when not in verbose mode.
+  # Use capture.output to suppress verbose ASReml messages
+  # (e.g., "Terms with zero df") when not in verbose mode.
   verbose_mode <- isTRUE(getOption("funcrop.verbose", default = FALSE))
-  if (!verbose_mode) {
-    sink_con <- textConnection(NULL, "w")
-    sink(sink_con, type = "output")
-    on.exit({ sink(type = "output"); close(sink_con) }, add = TRUE)
-  }
-  fit <- tryCatch(
-    do.call(asreml::asreml, asreml_args),
-    error = function(e) {
-      if (!verbose_mode) { sink(type = "output"); close(sink_con) }
-      stop(
-        "ASReml fitting failed with error:\n  ", conditionMessage(e),
-        call. = FALSE
+  fit <- tryCatch({
+    if (verbose_mode) {
+      do.call(asreml::asreml, asreml_args)
+    } else {
+      utils::capture.output(
+        result <- do.call(asreml::asreml, asreml_args),
+        type = "output"
       )
+      result
     }
-  )
-  if (!verbose_mode) { sink(type = "output"); close(sink_con) }
+  }, error = function(e) {
+    stop("ASReml fitting failed with error:\n  ", conditionMessage(e),
+         call. = FALSE)
+  })
 
   # If start.values were requested, re-fit with user-supplied values
   if (!is.null(model_spec[["start_values"]])) {
