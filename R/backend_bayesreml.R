@@ -70,8 +70,8 @@
     fixed    = formulas[["fixed"]],
     random   = formulas[["random"]],
     rcov     = formulas[["rcov"]],
-    data     = data,
-    nsamples = as.integer(n_samples),
+    data     = if (data.table::is.data.table(data)) data.table::copy(data) else data,
+    n_samples = as.integer(n_samples),
     warmup   = as.integer(warmup),
     chains   = as.integer(chains)
   )

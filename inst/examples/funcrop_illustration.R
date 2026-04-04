@@ -134,9 +134,9 @@ if (HAS_BAYESREML) {
     fixed     = yield_plot ~ block,
     random    = ~ variety,
     data      = copy(yield_plot_dt),
-    n_samples = 2000,
-    warmup    = 1000,
-    chains    = 4,
+    n_samples = 500,
+    warmup    = 250,
+    chains    = 2,
     verbose   = FALSE,
     mcmc_verbose = FALSE
   )
@@ -409,9 +409,9 @@ if (HAS_BAYESREML) {
             paste0("variety:B", 1:n_basis, collapse = " + "))
     ),
     data      = copy(dt),  # copy() prevents bayesreml modifying dt by reference
-    n_samples = 2000,
-    warmup    = 1000,
-    chains    = 4,
+    n_samples = 500,
+    warmup    = 250,
+    chains    = 2,
     verbose   = FALSE,
     mcmc_verbose = FALSE
   )
@@ -465,7 +465,9 @@ if (HAS_ASREML) {
     # Rename to avoid conflict with base::time
     setnames(show_dt, "time", "t_val")
     setnames(mean_dt, "time", "t_val")
-    obs_plot_dt <- dt[variety %in% show_vars, .(t_val = time, grain_weight, variety)]
+    obs_plot_dt <- dt_clean_copy[as.character(dt_clean_copy$variety) %in% show_vars,
+                                 .(t_val = as.numeric(time), grain_weight,
+                                   variety = as.character(variety))]
 
     p2 <- ggplot(show_dt, aes(x = t_val, y = fitted, colour = variety)) +
       geom_line(linewidth = 0.8) +
@@ -640,9 +642,9 @@ if (HAS_BAYESREML) {
       paste("yield ~ 1 +", paste0("C", 1:n_basis, collapse = " + "))
     ),
     data      = copy(reg_dt),
-    n_samples = 3000,
-    warmup    = 1500,
-    chains    = 4,
+    n_samples = 500,
+    warmup    = 250,
+    chains    = 2,
     verbose   = FALSE,
     mcmc_verbose = FALSE
   )
@@ -818,9 +820,9 @@ if (HAS_BAYESREML) {
             paste0("Crange", 1:ncol(C_range), collapse = " + "))
     ),
     data      = copy(reg_dt),
-    n_samples = 3000,
-    warmup    = 1500,
-    chains    = 4,
+    n_samples = 500,
+    warmup    = 250,
+    chains    = 2,
     verbose   = FALSE,
     mcmc_verbose = FALSE
   )
@@ -1094,16 +1096,13 @@ if (!is.null(results$m0_asr) && !is.null(results$m0_bay)) {
   asr_sige <- results$m0_asr$vc["units!R", "component"]
   bay_vc   <- results$m0_bay$vc
 
-  cat(sprintf("  sigma_variety^2:  ASReml = %.4f  |  bayesreml = %s\n",
-              asr_sigv,
-              ifelse(is.data.frame(bay_vc),
-                     sprintf("%.4f", bay_vc$estimate[grep("variety", bay_vc$component)]),
-                     "N/A")))
-  cat(sprintf("  sigma_resid^2:    ASReml = %.4f  |  bayesreml = %s\n",
-              asr_sige,
-              ifelse(is.data.frame(bay_vc),
-                     sprintf("%.4f", bay_vc$estimate[grep("units|resid", bay_vc$component)]),
-                     "N/A")))
+  # bayesreml reports SDs (not variances): square for comparison
+  bay_sigv_sd <- bay_vc$estimate[grep("variety", bay_vc$component)][1]
+  bay_sige_sd <- bay_vc$estimate[grep("sigma_e", bay_vc$component)][1]
+  cat(sprintf("  sigma_variety^2:  ASReml = %.4f  |  bayesreml SD = %.4f (var = %.4f)\n",
+              asr_sigv, bay_sigv_sd, bay_sigv_sd^2))
+  cat(sprintf("  sigma_resid^2:    ASReml = %.4f  |  bayesreml SD = %.4f (var = %.4f)\n",
+              asr_sige, bay_sige_sd, bay_sige_sd^2))
 
   # BLUP comparison
   asr_blups <- results$m0_asr$blups

@@ -374,22 +374,17 @@ fit_functional_profiles <- function(
     }
   }
 
-  # -- Build engine-specific model spec --
-  spline_str <- switch(
-    engine,
-    asreml = .asreml_build_spline_str(
-      basis           = basis$B,
-      variety_levels  = variety_levels,
-      var_structure   = "penalised",
-      penalty_matrix  = basis$P
-    ),
-    bayesreml = .bayesreml_build_spline_str(
-      basis           = basis$B,
-      variety_levels  = variety_levels,
-      var_structure   = "penalised",
-      penalty_matrix  = basis$P
-    )
-  )
+  # -- Build model using direct B-spline columns --
+  # This approach adds B-spline basis columns (B1, B2, ...) directly to the
+
+  # data and uses variety:B1 + variety:B2 + ... as random terms.
+  # This is more portable than str() syntax across both backends.
+
+  # Add B-spline basis columns to the data
+  B_col_names <- paste0("Bsp_", seq_len(n_basis))
+  for (k in seq_len(n_basis)) {
+    data.table::set(model_dt, j = B_col_names[k], value = B_obs[, k])
+  }
 
   # Fixed effects formula
   fixed_rhs <- "1"
@@ -400,18 +395,13 @@ fit_functional_profiles <- function(
     }
     fixed_rhs <- paste0(fixed_rhs, " + ", block_col)
   }
-  # Include fixed null-space spline terms (polynomial part)
-  # Attach X_obs columns to the data
-  null_dim <- spline_decomp$null_dim
-  for (k in seq_len(null_dim)) {
-    col_name <- paste0("Xnull_", k)
-    data.table::set(model_dt, j = col_name, value = X_obs[, k])
-    fixed_rhs <- paste0(fixed_rhs, " + ", col_name)
-  }
+  # Add B-spline columns as fixed (population mean curve)
+  fixed_rhs <- paste0(fixed_rhs, " + ",
+                       paste(B_col_names, collapse = " + "))
   fixed_formula <- stats::as.formula(paste(value_col, "~", fixed_rhs))
 
-  # Random effects formula
-  random_terms <- spline_str$formula_term
+  # Random effects: variety-specific deviations for each B-spline column
+  random_terms <- paste0("variety_f:", B_col_names, collapse = " + ")
 
   # Spatial term
   spatial_term <- NULL
@@ -450,14 +440,11 @@ fit_functional_profiles <- function(
   random_formula <- stats::as.formula(paste("~", random_terms))
 
   # Assemble model_spec
-  known_mats <- spline_str$known_matrices
-  known_mats[["Z_variety_spline"]] <- as.matrix(Z_full)
-
   model_spec <- list(
     fixed           = fixed_formula,
     random          = random_formula,
     rcov            = rcov_formula,
-    known_matrices  = known_mats
+    known_matrices  = list()
   )
 
   # ===========================================================================
