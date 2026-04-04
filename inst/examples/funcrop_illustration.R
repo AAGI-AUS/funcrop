@@ -620,13 +620,9 @@ if (HAS_ASREML) {
   # Model fit
   cat("Log-likelihood:", m3_asr$loglik, "\n")
 
-  # Predictions
-  pred3_asr <- predict(m3_asr, classify = "variety")
-  if (!is.null(pred3_asr$pvals)) {
-    pred3_dt <- as.data.table(pred3_asr$pvals)
-    cat("\nPredicted yields (top 5):\n")
-    print(head(pred3_dt[order(-predicted.value)], 5))
-  }
+  # Fitted values (no variety classify -- pure regression model)
+  fitted_m3 <- fitted(m3_asr)
+  cat("Fitted yield RMSE:", round(sqrt(mean((reg_dt$yield - fitted_m3)^2)), 3), "\n")
 
   results$m3_asr <- list(
     beta_coef = b_hat_asr,
