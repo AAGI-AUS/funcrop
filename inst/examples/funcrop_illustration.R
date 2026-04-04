@@ -521,9 +521,23 @@ cat("\n", strrep("=", 70), "\nMODEL 3: Scalar-on-function -- yield ~ grain-fill 
 
 # ---- 3a. Compute functional covariate matrix ----
 
-# Use per-variety mean curves (averaged over blocks) from OLS (Model 1)
-# alpha_hat is plots x basis. Average over blocks to get variety means.
-# Build plot-to-variety mapping from a fresh copy to avoid scope issues
+# Recompute alpha_hat fresh (dt may have been modified by M2 backends)
+cat("Recomputing per-plot OLS curves for M3...\n")
+B_all_m3 <- bspline_basis(dt[["time"]], n_knots = 4, degree = 3,
+                            boundary = basis$boundary)$B
+plots_m3 <- unique(as.character(dt[["plot_id"]]))
+alpha_hat <- matrix(NA, nrow = length(plots_m3), ncol = ncol(B_all_m3))
+rownames(alpha_hat) <- plots_m3
+
+for (p in seq_along(plots_m3)) {
+  idx <- which(as.character(dt[["plot_id"]]) == plots_m3[p])
+  y_p <- dt[["grain_weight"]][idx]
+  B_p <- B_all_m3[idx, ]
+  alpha_hat[p, ] <- solve(crossprod(B_p), crossprod(B_p, y_p))
+}
+cat("alpha_hat NAs:", sum(is.na(alpha_hat)), "of", length(alpha_hat), "\n")
+
+# Build plot-to-variety mapping
 plot_var_map <- unique(data.table(plot_id = as.character(dt[["plot_id"]]),
                                    variety = as.character(dt[["variety"]])))
 alpha_variety <- matrix(NA, nrow = n_var, ncol = n_basis)
