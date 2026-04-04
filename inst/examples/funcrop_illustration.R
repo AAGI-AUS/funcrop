@@ -46,8 +46,8 @@ cat("Time points:", sort(unique(dt$time)), "\n")
 cat("Grid: rows 1-", max(dt$row), " x cols 1-", max(dt$col), "\n\n")
 
 # Save factor levels before any backend modifies dt by reference
-VARIETY_LEVELS <- VARIETY_LEVELS
-N_VAR <- nVARIETY_LEVELS
+VARIETY_LEVELS <- levels(dt$variety)
+N_VAR <- length(VARIETY_LEVELS)
 
 # Yield in sim_grain_fill is per-variety (identical for all plots of a variety).
 # Add plot-level noise so RCBD models are estimable.
