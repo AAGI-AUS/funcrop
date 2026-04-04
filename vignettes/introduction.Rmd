@@ -1,0 +1,115 @@
+---
+title: "Introduction to funcrop"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction to funcrop}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 7,
+  fig.height = 5
+)
+```
+
+## Overview
+
+**funcrop** provides Functional Data Analysis (FDA) methods for crop variety
+trials, integrating B-spline basis functions with linear mixed models. It
+supports a dual-backend architecture:
+
+- **ASReml-R** (REML estimation) -- fast, production-proven
+- **bayesreml** (Bayesian MCMC via greta) -- full posterior inference
+
+The package handles:
+
+1. **Scalar-on-function regression** -- relating yield to grain-fill curves
+2. **Two-dimensional functional traits** -- time x depth, time x wavelength
+3. **Multi-environment trials** with GxE interaction on functional traits
+4. **Genomic/pedigree integration** for prediction
+
+## Quick Start: B-Spline Basis Construction
+
+The core building block is the B-spline basis:
+
+```{r basis}
+library(funcrop)
+library(data.table)
+
+# Simulated grain-fill time points
+times <- c(10, 15, 20, 25, 30, 35, 40, 45)
+
+# Construct B-spline basis with 4 internal knots, cubic, order-2 penalty
+basis <- bspline_basis(times, n_knots = 4, degree = 3, penalty_order = 2)
+basis
+```
+
+The basis matrix `B` has `r nrow(basis$B)` rows (time points) and
+`r basis$n_basis` columns (basis functions). The penalty matrix `P`
+enforces smoothness.
+
+```{r plot-basis, fig.cap = "B-spline basis functions evaluated at grain-fill time points."}
+plot(basis)
+```
+
+## Mixed Model Reparameterisation
+
+The key insight linking P-splines to mixed models: decompose the basis into
+a **fixed** (null space) and **random** (range space) component.
+
+```{r zspline}
+mm <- make_Zspline(basis, constraint = "decompose")
+cat("Fixed (polynomial) columns:", ncol(mm$X), "\n")
+cat("Random (wiggly) columns:   ", ncol(mm$Z), "\n")
+```
+
+This means a penalised spline can be fitted as a standard mixed model where
+the smoothing parameter is estimated as a variance ratio via REML or
+Bayesian posterior.
+
+## Simulated Data
+
+funcrop ships with two simulated datasets:
+
+```{r data}
+data(sim_grain_fill)
+cat("Grain-fill trial:", nrow(sim_grain_fill), "rows\n")
+cat("  Varieties:", uniqueN(sim_grain_fill$variety), "\n")
+cat("  Blocks:", uniqueN(sim_grain_fill$block), "\n")
+cat("  Time points:", sort(unique(sim_grain_fill$time)), "\n")
+
+data(sim_met_fda)
+cat("\nMET trial:", nrow(sim_met_fda), "rows\n")
+cat("  Varieties:", uniqueN(sim_met_fda$variety), "\n")
+cat("  Environments:", uniqueN(sim_met_fda$environment), "\n")
+```
+
+## Available Engines
+
+```{r engines}
+funcrop_engines()
+```
+
+## Genomic Relationship Matrices
+
+funcrop includes utilities for constructing relationship matrices:
+
+```{r grm}
+# Small example: 10 varieties, 50 markers
+set.seed(123)
+markers <- matrix(sample(0:2, 500, replace = TRUE), nrow = 10)
+rownames(markers) <- paste0("V", 1:10)
+
+G <- make_genomic_matrix(markers, method = "vanraden1")
+cat("GRM dimensions:", nrow(G), "x", ncol(G), "\n")
+cat("Mean diagonal:", round(mean(diag(G)), 3), "\n")
+```
+
+## Next Steps
+
+See the **Grain-Fill Case Study** vignette for a complete worked example
+using `fit_functional_profiles()` and `scalar_on_function()`.
