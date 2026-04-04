@@ -386,7 +386,9 @@ scalar_on_function <- function(
 
   # Add C matrix columns as covariates
   n_c_cols <- ncol(C)
-  c_names <- paste0("Cfn", seq_len(n_c_cols))  # avoid underscore (ASReml v4.2 quirk)
+  # Column names: use letters to avoid ASReml parsing digits as indices
+  c_letters <- c(letters, paste0(rep(letters, each = 26), letters))
+  c_names <- paste0("fc", c_letters[seq_len(n_c_cols)])
   for (k in seq_len(n_c_cols)) {
     data.table::set(model_dt, j = c_names[k], value = C[, k])
   }
@@ -468,13 +470,15 @@ scalar_on_function <- function(
     }
 
     # Add null-space fixed columns
-    fixed_c_names <- paste0("CfNull", seq_len(ncol(C_fixed)))
+    fn_letters <- c(letters, paste0(rep(letters, each = 26), letters))
+    fixed_c_names <- paste0("fn", fn_letters[seq_len(ncol(C_fixed))])
     for (k in seq_len(ncol(C_fixed))) {
       data.table::set(model_dt, j = fixed_c_names[k], value = C_fixed[, k])
     }
 
     # Add range-space random columns
-    rand_c_names <- paste0("CrRng", seq_len(ncol(C_random)))
+    rn_letters <- c(letters, paste0(rep(letters, each = 26), letters))
+    rand_c_names <- paste0("rn", rn_letters[seq_len(ncol(C_random))])
     for (k in seq_len(ncol(C_random))) {
       data.table::set(model_dt, j = rand_c_names[k], value = C_random[, k])
     }
