@@ -12,5 +12,9 @@
 #'   as.formula na.omit complete.cases
 #' @importFrom methods is new
 #' @importFrom graphics par plot lines abline legend
+#' @importFrom data.table is.data.table uniqueN setattr
 #' @importFrom grDevices colorRampPalette
 NULL
+
+# Required for data.table := and [.data.table to work inside package code
+.datatable.aware <- TRUE
