@@ -531,19 +531,24 @@ scalar_on_function <- function(
     .msg(sprintf("Data columns: %s", paste(names(fit_df), collapse = ", ")))
     .msg(sprintf("NAs per column: %s",
                  paste(colSums(is.na(fit_df)), collapse = ", ")))
-    # Allow ASReml to handle singularities in the AI matrix
-    old_opts <- asreml::asreml.options(ai.sing = TRUE)
-    on.exit(asreml::asreml.options(old_opts), add = TRUE)
-    raw_model <- asreml::asreml(
-      fixed = model_spec[["fixed"]],
-      data  = fit_df,
-      trace = FALSE
-    )
+    # ASReml with fixed-effects-only may hit singularities when n ~ p.
+    # Use ai.sing option and fall back to lm() if ASReml fails.
+    raw_model <- tryCatch({
+      old_opts <- asreml::asreml.options(ai.sing = TRUE)
+      on.exit(asreml::asreml.options(old_opts), add = TRUE)
+      asreml::asreml(fixed = model_spec[["fixed"]],
+                     data = fit_df, trace = FALSE)
+    }, error = function(e) {
+      .msg("ASReml failed (", e$message,
+           "). Falling back to stats::lm() for fixed-effects-only model.")
+      stats::lm(model_spec[["fixed"]], data = fit_df)
+    })
     raw_result <- list(
       model     = raw_model,
-      converged = raw_model$converge,
-      log_lik   = raw_model$loglik,
-      n_iter    = raw_model$trace$iter[length(raw_model$trace$iter)]
+      converged = if (inherits(raw_model, "asreml")) raw_model$converge else TRUE,
+      log_lik   = if (inherits(raw_model, "asreml")) raw_model$loglik
+                  else as.numeric(logLik(raw_model)),
+      n_iter    = 1L
     )
   } else {
     raw_result <- .dispatch_fit(engine = engine, model_spec = model_spec,
