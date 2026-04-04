@@ -103,16 +103,26 @@
   old_opts <- asreml::asreml.options(ai.sing = TRUE)
   on.exit(asreml::asreml.options(old_opts), add = TRUE)
 
-  # Execute the ASReml call with error trapping
+  # Execute the ASReml call with error trapping.
+  # Suppress verbose ASReml messages (e.g., "Terms with zero df") by
+  # temporarily redirecting output when not in verbose mode.
+  verbose_mode <- isTRUE(getOption("funcrop.verbose", default = FALSE))
+  if (!verbose_mode) {
+    sink_con <- textConnection(NULL, "w")
+    sink(sink_con, type = "output")
+    on.exit({ sink(type = "output"); close(sink_con) }, add = TRUE)
+  }
   fit <- tryCatch(
     do.call(asreml::asreml, asreml_args),
     error = function(e) {
+      if (!verbose_mode) { sink(type = "output"); close(sink_con) }
       stop(
         "ASReml fitting failed with error:\n  ", conditionMessage(e),
         call. = FALSE
       )
     }
   )
+  if (!verbose_mode) { sink(type = "output"); close(sink_con) }
 
   # If start.values were requested, re-fit with user-supplied values
   if (!is.null(model_spec[["start_values"]])) {
@@ -222,50 +232,47 @@
     stop("ASReml-R is required for BLUP extraction.", call. = FALSE)
   }
 
+  # Use coef()$random directly -- more reliable than predict(classify=...)
+  # because predict fails for interaction terms with continuous covariates
+  # (e.g., variety_f:Bsp_1 where Bsp_1 is numeric).
+  co_random <- tryCatch(coef(asreml_model)$random,
+                         error = function(e) NULL)
+
+  if (is.null(co_random) || nrow(co_random) == 0L) {
+    return(data.table::data.table(term = character(0),
+                                   level = character(0),
+                                   blup = numeric(0),
+                                   se = numeric(0)))
+  }
+
+  rn <- rownames(co_random)
   results <- vector("list", length(terms))
 
   for (i in seq_along(terms)) {
     tm <- terms[i]
-
-    pred <- tryCatch(
-      asreml::predict.asreml(
-        asreml_model,
-        classify = tm,
-        present  = all.vars(asreml_model$call$random)
-      ),
-      error = function(e) {
-        warning(
-          sprintf("Failed to extract BLUPs for term '%s': %s", tm,
-                  conditionMessage(e)),
-          call. = FALSE
-        )
-        NULL
-      }
-    )
-
-    if (is.null(pred)) next
-
-    # ASReml predict returns a list with $pvals (predictions data.frame)
-    pvals <- pred$pvals
-
-    # Construct data.table from predictions
-    # The classify columns form the 'level' identifier
-    classify_cols <- setdiff(names(pvals), c("predicted.value", "std.error",
-                                              "status"))
-    if (length(classify_cols) == 1L) {
-      level_vec <- as.character(pvals[[classify_cols]])
+    # Match rownames that belong to this term
+    # For "variety_f:Bsp_1", rownames are "variety_f_V01:Bsp_1", etc.
+    # Match by checking the term pattern in the rowname
+    # Split term by ":" and match each part
+    tm_parts <- strsplit(tm, ":", fixed = TRUE)[[1]]
+    if (length(tm_parts) == 1L) {
+      idx <- grep(paste0("^", tm, "_"), rn)
+      if (length(idx) == 0L) idx <- grep(tm, rn, fixed = TRUE)
     } else {
-      # Multiple classify columns -- paste together
-      level_vec <- do.call(
-        paste, c(lapply(classify_cols, function(cc) pvals[[cc]]), sep = ":")
-      )
+      # Interaction term: match rownames containing all parts
+      idx <- seq_along(rn)
+      for (part in tm_parts) {
+        idx <- idx[grepl(part, rn[idx], fixed = TRUE)]
+      }
     }
+
+    if (length(idx) == 0L) next
 
     results[[i]] <- data.table::data.table(
       term  = tm,
-      level = level_vec,
-      blup  = pvals[["predicted.value"]],
-      se    = pvals[["std.error"]]
+      level = rn[idx],
+      blup  = co_random[idx, 1],
+      se    = NA_real_  # coef() does not provide SEs directly
     )
   }
 

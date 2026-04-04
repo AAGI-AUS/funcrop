@@ -958,18 +958,7 @@ fit_fda_met <- function(
     fa1 = paste0("fa(", environment_col, ", 1)"),
     fa2 = paste0("fa(", environment_col, ", 2)"),
     us  = paste0("us(", environment_col, ")"),
-    diag = {
-      if (!is.null(env_levels) && length(env_levels) > 0L) {
-        # Expand to at(env, "E1"):var + at(env, "E2"):var + ...
-        at_terms <- paste0(
-          "at(", environment_col, ", \"", env_levels, "\"):",
-          var_term
-        )
-        return(paste(at_terms, collapse = " + "))
-      } else {
-        paste0("diag(", environment_col, ")")
-      }
-    },
+    diag = paste0("idh(", environment_col, ")"),
     compound_symmetry = paste0("corh(", environment_col, ")"),
     stop("Unknown gxe_structure: ", gxe_structure, call. = FALSE)
   )

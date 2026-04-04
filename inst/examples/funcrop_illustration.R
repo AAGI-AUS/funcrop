@@ -918,13 +918,15 @@ for (eng in c("asreml", "bayesreml")) {
 
   tryCatch({
     # Stage 1: Variety-specific functional profiles
+    # Use n_knots=2 (not 4) to reduce random effects from 160 to 80,
+    # improving bayesreml convergence (Rhat < 1.1 instead of > 3)
     fit_s1 <- fit_functional_profiles(
       data       = dt_clean,
       time_col   = "time",
       value_col  = "grain_weight",
       id_col     = "plot_id",
       group_col  = "variety",
-      n_knots    = 4,
+      n_knots    = 2,
       degree     = 3,
       spatial    = "none",
       engine     = eng
