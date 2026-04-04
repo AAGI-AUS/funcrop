@@ -136,20 +136,40 @@ if (HAS_BAYESREML) {
   cat("\nVariance components (posterior):\n")
   print(m0_bay$extras$variance_comps)
 
-  # Variety BLUPs (posterior means)
-  blup0_bay <- m0_bay$extras$blups
-  if (is.list(blup0_bay)) {
-    blup0_bay_dt <- data.table(
-      variety = names(blup0_bay$variety),
-      predicted.value = unname(blup0_bay$variety)
-    )
+  # IMPORTANT: bayesreml uses non-centred parameterisation internally:
+  #   u_variety = variety_raw * sigma_variety
+  # Only hyperparameters (sigma_variety, sigma_e) and fixed effects are in
+  # the MCMC draws. Variety random effects (BLUPs) must be computed post-hoc
+  # via greta::calculate() on the u_variety greta array.
+  blup0_bay <- tryCatch({
+    # Attempt to use greta::calculate for posterior variety effects
+    if (!is.null(m0_bay$greta$greta_arrays$u_variety) &&
+        !is.null(m0_bay$greta$draws)) {
+      u_post <- greta::calculate(m0_bay$greta$greta_arrays$u_variety,
+                                  values = m0_bay$greta$draws)
+      u_means <- colMeans(do.call(rbind, u_post))
+      data.table(variety = levels(yield_plot_dt$variety),
+                 predicted.value = as.numeric(u_means))
+    } else {
+      cat("  (Variety BLUPs not available in draws -- need greta::calculate)\n")
+      NULL
+    }
+  }, error = function(e) {
+    cat("  (Could not extract BLUPs:", e$message, ")\n")
+    NULL
+  })
+
+  if (!is.null(blup0_bay) && nrow(blup0_bay) > 0) {
+    cat("\nTop 5 varieties (posterior means):\n")
+    print(head(blup0_bay[order(-predicted.value)], 5))
+  } else {
+    cat("\n  Variety BLUPs: not directly in MCMC draws (non-centred param).\n")
+    cat("  Use greta::calculate(model$greta$greta_arrays$u_variety, values = draws)\n")
   }
-  cat("\nTop 5 varieties (posterior means):\n")
-  print(head(blup0_bay_dt[order(-predicted.value)], 5))
 
   results$m0_bay <- list(
-    vc    = m0_bay$extras$variance_comps,
-    blups = blup0_bay_dt,
+    vc      = m0_bay$extras$variance_comps,
+    blups   = blup0_bay,
     summary = m0_bay$extras$summary
   )
 }
