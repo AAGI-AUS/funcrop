@@ -517,22 +517,29 @@ scalar_on_function <- function(
 
   .msg("Fitting scalar-on-function model via '", engine, "' engine...")
 
-  # For ASReml: convert to data.frame AND set formula environment to a
-  # local env containing the data columns (ASReml formula parser is strict)
-  if (engine == "asreml") {
-    fit_data <- as.data.frame(model_dt)
-    # Set formula environments to find data columns
-    data_env <- list2env(fit_data, parent = globalenv())
-    environment(model_spec[["fixed"]]) <- data_env
-    if (!is.null(model_spec[["random"]])) {
-      environment(model_spec[["random"]]) <- data_env
+  # For ASReml: call directly to avoid formula environment issues.
+  # The .dispatch_fit() / .asreml_fit() path has formula parsing issues
+  # when all covariates are fixed (no random effects).
+  if (engine == "asreml" && is.null(model_spec[["random"]])) {
+    if (!requireNamespace("asreml", quietly = TRUE)) {
+      stop("ASReml is not installed.", call. = FALSE)
     }
+    fit_df <- as.data.frame(model_dt)
+    raw_model <- asreml::asreml(
+      fixed = model_spec[["fixed"]],
+      data  = fit_df,
+      trace = FALSE
+    )
+    raw_result <- list(
+      model     = raw_model,
+      converged = raw_model$converge,
+      log_lik   = raw_model$loglik,
+      n_iter    = raw_model$trace$iter[length(raw_model$trace$iter)]
+    )
   } else {
-    fit_data <- model_dt
+    raw_result <- .dispatch_fit(engine = engine, model_spec = model_spec,
+                                data = model_dt, ...)
   }
-
-  raw_result <- .dispatch_fit(engine = engine, model_spec = model_spec,
-                              data = fit_data, ...)
 
   # ===========================================================================
   # Extract results
