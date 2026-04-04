@@ -45,6 +45,10 @@ cat("Rows:", nrow(dt), " | Varieties:", uniqueN(dt$variety),
 cat("Time points:", sort(unique(dt$time)), "\n")
 cat("Grid: rows 1-", max(dt$row), " x cols 1-", max(dt$col), "\n\n")
 
+# Save factor levels before any backend modifies dt by reference
+VARIETY_LEVELS <- VARIETY_LEVELS
+N_VAR <- nVARIETY_LEVELS
+
 # Yield in sim_grain_fill is per-variety (identical for all plots of a variety).
 # Add plot-level noise so RCBD models are estimable.
 set.seed(42)
@@ -249,7 +253,7 @@ cat("Fitted", ncol(fitted_curves), "plot-level curves\n")
 
 # ---- 1c. Visualise a subset ----
 # Pick 4 varieties, 1 block each
-show_vars <- levels(dt$variety)[c(1, 5, 10, 15)]
+show_vars <- VARIETY_LEVELS[c(1, 5, 10, 15)]
 show_plots <- dt[variety %in% show_vars & block == "B1",
                   unique(as.character(plot_id))]
 
@@ -328,7 +332,7 @@ B_obs_full <- bspline_basis(dt$time, n_knots = 4, degree = 3,
 
 # Create variety:basis interaction columns
 # Each variety gets its own set of B-spline coefficients
-n_var <- nlevels(dt$variety)
+n_var <- N_VAR
 cat("Constructing Z matrix:", n_var, "varieties x", n_basis, "basis =",
     n_var * n_basis, "random effects\n")
 
@@ -438,7 +442,7 @@ if (HAS_ASREML) {
   rand_names <- rownames(rand_mat)
   var_curves <- data.table()
 
-  for (v in levels(dt$variety)) {
+  for (v in VARIETY_LEVELS) {
     v_idx <- grep(paste0("variety_", v, ":B"), rand_names)
     if (length(v_idx) == n_basis) {
       u_v <- rand_mat[v_idx, 1]
@@ -521,29 +525,34 @@ cat("\n", strrep("=", 70), "\nMODEL 3: Scalar-on-function -- yield ~ grain-fill 
 
 # ---- 3a. Compute functional covariate matrix ----
 
-# Recompute alpha_hat fresh (dt may have been modified by M2 backends)
+# Recompute alpha_hat fresh (dt may have been modified by M2 backends --
+# bayesreml converts columns to factor/character by reference)
 cat("Recomputing per-plot OLS curves for M3...\n")
-B_all_m3 <- bspline_basis(dt[["time"]], n_knots = 4, degree = 3,
+time_num <- as.numeric(as.character(dt[["time"]]))  # force numeric
+gw_num   <- as.numeric(dt[["grain_weight"]])
+pid_chr  <- as.character(dt[["plot_id"]])
+var_chr  <- as.character(dt[["variety"]])
+
+B_all_m3 <- bspline_basis(time_num, n_knots = 4, degree = 3,
                             boundary = basis$boundary)$B
-plots_m3 <- unique(as.character(dt[["plot_id"]]))
+plots_m3 <- unique(pid_chr)
 alpha_hat <- matrix(NA, nrow = length(plots_m3), ncol = ncol(B_all_m3))
 rownames(alpha_hat) <- plots_m3
 
 for (p in seq_along(plots_m3)) {
-  idx <- which(as.character(dt[["plot_id"]]) == plots_m3[p])
-  y_p <- dt[["grain_weight"]][idx]
+  idx <- which(pid_chr == plots_m3[p])
+  y_p <- gw_num[idx]
   B_p <- B_all_m3[idx, ]
   alpha_hat[p, ] <- solve(crossprod(B_p), crossprod(B_p, y_p))
 }
 cat("alpha_hat NAs:", sum(is.na(alpha_hat)), "of", length(alpha_hat), "\n")
 
-# Build plot-to-variety mapping
-plot_var_map <- unique(data.table(plot_id = as.character(dt[["plot_id"]]),
-                                   variety = as.character(dt[["variety"]])))
+# Build plot-to-variety mapping from pre-extracted character vectors
+plot_var_map <- unique(data.table(plot_id = pid_chr, variety = var_chr))
 alpha_variety <- matrix(NA, nrow = n_var, ncol = n_basis)
-rownames(alpha_variety) <- levels(dt$variety)
+rownames(alpha_variety) <- VARIETY_LEVELS
 
-for (v in levels(dt$variety)) {
+for (v in VARIETY_LEVELS) {
   v_plots <- plot_var_map[variety == v, as.character(plot_id)]
   alpha_variety[v, ] <- colMeans(alpha_hat[v_plots, , drop = FALSE])
 }
@@ -566,7 +575,7 @@ C_mat <- alpha_variety %*% as.matrix(J)
 cat("Functional covariate C:", nrow(C_mat), "x", ncol(C_mat), "\n")
 
 # Build regression data.frame -- ensure variety order matches alpha_variety rows
-var_levels <- rownames(alpha_variety)  # same as levels(dt$variety)
+var_levels <- rownames(alpha_variety)  # same as VARIETY_LEVELS
 reg_dt <- data.table(variety = var_levels)
 # Match yield to varieties
 reg_dt[, yield := yield_dt[match(var_levels, yield_dt$variety), yield]]
