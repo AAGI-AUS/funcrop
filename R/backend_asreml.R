@@ -99,6 +99,10 @@
     asreml_args <- utils::modifyList(asreml_args, control)
   }
 
+  # Allow ASReml to handle singularities (common in FDA models with many basis functions)
+  old_opts <- asreml::asreml.options(ai.sing = TRUE)
+  on.exit(asreml::asreml.options(old_opts), add = TRUE)
+
   # Execute the ASReml call with error trapping
   fit <- tryCatch(
     do.call(asreml::asreml, asreml_args),
