@@ -647,16 +647,24 @@ if (HAS_BAYESREML) {
     mcmc_verbose = FALSE
   )
 
-  # Extract beta(t)
+  # Extract beta(t) -- bayesreml summary is an mcmc summary object
   bay_summary <- m3_bay$extras$summary
-  b_hat_bay <- bay_summary[grep("^beta_C", bay_summary$param), "mean"]
-  if (length(b_hat_bay) == n_basis) {
-    beta_t_bay <- as.numeric(B_fine %*% b_hat_bay)
+  # The summary$statistics matrix has rownames like "beta_C1", "beta_C2", ...
+  stats_mat <- bay_summary$statistics
+  c_rows <- grep("^beta_C[0-9]", rownames(stats_mat))
+  if (length(c_rows) == n_basis) {
+    b_hat_bay <- stats_mat[c_rows, "Mean"]
   } else {
-    # Try extracting from fixed coefficients
-    b_hat_bay <- coef(m3_bay)[paste0("C", 1:n_basis)]
-    beta_t_bay <- as.numeric(B_fine %*% b_hat_bay)
+    # Fallback: try mu_atg for intercept, then beta_ for slopes
+    c_rows <- grep("^beta_", rownames(stats_mat))
+    if (length(c_rows) >= n_basis) {
+      b_hat_bay <- stats_mat[c_rows[1:n_basis], "Mean"]
+    } else {
+      # Last resort: extract from glm coefficients
+      b_hat_bay <- m3_bay$glm$coefficients[paste0("C", 1:n_basis)]
+    }
   }
+  beta_t_bay <- as.numeric(B_fine %*% b_hat_bay)
 
   cat("\nBeta(t) coefficients (posterior means):\n")
   print(round(b_hat_bay, 4))
@@ -821,7 +829,8 @@ if (HAS_BAYESREML) {
   print(m4_bay$extras$variance_comps)
 
   # Reconstruct beta(t)
-  b_null_bay  <- coef(m4_bay)[paste0("Cnull", 1:ncol(C_null))]
+  # Extract from glm coefficients (bayesreml $glm$coefficients)
+  b_null_bay  <- m4_bay$glm$coefficients[paste0("Cnull", 1:ncol(C_null))]
   b_range_bay <- m4_bay$extras$blups
   # Extract range coefficients
   if (is.list(b_range_bay)) {
