@@ -85,7 +85,7 @@ results <- list()
 #
 ###############################################################################
 
-cat("="^70, "\nMODEL 0: Baseline RCBD for yield (no FDA)\n", "="^70, "\n")
+cat(strrep("=", 70), "\nMODEL 0: Baseline RCBD for yield (no FDA)\n", strrep("=", 70), "\n")
 
 # One yield per plot (with plot-level noise for model estimability)
 yield_plot_dt <- unique(dt[, .(plot_id, variety, block, row, col, yield_plot)])
@@ -183,8 +183,8 @@ if (HAS_BAYESREML) {
 #
 ###############################################################################
 
-cat("\n", "="^70, "\nMODEL 1: B-spline smoothing of grain-fill curves\n",
-    "="^70, "\n")
+cat("\n", strrep("=", 70), "\nMODEL 1: B-spline smoothing of grain-fill curves\n",
+    strrep("=", 70), "\n")
 
 # ---- 1a. Build B-spline basis ----
 times <- sort(unique(dt$time))
@@ -284,8 +284,8 @@ cat("Plot 1 rendered.\n")
 #
 ###############################################################################
 
-cat("\n", "="^70, "\nMODEL 2: Variety-specific functional profiles (mixed model)\n",
-    "="^70, "\n")
+cat("\n", strrep("=", 70), "\nMODEL 2: Variety-specific functional profiles (mixed model)\n",
+    strrep("=", 70), "\n")
 
 # ---- 2a. Construct design matrices ----
 
@@ -494,8 +494,8 @@ if (HAS_ASREML) {
 #
 ###############################################################################
 
-cat("\n", "="^70, "\nMODEL 3: Scalar-on-function -- yield ~ grain-fill curve\n",
-    "="^70, "\n")
+cat("\n", strrep("=", 70), "\nMODEL 3: Scalar-on-function -- yield ~ grain-fill curve\n",
+    strrep("=", 70), "\n")
 
 # ---- 3a. Compute functional covariate matrix ----
 
@@ -676,8 +676,8 @@ if (exists("beta_t_asr") || exists("beta_t_bay")) {
 #
 ###############################################################################
 
-cat("\n", "="^70, "\nMODEL 4: Penalised scalar-on-function (P-spline on beta(t))\n",
-    "="^70, "\n")
+cat("\n", strrep("=", 70), "\nMODEL 4: Penalised scalar-on-function (P-spline on beta(t))\n",
+    strrep("=", 70), "\n")
 
 # ---- 4a. Decompose functional covariate ----
 # C_null: functional covariate projected onto null space of penalty
@@ -832,8 +832,8 @@ if (nrow(p4_dt) > 0) {
 #
 ###############################################################################
 
-cat("\n", "="^70, "\nMODEL 5: funcrop high-level API (two-stage FDA)\n",
-    "="^70, "\n")
+cat("\n", strrep("=", 70), "\nMODEL 5: funcrop high-level API (two-stage FDA)\n",
+    strrep("=", 70), "\n")
 
 # Clean the extra B-spline columns before passing to funcrop
 dt_clean <- dt[, .(plot_id, variety, block, row, col, time,
@@ -927,8 +927,8 @@ for (eng in c("asreml", "bayesreml")) {
 #
 ###############################################################################
 
-cat("\n", "="^70, "\nMODEL 6: MET-FDA with GxE (using sim_met_fda)\n",
-    "="^70, "\n")
+cat("\n", strrep("=", 70), "\nMODEL 6: MET-FDA with GxE (using sim_met_fda)\n",
+    strrep("=", 70), "\n")
 
 data(sim_met_fda)
 met <- copy(sim_met_fda)
@@ -1016,9 +1016,9 @@ for (eng in c("asreml", "bayesreml")) {
 #  COMPARISON AND RECONCILIATION
 ###############################################################################
 
-cat("\n\n", "="^70, "\n")
+cat("\n\n", strrep("=", 70), "\n")
 cat("COMPARISON: ASReml (REML) vs bayesreml (Bayesian)\n")
-cat("="^70, "\n\n")
+cat(strrep("=", 70), "\n\n")
 
 # ---- Model 0: Baseline Yield ----
 if (!is.null(results$m0_asr) && !is.null(results$m0_bay)) {
@@ -1075,9 +1075,9 @@ if (!is.null(results$m3_asr) && !is.null(results$m3_bay)) {
 
 # ---- Summary table ----
 cat("\n\n")
-cat("="^70, "\n")
+cat(strrep("=", 70), "\n")
 cat("SUMMARY TABLE: Key Results Across All Models\n")
-cat("="^70, "\n\n")
+cat(strrep("=", 70), "\n\n")
 
 summary_rows <- list()
 
@@ -1139,9 +1139,9 @@ if (length(summary_rows) > 0) {
 ###############################################################################
 
 cat("\n\n")
-cat("="^70, "\n")
+cat(strrep("=", 70), "\n")
 cat("RECONCILIATION: Expected Differences Between REML and Bayesian\n")
-cat("="^70, "\n\n")
+cat(strrep("=", 70), "\n\n")
 
 cat("
 1. VARIANCE COMPONENTS
