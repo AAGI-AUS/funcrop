@@ -55,13 +55,18 @@
 
   asreml_args <- list(
     fixed     = formulas[["fixed"]],
-    random    = formulas[["random"]],
-    residual  = formulas[["rcov"]],
     data      = data,
     maxiter   = as.integer(maxiter),
     workspace = workspace,
     trace     = isTRUE(getOption("funcrop.verbose", default = FALSE))
   )
+  # Only include random/residual if non-NULL (ASReml v4.2 errors on NULL)
+  if (!is.null(formulas[["random"]])) {
+    asreml_args[["random"]] <- formulas[["random"]]
+  }
+  if (!is.null(formulas[["rcov"]])) {
+    asreml_args[["residual"]] <- formulas[["rcov"]]
+  }
 
   # Register known matrices (relationship / design matrices) if supplied.
   # ASReml-R v4.2 uses vm(term, source = mat) -- matrices must be assigned
