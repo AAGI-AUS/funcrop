@@ -1,5 +1,5 @@
 # funcrop: Internal utility functions
-# Not exported — for package-internal use only.
+# Not exported -- for package-internal use only.
 
 # ---- Input validation helpers ------------------------------------------------
 
@@ -153,8 +153,8 @@ if (engine == "asreml" && !.has_asreml()) {
   # Vectorised: replicate columns of A q times, multiply element-wise with
 
   # B tiled p times. Each row i becomes: (A[i,1]*B[i,], A[i,2]*B[i,], ...).
-  # A_rep: n x pq  — each column j of A repeated q times side-by-side
-  # B_rep: n x pq  — columns of B tiled p times
+  # A_rep: n x pq  -- each column j of A repeated q times side-by-side
+  # B_rep: n x pq  -- columns of B tiled p times
   col_idx_a <- rep(seq_len(p), each = q)
   col_idx_b <- rep(seq_len(q), times = p)
 

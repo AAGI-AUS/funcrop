@@ -1,4 +1,4 @@
-# scalar_on_function.R — Stage 2: Scalar-on-function regression
+# scalar_on_function.R -- Stage 2: Scalar-on-function regression
 #
 # Relates a scalar primary trait (e.g., yield) to the functional profiles
 # recovered in Stage 1 (fit_functional_profiles). This is the second stage of
@@ -52,7 +52,7 @@
 #' \describe{
 #'   \item{fitted_curves}{Empty data.table (not applicable for Stage 2).}
 #'   \item{coefficient_function}{List with `time`, `beta`, `se`, `ci_lower`,
-#'     `ci_upper` — the estimated coefficient function \eqn{\hat{\beta}(t)}
+#'     `ci_upper` -- the estimated coefficient function \eqn{\hat{\beta}(t)}
 #'     evaluated on a fine grid.}
 #'   \item{variance_components}{data.table of estimated variance components.}
 #'   \item{predictions}{data.table of predicted primary trait values per
@@ -353,7 +353,7 @@ scalar_on_function <- function(
     # Inner product in Z-space: J_z = integral( Z_j(t) * Z_k(t) ) dt
     J_z <- .compute_z_space_inner_product(basis)
     if (ncol(J_z) != n_coefs) {
-      # Dimension mismatch — fall back to using what we have
+      # Dimension mismatch -- fall back to using what we have
       warning(
         sprintf(
           "Z-space inner product matrix has %d columns but alpha_matrix has %d. ",
@@ -369,7 +369,7 @@ scalar_on_function <- function(
     C <- alpha_matrix %*% J_z
   }
 
-  # C is now n_var x n_basis (or n_var x n_z_cols) — the functional covariate.
+  # C is now n_var x n_basis (or n_var x n_z_cols) -- the functional covariate.
   # Each column of C corresponds to a B-spline coefficient b_k in beta(t).
 
   # ===========================================================================
@@ -400,7 +400,7 @@ scalar_on_function <- function(
 
   # split into fixed (null space) and random (range space) components.
   # For Stage 2, we use the C columns as fixed effects with a penalty on
-  # the b coefficients — implemented via a random effect with known precision.
+  # the b coefficients -- implemented via a random effect with known precision.
 
   # Apply the same decomposition to the beta(t) coefficients:
   # beta(t) = X_null %*% alpha_fixed + Z_range %*% u_beta
@@ -446,7 +446,7 @@ scalar_on_function <- function(
 
   # Split the C matrix into null-space (fixed) and range-space (random) parts
   if (n_c_cols == basis$n_basis) {
-    # C is in original basis space — apply the decomposition to columns
+    # C is in original basis space -- apply the decomposition to columns
     P_dense <- as.matrix(basis$P)
     eig <- eigen(P_dense, symmetric = TRUE)
     tol <- max(eig$values) * .Machine$double.eps * basis$n_basis * 10
@@ -494,7 +494,7 @@ scalar_on_function <- function(
     data.table::set(model_dt, j = "beta_smooth",
                     value = factor(variety_ids, levels = variety_ids))
   } else {
-    # C is in Z-space — treat all C columns as fixed (penalty already absorbed
+    # C is in Z-space -- treat all C columns as fixed (penalty already absorbed
     # by the Z-space transformation from Stage 1)
     .msg("Functional covariates in Z-space: treating as fixed effects.")
   }
@@ -602,7 +602,7 @@ scalar_on_function <- function(
 #' @param labels Optional character vector of model labels. If `NULL`,
 #'   labels are generated from the call or assigned sequentially.
 #'
-#' @return An `fda_comparison` object (see [new_fda_comparison()]) containing:
+#' @return An `fda_comparison` object (see `new_fda_comparison()`) containing:
 #' \describe{
 #'   \item{models}{Named list of the input `fda_model` objects.}
 #'   \item{metrics}{data.table of comparison metrics with one row per model
@@ -627,7 +627,7 @@ scalar_on_function <- function(
 #' }
 #'
 #' @seealso [fit_functional_profiles()], [scalar_on_function()],
-#'   [new_fda_comparison()].
+#'   `new_fda_comparison()`.
 #'
 #' @examples
 #' \dontrun{
@@ -1017,7 +1017,7 @@ compare_methods <- function(..., labels = NULL) {
           # For now, set range component to zero (conservative)
         }
       } else if (length(fixed_idx) > 0L) {
-        # C is in original space — coefficients are beta directly
+        # C is in original space -- coefficients are beta directly
         beta_coefs <- coef_vals[fixed_idx]
         if (!is.null(coef_se)) {
           se_coefs <- coef_se[fixed_idx]
@@ -1100,11 +1100,11 @@ compare_methods <- function(..., labels = NULL) {
       },
       waic = {
         if (model$engine == "bayesreml") {
-          # bayesreml may provide WAIC directly
-          w <- tryCatch(
-            bayesreml::waic(raw_model),
-            error = function(e) NA_real_
-          )
+          # bayesreml v0.1.0: WAIC stored in fit$extras$summary or similar
+          w <- tryCatch({
+            waic_val <- raw_model$extras$summary$waic
+            if (is.null(waic_val)) NA_real_ else waic_val
+          }, error = function(e) NA_real_)
           if (is.list(w)) w$waic else w
         } else {
           NA_real_

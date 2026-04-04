@@ -1,4 +1,4 @@
-# tensor.R — Tensor product B-spline basis for 2D functional data
+# tensor.R -- Tensor product B-spline basis for 2D functional data
 #
 # Constructs tensor product bases from two marginal B-spline bases. The
 # tensor product basis is formed by the row-wise Kronecker product of the
@@ -35,18 +35,18 @@
 #' @return An S3 object of class `c("fda_tensor_basis", "fda_basis")`
 #'   containing:
 #' \describe{
-#'   \item{B}{Tensor product basis matrix (n x p1*p2), constructed as the
+#'   \item{B}{Tensor product basis matrix (n x p1p2), constructed as the
 #'     row-wise Kronecker product of the two marginal basis matrices.}
-#'   \item{basis1, basis2}{The marginal `fda_basis` objects for each
-#'     dimension.}
-#'   \item{P}{Combined additive penalty matrix (p1*p2 x p1*p2), sparse.
+#'   \item{basis1}{The marginal `fda_basis` object for the first dimension.}
+#'   \item{basis2}{The marginal `fda_basis` object for the second dimension.}
+#'   \item{P}{Combined additive penalty matrix (p1p2 x p1p2), sparse.
 #'     Computed as \eqn{P_1 \otimes I_2 + I_1 \otimes P_2}.}
 #'   \item{P1}{Marginal penalty in tensor product form:
 #'     \eqn{P_1 \otimes I_2} (sparse).}
 #'   \item{P2}{Marginal penalty in tensor product form:
 #'     \eqn{I_1 \otimes P_2} (sparse).}
 #'   \item{n_basis}{Integer; total number of tensor product basis functions
-#'     (p1 * p2).}
+#'     (p1 times p2).}
 #' }
 #'
 #' @details

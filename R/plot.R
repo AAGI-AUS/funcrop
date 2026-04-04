@@ -1,4 +1,4 @@
-# plot.R — Publication-ready visualisation suite for funcrop
+# plot.R -- Publication-ready visualisation suite for funcrop
 #
 # All plotting functions return ggplot objects (invisibly) when ggplot2 is
 # available, with a base R fallback that prints a message recommending ggplot2
@@ -845,9 +845,9 @@ plot_fa_biplot <- function(model,
   }
 
   if (model$engine == "bayesreml" && .has_bayesreml()) {
-    # Try to extract from bayesreml posterior
+    # bayesreml v0.1.0: FA structure stored in fit$extras
     tryCatch({
-      fa_post <- bayesreml::extract_fa(raw_model)
+      fa_post <- raw_model$extras$fa_structure
       if (!is.null(fa_post)) {
         return(list(
           loadings = fa_post$loadings,

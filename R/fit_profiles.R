@@ -1,4 +1,4 @@
-# fit_profiles.R — Stage 1: Fit variety-specific functional profiles
+# fit_profiles.R -- Stage 1: Fit variety-specific functional profiles
 #
 # Fits a spatial + temporal mixed model per trial to extract variety-specific
 # functional profiles (smooth curves). This is the first stage of the two-stage
@@ -58,7 +58,7 @@
 #' @param ... Additional arguments passed to the backend fitting function
 #'   (e.g., `control` for ASReml, `mcmc_control` for bayesreml).
 #'
-#' @return An `fda_model` object (see [new_fda_model()]) containing:
+#' @return An `fda_model` object (see `new_fda_model()`) containing:
 #' \describe{
 #'   \item{fitted_curves}{data.table of variety-specific fitted curves on a
 #'     fine time grid, with columns `id`, `time`, `fitted`, `se`.}
@@ -99,9 +99,9 @@
 #'
 #' ## Backend dispatch
 #'
-#' For ASReml: uses `str()` specification from [.asreml_build_spline_str()]
+#' For ASReml: uses `str()` specification from `.asreml_build_spline_str()`
 #' with penalised variance structure. For bayesreml: uses known matrices from
-#' [.bayesreml_build_spline_str()] with penalty-as-precision prior.
+#' `.bayesreml_build_spline_str()` with penalty-as-precision prior.
 #'
 #' @references
 #' Verbyla, A.P., Cavanagh, C.R. and Verbyla, K.L. (2012). Whole-genome

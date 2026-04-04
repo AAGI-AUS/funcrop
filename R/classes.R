@@ -2,7 +2,7 @@
 # Defines fda_data, fda_model, and fda_comparison classes.
 
 # ==============================================================================
-# fda_data — functional observation data container
+# fda_data -- functional observation data container
 # ==============================================================================
 
 #' Create a functional data object
@@ -143,7 +143,7 @@ fda_data <- function(time, value, id, group = NULL, spatial_row = NULL,
       }
       dt[, primary_trait := primary_trait]
     } else if (length(primary_trait) == n_ids) {
-      # Merge by id — assume same order as unique(id)
+      # Merge by id -- assume same order as unique(id)
       pt_map <- data.table::data.table(id = uid, primary_trait = primary_trait)
       dt <- merge(dt, pt_map, by = "id", sort = FALSE)
     } else {
@@ -385,12 +385,12 @@ plot.fda_data <- function(x, max_curves = 50L, alpha = 0.4, ...) {
 #' Subset method for fda_data
 #'
 #' Subsets an `fda_data` object while preserving the class and updating
-#' metadata.
+#' metadata. Accepts the same arguments as [data.table::data.table]
+#' subsetting (row expressions, column selections, etc.).
 #'
 #' @param x An `fda_data` object.
-#' @param i Row indices or logical vector.
-#' @param j Column indices or names.
-#' @param ... Further arguments passed to `[.data.table`.
+#' @param ... Arguments passed to `[.data.table` (e.g., row filter
+#'   expressions, column selections, `by` grouping).
 #' @return An `fda_data` object (if essential columns remain) or a
 #'   `data.table`.
 #' @export
@@ -401,7 +401,17 @@ plot.fda_data <- function(x, max_curves = 50L, alpha = 0.4, ...) {
   old_meta  <- attr(x, "fda_meta")
   data.table::setattr(x, "class", c("data.table", "data.frame"))
 
-  result <- x[...]
+  # Reconstruct the [.data.table call and evaluate in the parent frame so
+
+  # that data.table NSE can resolve variables from the caller's environment.
+  .fda_dt_x <- x
+  sc <- sys.call()
+  sc[[1L]] <- quote(`[`)
+  sc[[2L]] <- quote(.fda_dt_x)
+  pf <- parent.frame()
+  pf$.fda_dt_x <- x
+  result <- eval(sc, envir = pf)
+  rm(".fda_dt_x", envir = pf)
 
   # Restore original object's class (setattr modifies in place)
   data.table::setattr(x, "class", old_class)
@@ -447,7 +457,7 @@ as.data.table.fda_data <- function(x, keep.rownames = FALSE, ...) {
 
 
 # ==============================================================================
-# fda_model — fitted FDA model container
+# fda_model -- fitted FDA model container
 # ==============================================================================
 
 #' Create a new fda_model object (internal constructor)
@@ -459,7 +469,7 @@ as.data.table.fda_data <- function(x, keep.rownames = FALSE, ...) {
 #' @param fitted_curves A [data.table::data.table] with columns: `id`, `group`,
 #'   `time`, `fitted`, and optionally `se`, `ci_lower`, `ci_upper`.
 #' @param coefficient_function A list with components: `time`, `beta`, `se`,
-#'   `ci_lower`, `ci_upper` — the estimated coefficient function beta(t).
+#'   `ci_lower`, `ci_upper` -- the estimated coefficient function beta(t).
 #' @param variance_components A [data.table::data.table] of estimated variance
 #'   components.
 #' @param predictions A [data.table::data.table] of predictions for the primary
@@ -740,7 +750,7 @@ plot.fda_model <- function(x, which = c("both", "coef", "fitted"), ...) {
 
 
 # ==============================================================================
-# fda_comparison — comparison of multiple models
+# fda_comparison -- comparison of multiple models
 # ==============================================================================
 
 #' Create a new fda_comparison object (internal constructor)
@@ -812,7 +822,7 @@ summary.fda_comparison <- function(object, ...) {
   engines <- vapply(object$models, function(m) m$engine, character(1L))
   cat("Models:\n")
   for (nm in names(object$models)) {
-    cat(sprintf("  %s — engine: %s\n", nm, engines[nm]))
+    cat(sprintf("  %s -- engine: %s\n", nm, engines[nm]))
   }
 
   cat("\nMetrics:\n")

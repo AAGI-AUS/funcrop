@@ -1,4 +1,4 @@
-# fit_joint.R — Single-stage joint model and 2D functional modelling
+# fit_joint.R -- Single-stage joint model and 2D functional modelling
 #
 # Implements the single-stage joint model for simultaneously estimating a
 # scalar primary trait and a functional secondary trait, avoiding the error
@@ -10,7 +10,7 @@
 
 
 # ==============================================================================
-# fit_fda_joint — Single-stage joint model
+# fit_fda_joint -- Single-stage joint model
 # ==============================================================================
 
 #' Fit a Joint Model for Primary and Functional Secondary Traits
@@ -332,7 +332,7 @@ fit_fda_joint <- function(
   dt_primary[, (time_col) := NA_real_]
 
   # For primary trait rows, set the B-spline columns to integrated basis values.
-  # Each primary observation gets the same integrated basis vector — the actual
+  # Each primary observation gets the same integrated basis vector -- the actual
 
   # variety-level integration is handled via the random effect structure.
   for (k in seq_len(n_basis)) {
@@ -615,7 +615,7 @@ fit_fda_joint <- function(
 
 
 # ==============================================================================
-# fit_2d_functional — 2D functional profiles via tensor product B-splines
+# fit_2d_functional -- 2D functional profiles via tensor product B-splines
 # ==============================================================================
 
 #' Fit 2D Functional Profiles via Tensor Product B-Splines
@@ -867,7 +867,7 @@ fit_2d_functional <- function(
 
 
 # ==============================================================================
-# scalar_on_2d_function — Scalar-on-2D-function regression
+# scalar_on_2d_function -- Scalar-on-2D-function regression
 # ==============================================================================
 
 #' Scalar-on-2D-Function Regression

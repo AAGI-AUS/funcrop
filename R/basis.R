@@ -1,4 +1,4 @@
-# basis.R — Core B-spline basis constructor for funcrop
+# basis.R -- Core B-spline basis constructor for funcrop
 #
 # Constructs B-spline basis matrices with integrated difference penalty
 # matrices for use in P-spline and mixed model representations.
@@ -18,7 +18,7 @@
 #' @param x Numeric vector of evaluation points (e.g., time, wavelength, depth).
 #'   Must contain at least 2 unique values and no `NA` or non-finite values.
 #' @param n_knots Integer; number of internal knots. Default is 10. Must be
-#'   >= 1. The total number of basis functions is `n_knots + degree + 1`.
+#'   at least 1. The total number of basis functions is `n_knots + degree + 1`.
 #' @param degree Integer; polynomial degree of the B-spline. Default is 3
 #'   (cubic). Must be >= 0.
 #' @param knot_type Character; method for placing internal knots. One of
@@ -31,7 +31,7 @@
 #'   (lower, upper). Defaults to `range(x)` extended by 1% on each side.
 #' @param penalty_order Integer; order of the difference penalty matrix.
 #'   Default is 2 (second-order differences, penalising curvature). Must be
-#'   >= 1 and < `n_basis`.
+#'   at least 1 and less than `n_basis`.
 #'
 #' @return An S3 object of class `"fda_basis"` (a list) containing:
 #' \describe{
@@ -203,7 +203,7 @@ if (any(!is.finite(x))) {
     rep(boundary[2], degree + 1L)
   )
 
-  # Evaluate B-spline basis — splineDesign handles boundary values correctly
+  # Evaluate B-spline basis -- splineDesign handles boundary values correctly
   B <- splines::splineDesign(
     knots = knot_vec,
     x = x,

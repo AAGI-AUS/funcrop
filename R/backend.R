@@ -1,4 +1,4 @@
-# funcrop: Engine dispatcher — dual-backend architecture
+# funcrop: Engine dispatcher -- dual-backend architecture
 #
 # Provides the user-facing API for selecting and querying estimation engines,
 # plus the internal dispatch mechanism that routes model fitting to the
@@ -21,9 +21,9 @@
 #' @details
 #' funcrop supports two estimation backends:
 #' \describe{
-#'   \item{`asreml`}{ASReml-R v4.2+ — restricted maximum likelihood (REML)
+#'   \item{`asreml`}{ASReml-R v4.2+ -- restricted maximum likelihood (REML)
 #'     estimation. Commercial licence required. Faster for large models.}
-#'   \item{`bayesreml`}{bayesreml — Bayesian MCMC estimation via greta/TensorFlow.
+#'   \item{`bayesreml`}{bayesreml -- Bayesian MCMC estimation via greta/TensorFlow.
 #'     Open-source. Provides full posterior distributions and credible intervals.}
 #' }
 #'
@@ -55,7 +55,7 @@ funcrop_engines <- function() {
 #'   `"asreml"` or `"bayesreml"`. If `NULL` (the default), returns the
 #'   current default engine without changing it.
 #'
-#' @return Character string — the current (or newly set) default engine name.
+#' @return Character string -- the current (or newly set) default engine name.
 #'   Returned invisibly when setting.
 #'
 #' @details
@@ -132,7 +132,7 @@ funcrop_default_engine <- function(engine = NULL) {
     return(.auto_detect_engine())
   }
 
-  # Explicit engine requested — validate it is installed
+  # Explicit engine requested -- validate it is installed
   .validate_engine(engine)
   engine
 }

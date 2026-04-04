@@ -40,8 +40,10 @@ Suggests:
     bayesreml (>= 0.1.0),
     greta (>= 0.4.0),
     ggplot2 (>= 3.4.0),
+    ggrepel,
     viridis,
     plotly,
+    patchwork,
     testthat (>= 3.0.0),
     knitr,
     rmarkdown,
@@ -49,10 +51,10 @@ Suggests:
     emmeans,
     marginaleffects,
     sommer,
-    lme4
+    lme4,
+    withr
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.3
-VignetteBuilder: knitr
 LazyData: true
 Config/testthat/edition: 3

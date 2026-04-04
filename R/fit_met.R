@@ -1,4 +1,4 @@
-# fit_met.R — Multi-Environment Trial FDA with GxE interaction
+# fit_met.R -- Multi-Environment Trial FDA with GxE interaction
 #
 # Fits FDA models across multiple environments, accounting for
 # genotype-by-environment (GxE) interaction on the functional trait
@@ -1246,12 +1246,12 @@ fit_fda_met <- function(
 #'
 #' @return A data.table with columns:
 #' \describe{
-#'   \item{`variety`}{Variety identifier.}
-#'   \item{`time`}{Evaluation time point.}
-#'   \item{`predicted`}{Predicted functional value at this time point.}
-#'   \item{`se`}{Approximate standard error (if `ci = TRUE`).}
-#'   \item{`ci_lower`}{Lower 95\% confidence bound (if `ci = TRUE`).}
-#'   \item{`ci_upper`}{Upper 95\% confidence bound (if `ci = TRUE`).}
+#'   \item{variety}{Variety identifier.}
+#'   \item{time}{Evaluation time point.}
+#'   \item{predicted}{Predicted functional value at this time point.}
+#'   \item{se}{Approximate standard error (if `ci = TRUE`).}
+#'   \item{ci_lower}{Lower 95 percent confidence bound (if `ci = TRUE`).}
+#'   \item{ci_upper}{Upper 95 percent confidence bound (if `ci = TRUE`).}
 #' }
 #'
 #' @details

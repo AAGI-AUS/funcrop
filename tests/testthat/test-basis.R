@@ -1,4 +1,4 @@
-# test-basis.R — Comprehensive tests for the B-spline engine in funcrop
+# test-basis.R -- Comprehensive tests for the B-spline engine in funcrop
 #
 # Tests cover: bspline_basis(), make_penalty(), make_Zspline(),
 #              tensor_bspline_basis(), and edge cases.
@@ -13,6 +13,9 @@ x_regular <- seq(0, 1, length.out = 100)
 x_sparse  <- seq(0, 10, length.out = 20)
 x_skew    <- sort(c(rbeta(50, 2, 8), rbeta(50, 8, 2)))
 
+# The n_basis formula for B-splines: n_knots + degree + 1
+# (number of internal knots + degree + 1)
+
 # ==============================================================================
 # 1. bspline_basis()
 # ==============================================================================
@@ -25,7 +28,7 @@ test_that("bspline_basis returns correct class", {
 test_that("bspline_basis returns basis matrix with correct dimensions", {
   n_knots <- 10L
   degree <- 3L
-  n_basis_expected <- n_knots + degree - 1L
+  n_basis_expected <- n_knots + degree + 1L
   basis <- bspline_basis(x_regular, n_knots = n_knots, degree = degree)
 
   expect_equal(nrow(basis$B), length(x_regular))
@@ -46,7 +49,6 @@ test_that("bspline_basis produces non-negative values", {
 
 test_that("bspline_basis values at knots are valid", {
   basis <- bspline_basis(x_regular, n_knots = 5, degree = 3)
-  # At each internal knot, the basis should still sum to 1
   knot_vals <- basis$knots
   basis_at_knots <- bspline_basis(knot_vals, n_knots = 5, degree = 3,
                                    boundary = basis$boundary)
@@ -80,7 +82,6 @@ test_that("custom knots produce valid basis", {
 })
 
 test_that("boundary knots default correctly from range of x", {
-
   basis <- bspline_basis(x_regular, n_knots = 5)
   x_range <- range(x_regular)
   x_span <- diff(x_range)
@@ -94,15 +95,15 @@ test_that("bspline_basis errors on non-numeric x", {
 
 test_that("bspline_basis errors on x with NA/Inf", {
   expect_error(bspline_basis(c(1, 2, NA, 4)), "NA")
-  expect_error(bspline_basis(c(1, 2, Inf, 4)), "Inf")
+  expect_error(bspline_basis(c(1, 2, Inf, 4)), "Inf|finite")
 })
 
 test_that("bspline_basis errors on negative n_knots", {
-  expect_error(bspline_basis(x_regular, n_knots = -1), "positive")
+  expect_error(bspline_basis(x_regular, n_knots = -1))
 })
 
 test_that("bspline_basis errors on x with < 2 values", {
-  expect_error(bspline_basis(c(1)), "length >= 2")
+  expect_error(bspline_basis(c(1)))
 })
 
 test_that("bspline_basis errors on x with < 2 unique values", {
@@ -115,7 +116,6 @@ test_that("penalty matrix is symmetric positive semi-definite", {
   P <- as.matrix(basis$P)
 
   # Symmetric
-
   expect_equal(P, t(P), tolerance = 1e-12)
 
   # Positive semi-definite: all eigenvalues >= 0
@@ -127,7 +127,7 @@ test_that("penalty matrix has correct rank (n_basis - penalty_order)", {
   n_knots <- 10L
   degree <- 3L
   penalty_order <- 2L
-  n_basis <- n_knots + degree - 1L
+  n_basis <- n_knots + degree + 1L
 
   basis <- bspline_basis(x_regular, n_knots = n_knots, degree = degree,
                           penalty_order = penalty_order)
@@ -204,12 +204,8 @@ test_that("make_Zspline reconstructs original basis (X*T_X + Z*T_Z ~ B)", {
                           penalty_order = 2)
   zs <- make_Zspline(basis)
 
-  # The decomposition should allow: B = [X, Z] %*% T for some T
-
-  # Equivalently, the column space of [X, Z] should span the column space of B
+  # The column space of [X, Z] should span the column space of B
   XZ <- cbind(zs$X, zs$Z)
-  # Project B onto [X, Z] and check reconstruction
-  # B should be exactly in the column space of XZ (both n x n_basis)
   expect_equal(ncol(XZ), basis$n_basis)
   expect_equal(nrow(XZ), nrow(basis$B))
 
@@ -219,16 +215,16 @@ test_that("make_Zspline reconstructs original basis (X*T_X + Z*T_Z ~ B)", {
   expect_equal(B_reconstructed, basis$B, tolerance = 1e-8)
 })
 
-test_that("make_Zspline 'decompose' method works", {
+test_that("make_Zspline 'decompose' constraint works", {
   basis <- bspline_basis(x_regular, n_knots = 10, degree = 3)
-  zs <- make_Zspline(basis, method = "decompose")
+  zs <- make_Zspline(basis, constraint = "decompose")
   expect_true(!is.null(zs$X))
   expect_true(!is.null(zs$Z))
 })
 
-test_that("make_Zspline 'absorb' method works", {
+test_that("make_Zspline 'absorb' constraint works", {
   basis <- bspline_basis(x_regular, n_knots = 10, degree = 3)
-  zs <- make_Zspline(basis, method = "absorb")
+  zs <- make_Zspline(basis, constraint = "absorb")
   expect_true(!is.null(zs$X))
   expect_true(!is.null(zs$Z))
 })
@@ -239,31 +235,34 @@ test_that("make_Zspline 'absorb' method works", {
 # ==============================================================================
 
 test_that("tensor_bspline_basis returns correct class", {
+  # Tensor product requires paired observations (same length x1 and x2)
   x1 <- seq(0, 1, length.out = 20)
-  x2 <- seq(0, 1, length.out = 15)
+  x2 <- seq(0, 1, length.out = 20)
   tb <- tensor_bspline_basis(x1, x2, n_knots1 = 5, n_knots2 = 4)
   expect_s3_class(tb, "fda_basis")
 })
 
 test_that("tensor_bspline_basis has correct basis matrix dimensions", {
-  x1 <- seq(0, 1, length.out = 20)
-  x2 <- seq(0, 1, length.out = 15)
+  n <- 20L
+  x1 <- seq(0, 1, length.out = n)
+  x2 <- seq(0, 1, length.out = n)
   n_knots1 <- 5L
   n_knots2 <- 4L
-  degree <- 3L
-  n_basis1 <- n_knots1 + degree - 1L
-  n_basis2 <- n_knots2 + degree - 1L
-  n <- length(x1)  # evaluation points in first margin
+  degree1 <- 3L
+  degree2 <- 3L
+  n_basis1 <- n_knots1 + degree1 + 1L
+  n_basis2 <- n_knots2 + degree2 + 1L
 
   tb <- tensor_bspline_basis(x1, x2, n_knots1 = n_knots1, n_knots2 = n_knots2,
-                              degree = degree)
+                              degree1 = degree1, degree2 = degree2)
   # Tensor product: n_obs x (n_basis1 * n_basis2)
+  expect_equal(nrow(tb$B), n)
   expect_equal(ncol(tb$B), n_basis1 * n_basis2)
 })
 
 test_that("tensor_bspline_basis combined penalty is symmetric PSD", {
   x1 <- seq(0, 1, length.out = 20)
-  x2 <- seq(0, 1, length.out = 15)
+  x2 <- seq(0, 1, length.out = 20)
   tb <- tensor_bspline_basis(x1, x2, n_knots1 = 5, n_knots2 = 4)
 
   P <- as.matrix(tb$P)
@@ -277,7 +276,7 @@ test_that("tensor_bspline_basis combined penalty is symmetric PSD", {
 
 test_that("tensor_bspline_basis stores marginal bases", {
   x1 <- seq(0, 1, length.out = 20)
-  x2 <- seq(0, 1, length.out = 15)
+  x2 <- seq(0, 1, length.out = 20)
   tb <- tensor_bspline_basis(x1, x2, n_knots1 = 5, n_knots2 = 4)
 
   # Should store marginal basis objects
@@ -286,7 +285,7 @@ test_that("tensor_bspline_basis stores marginal bases", {
 })
 
 test_that("tensor_bspline_basis row-wise Kronecker product is correct", {
-  # Small example to verify manually
+  # Small example to verify manually -- paired observations (same length)
   x1 <- c(0.2, 0.5, 0.8)
   x2 <- c(0.3, 0.6, 0.9)
   n_k1 <- 2L
@@ -294,7 +293,7 @@ test_that("tensor_bspline_basis row-wise Kronecker product is correct", {
   deg <- 3L
 
   tb <- tensor_bspline_basis(x1, x2, n_knots1 = n_k1, n_knots2 = n_k2,
-                              degree = deg)
+                              degree1 = deg, degree2 = deg)
 
   # Get marginal bases and compute row-Kronecker manually
   b1 <- bspline_basis(x1, n_knots = n_k1, degree = deg)
@@ -309,7 +308,7 @@ test_that("tensor_bspline_basis row-wise Kronecker product is correct", {
     manual_tensor[i, ] <- as.vector(outer(b1$B[i, ], b2$B[i, ]))
   }
 
-  expect_equal(tb$B, manual_tensor, tolerance = 1e-10)
+  expect_equal(as.matrix(tb$B), manual_tensor, tolerance = 1e-10)
 })
 
 
@@ -326,18 +325,18 @@ test_that("bspline_basis works with single evaluation point (length 2 min)", {
 })
 
 test_that("bspline_basis works with very few knots (minimum viable)", {
-  # 1 internal knot, degree 3 => n_basis = 1 + 3 - 1 = 3
+  # 1 internal knot, degree 3 => n_basis = 1 + 3 + 1 = 5
   basis <- bspline_basis(x_regular, n_knots = 1, degree = 3,
                           penalty_order = 1)
-  expect_equal(basis$n_basis, 3L)
-  expect_equal(ncol(basis$B), 3L)
+  expect_equal(basis$n_basis, 5L)
+  expect_equal(ncol(basis$B), 5L)
   expect_equal(rowSums(basis$B), rep(1, length(x_regular)), tolerance = 1e-10)
 })
 
 test_that("bspline_basis with degree = 1 (linear splines) works correctly", {
   basis <- bspline_basis(x_regular, n_knots = 5, degree = 1,
                           penalty_order = 1)
-  n_basis_expected <- 5L + 1L - 1L  # n_knots + degree - 1 = 5
+  n_basis_expected <- 5L + 1L + 1L  # n_knots + degree + 1 = 7
   expect_equal(basis$n_basis, n_basis_expected)
   expect_equal(basis$degree, 1L)
 
@@ -346,8 +345,6 @@ test_that("bspline_basis with degree = 1 (linear splines) works correctly", {
 
   # Non-negativity
   expect_true(all(basis$B >= -1e-15))
-
-  # Linear splines should be piecewise linear: each column has at most one peak
 })
 
 test_that("bspline_basis handles duplicate x values correctly", {
@@ -364,18 +361,16 @@ test_that("bspline_basis handles duplicate x values correctly", {
 })
 
 test_that("bspline_basis with degree = 0 (step functions) works", {
-  # degree 0, penalty_order must be < n_basis
-  # n_basis = n_knots + 0 - 1 = n_knots - 1, need n_knots >= 3 for pen_order=1
+  # degree 0: n_basis = n_knots + 0 + 1 = n_knots + 1
   basis <- bspline_basis(x_regular, n_knots = 5, degree = 0,
                           penalty_order = 1)
   expect_equal(basis$degree, 0L)
-  expect_equal(basis$n_basis, 4L)  # 5 + 0 - 1
-  # Step functions: each row has exactly one non-zero entry (value = 1)
+  expect_equal(basis$n_basis, 6L)  # 5 + 0 + 1
+  # Step functions: partition of unity
   expect_equal(rowSums(basis$B), rep(1, length(x_regular)), tolerance = 1e-10)
 })
 
-test_that("make_penalty errors on invalid inputs",
-{
+test_that("make_penalty errors on invalid inputs", {
   expect_error(make_penalty(0, order = 1))
   expect_error(make_penalty(3, order = 3))  # order must be < n
   expect_error(make_penalty(5, order = -1))

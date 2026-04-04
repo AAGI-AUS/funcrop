@@ -113,8 +113,9 @@
   )
 
   # Extract posterior draws and summary
+  # bayesreml v0.1.0 stores draws in fit$greta$draws
   draws <- tryCatch(
-    bayesreml::extract_draws(fit),
+    fit$greta$draws,
     error = function(e) {
       warning(
         "Failed to extract posterior draws: ", conditionMessage(e),
@@ -169,13 +170,13 @@
 #' @return Named list of formulas: `fixed`, `random`, `rcov`.
 #' @noRd
 .bayesreml_build_formulas <- function(model_spec) {
-  # Fixed effects — direct pass-through
+  # Fixed effects -- direct pass-through
   fixed <- model_spec[["fixed"]]
   if (is.character(fixed)) {
     fixed <- stats::as.formula(fixed)
   }
 
-  # Random effects — direct pass-through (bayesreml uses ASReml syntax)
+  # Random effects -- direct pass-through (bayesreml uses ASReml syntax)
   random <- model_spec[["random"]]
   if (is.character(random)) {
     random <- stats::as.formula(random)
@@ -222,19 +223,22 @@
   for (i in seq_along(terms)) {
     tm <- terms[i]
 
-    # bayesreml stores random effect draws in the model object.
-    # Extract posterior draws for this term.
-    draws_mat <- tryCatch(
-      bayesreml::extract_ranef(bayesreml_model, term = tm),
-      error = function(e) {
-        warning(
-          sprintf("Failed to extract BLUPs for term '%s': %s", tm,
-                  conditionMessage(e)),
-          call. = FALSE
-        )
+    # bayesreml v0.1.0 stores BLUPs in fit$extras$blups (named list by term).
+    draws_mat <- tryCatch({
+      blups_list <- bayesreml_model$extras$blups
+      if (!is.null(blups_list) && tm %in% names(blups_list)) {
+        blups_list[[tm]]
+      } else {
         NULL
       }
-    )
+    }, error = function(e) {
+      warning(
+        sprintf("Failed to extract BLUPs for term '%s': %s", tm,
+                conditionMessage(e)),
+        call. = FALSE
+      )
+      NULL
+    })
 
     if (is.null(draws_mat)) next
 
@@ -281,8 +285,9 @@
          call. = FALSE)
   }
 
+  # bayesreml v0.1.0 stores variance components in fit$extras$variance_comps
   vc_summary <- tryCatch(
-    bayesreml::extract_vc(bayesreml_model),
+    bayesreml_model$extras$variance_comps,
     error = function(e) {
       stop(
         "Failed to extract variance components: ", conditionMessage(e),
@@ -304,15 +309,36 @@
   }
 
   # Fallback: extract from posterior draws manually
-  vc_draws <- tryCatch(
-    bayesreml::extract_vc_draws(bayesreml_model),
-    error = function(e) {
-      stop(
-        "Failed to extract VC draws: ", conditionMessage(e),
-        call. = FALSE
-      )
+  # bayesreml v0.1.0: draws available via fit$greta$draws
+  vc_draws <- tryCatch({
+    all_draws <- bayesreml_model$greta$draws
+    if (is.null(all_draws)) {
+      stop("No posterior draws available in bayesreml fit object.")
     }
-  )
+    # Extract variance-related parameters from draws
+    if (inherits(all_draws, "mcmc.list")) {
+      all_names <- colnames(all_draws[[1L]])
+    } else if (is.matrix(all_draws)) {
+      all_names <- colnames(all_draws)
+    } else {
+      stop("Unexpected draws format.")
+    }
+    vc_idx <- grep("^sigma|^tau|^variance", all_names)
+    if (length(vc_idx) == 0L) {
+      stop("No variance component parameters found in draws.")
+    }
+    if (is.matrix(all_draws)) {
+      all_draws[, vc_idx, drop = FALSE]
+    } else {
+      # Combine chains for mcmc.list
+      do.call(rbind, lapply(all_draws, function(ch) ch[, vc_idx, drop = FALSE]))
+    }
+  }, error = function(e) {
+    stop(
+      "Failed to extract VC draws: ", conditionMessage(e),
+      call. = FALSE
+    )
+  })
 
   # vc_draws: matrix (n_draws x n_components)
   comp_names <- colnames(vc_draws)
@@ -351,8 +377,9 @@
     stop("bayesreml is required for posterior extraction.", call. = FALSE)
   }
 
+  # bayesreml v0.1.0 stores draws in fit$greta$draws
   draws <- tryCatch(
-    bayesreml::extract_draws(bayesreml_model),
+    bayesreml_model$greta$draws,
     error = function(e) {
       stop(
         "Failed to extract posterior draws: ", conditionMessage(e),
@@ -555,7 +582,7 @@
     return(FALSE)
   }
 
-  # Extract Rhat values — bayesreml may store these under different names
+  # Extract Rhat values -- bayesreml may store these under different names
   rhat_vals <- NULL
 
   if (is.data.frame(fit_summary)) {

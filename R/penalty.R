@@ -1,4 +1,4 @@
-# penalty.R — Penalty matrix construction and mixed model reparameterisation
+# penalty.R -- Penalty matrix construction and mixed model reparameterisation
 #
 # Constructs difference penalty matrices for P-splines and provides the
 # eigendecomposition/Cholesky reparameterisation that maps penalised splines
@@ -85,7 +85,7 @@ make_penalty <- function(n_basis, order = 2L) {
     D <- D1 %*% D
   }
 
-  # Penalty: D'D — symmetric, positive semi-definite
+  # Penalty: D'D -- symmetric, positive semi-definite
   P <- Matrix::crossprod(D)
 
   # Ensure dgCMatrix storage for consistency
@@ -170,7 +170,7 @@ make_penalty <- function(n_basis, order = 2L) {
 #' dim(mm$X)
 #' dim(mm$Z)
 #'
-#' # Absorb method — penalty becomes identity
+#' # Absorb method -- penalty becomes identity
 #' mm2 <- make_Zspline(basis, constraint = "absorb")
 #' dim(mm2$Z)
 #'

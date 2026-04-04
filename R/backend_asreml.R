@@ -64,7 +64,7 @@
   )
 
   # Register known matrices (relationship / design matrices) if supplied.
-  # ASReml-R v4.2 uses vm(term, source = mat) — matrices must be assigned
+  # ASReml-R v4.2 uses vm(term, source = mat) -- matrices must be assigned
 
   # into the data environment or registered via asreml's attr mechanism.
   known_mats <- model_spec[["known_matrices"]]
@@ -165,7 +165,7 @@
 #' @return Named list of formulas: `fixed`, `random`, `rcov`.
 #' @noRd
 .asreml_build_formulas <- function(model_spec) {
-  # Fixed effects formula — pass through (ASReml uses standard R formula syntax)
+  # Fixed effects formula -- pass through (ASReml uses standard R formula syntax)
   fixed <- model_spec[["fixed"]]
   if (is.character(fixed)) {
     fixed <- stats::as.formula(fixed)
@@ -244,7 +244,7 @@
     if (length(classify_cols) == 1L) {
       level_vec <- as.character(pvals[[classify_cols]])
     } else {
-      # Multiple classify columns — paste together
+      # Multiple classify columns -- paste together
       level_vec <- do.call(
         paste, c(lapply(classify_cols, function(cc) pvals[[cc]]), sep = ":")
       )
@@ -320,10 +320,10 @@
 #' \eqn{I_V} is the \eqn{V \times V} identity matrix selecting the variety.
 #'
 #' The associated variance structure for the spline coefficients can be:
-#' - `"iid"`: \eqn{Var(\alpha) = \sigma^2_s I_{VK}} — independent coefficients
+#' - `"iid"`: \eqn{Var(\alpha) = \sigma^2_s I_{VK}} -- independent coefficients
 #' - `"penalised"`: \eqn{Var(\alpha) = \sigma^2_s (I_V \otimes P^{-})} where
 #'   \eqn{P} is the P-spline penalty matrix
-#' - `"us"`: \eqn{Var(\alpha) = G_s \otimes I_K} — unstructured covariance
+#' - `"us"`: \eqn{Var(\alpha) = G_s \otimes I_K} -- unstructured covariance
 #'   among varieties for each spline coefficient
 #'
 #' @param basis A funcrop basis object (containing `Bmatrix`, `penalty`, and

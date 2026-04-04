@@ -1,4 +1,4 @@
-# data.R — Documentation for simulated datasets in funcrop
+# data.R -- Documentation for simulated datasets in funcrop
 #
 # Roxygen2 documentation for package datasets.
 # See data-raw/simulate_data.R for generation code.
@@ -80,7 +80,7 @@
 #'   \item{col}{Integer. Column position in the spatial layout (1--6).}
 #'   \item{time}{Numeric. Days after sowing (70, 80, 90, 100, 110, 120).}
 #'   \item{ndvi}{Numeric. Observed NDVI value at each time point, clamped to
-#'     [0, 1].}
+#'     the range 0 to 1.}
 #'   \item{yield}{Numeric. Plot-level yield (t/ha), incorporating variety main
 #'     effects, GxE interaction, and environment-specific noise.}
 #' }
@@ -104,7 +104,7 @@
 #' str(sim_met_fda)
 #'
 #' # Plots per environment
-#' sim_met_fda[, uniqueN(plot_id), by = environment]
+#' sim_met_fda[, data.table::uniqueN(plot_id), by = environment]
 #'
 #' # Time points
 #' sim_met_fda[, unique(time)]
