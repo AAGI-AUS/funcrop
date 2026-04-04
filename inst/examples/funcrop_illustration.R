@@ -898,8 +898,11 @@ cat("\n", strrep("=", 70), "\nMODEL 5: funcrop high-level API (two-stage FDA)\n"
     strrep("=", 70), "\n")
 
 # Clean the extra B-spline columns before passing to funcrop
-dt_clean <- dt[, .(plot_id, variety, block, row, col, time,
-                    grain_weight, yield)]
+# Use clean copy (dt was modified by bayesreml)
+dt_clean <- dt_clean_copy[, c("plot_id", "variety", "block", "row", "col",
+                               "time", "grain_weight", "yield_plot"),
+                           with = FALSE]
+setnames(dt_clean, "yield_plot", "yield")
 
 cat("Using funcrop::fit_functional_profiles() + scalar_on_function()\n")
 cat("Engine: ASReml if available, else bayesreml\n\n")
