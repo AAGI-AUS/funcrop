@@ -933,8 +933,10 @@ for (eng in c("asreml", "bayesreml")) {
     cat("Stage 1 complete. Engine:", fit_s1$engine, "\n")
 
     # Stage 2: Relate yield to functional profiles
+    # primary_trait must be a named vector (names = variety IDs)
+    yield_named <- setNames(yield_dt[["yield"]], yield_dt[["variety"]])
     fit_s2 <- scalar_on_function(
-      primary_trait       = yield_dt[["yield"]],
+      primary_trait       = yield_named,
       functional_profiles = fit_s1,
       engine              = eng
     )

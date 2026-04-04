@@ -140,7 +140,7 @@
   # Rhat > 1.05 indicates poor mixing / non-convergence (Vehtari et al., 2021).
   converged <- .bayesreml_check_convergence(fit_summary, threshold = 1.05)
 
-  if (!converged) {
+  if (isFALSE(converged)) {
     warning(
       "bayesreml MCMC may not have converged. ",
       "Some Rhat values exceed 1.05. Consider increasing `n_samples` ",
