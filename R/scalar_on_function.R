@@ -532,9 +532,10 @@ scalar_on_function <- function(
     .msg(sprintf("NAs per column: %s",
                  paste(colSums(is.na(fit_df)), collapse = ", ")))
     raw_model <- asreml::asreml(
-      fixed = model_spec[["fixed"]],
-      data  = fit_df,
-      trace = FALSE
+      fixed   = model_spec[["fixed"]],
+      data    = fit_df,
+      trace   = FALSE,
+      ai.sing = TRUE  # allow singularities (common with n ~ p)
     )
     raw_result <- list(
       model     = raw_model,
