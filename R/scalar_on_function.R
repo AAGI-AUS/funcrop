@@ -531,11 +531,13 @@ scalar_on_function <- function(
     .msg(sprintf("Data columns: %s", paste(names(fit_df), collapse = ", ")))
     .msg(sprintf("NAs per column: %s",
                  paste(colSums(is.na(fit_df)), collapse = ", ")))
+    # Allow ASReml to handle singularities in the AI matrix
+    old_opts <- asreml::asreml.options(ai.sing = TRUE)
+    on.exit(asreml::asreml.options(old_opts), add = TRUE)
     raw_model <- asreml::asreml(
-      fixed   = model_spec[["fixed"]],
-      data    = fit_df,
-      trace   = FALSE,
-      ai.sing = TRUE  # allow singularities (common with n ~ p)
+      fixed = model_spec[["fixed"]],
+      data  = fit_df,
+      trace = FALSE
     )
     raw_result <- list(
       model     = raw_model,
