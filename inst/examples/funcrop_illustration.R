@@ -65,6 +65,10 @@ yield_dt <- dt[, .(yield = mean(yield_plot)), by = variety]
 setkey(yield_dt, variety)
 
 # Storage for cross-model comparison
+# IMPORTANT: bayesreml modifies data.table columns by reference (converts to
+# factor/character). Save a clean copy for post-model computations.
+dt_clean_copy <- copy(dt)
+
 results <- list()
 
 
@@ -129,7 +133,7 @@ if (HAS_BAYESREML) {
   m0_bay <- bayesreml(
     fixed     = yield_plot ~ block,
     random    = ~ variety,
-    data      = yield_plot_dt,
+    data      = copy(yield_plot_dt),
     n_samples = 2000,
     warmup    = 1000,
     chains    = 4,
@@ -404,7 +408,7 @@ if (HAS_BAYESREML) {
       paste("~",
             paste0("variety:B", 1:n_basis, collapse = " + "))
     ),
-    data      = dt,
+    data      = copy(dt),  # copy() prevents bayesreml modifying dt by reference
     n_samples = 2000,
     warmup    = 1000,
     chains    = 4,
@@ -525,13 +529,12 @@ cat("\n", strrep("=", 70), "\nMODEL 3: Scalar-on-function -- yield ~ grain-fill 
 
 # ---- 3a. Compute functional covariate matrix ----
 
-# Recompute alpha_hat fresh (dt may have been modified by M2 backends --
-# bayesreml converts columns to factor/character by reference)
-cat("Recomputing per-plot OLS curves for M3...\n")
-time_num <- as.numeric(as.character(dt[["time"]]))  # force numeric
-gw_num   <- as.numeric(dt[["grain_weight"]])
-pid_chr  <- as.character(dt[["plot_id"]])
-var_chr  <- as.character(dt[["variety"]])
+# Use the clean copy (bayesreml modifies dt by reference)
+cat("Recomputing per-plot OLS curves for M3 (from clean data copy)...\n")
+time_num <- as.numeric(dt_clean_copy[["time"]])
+gw_num   <- as.numeric(dt_clean_copy[["grain_weight"]])
+pid_chr  <- as.character(dt_clean_copy[["plot_id"]])
+var_chr  <- as.character(dt_clean_copy[["variety"]])
 
 B_all_m3 <- bspline_basis(time_num, n_knots = 4, degree = 3,
                             boundary = basis$boundary)$B
@@ -640,7 +643,7 @@ if (HAS_BAYESREML) {
     fixed     = as.formula(
       paste("yield ~ 1 +", paste0("C", 1:n_basis, collapse = " + "))
     ),
-    data      = reg_dt,
+    data      = copy(reg_dt),
     n_samples = 3000,
     warmup    = 1500,
     chains    = 4,
@@ -810,7 +813,7 @@ if (HAS_BAYESREML) {
       paste("~",
             paste0("Crange", 1:ncol(C_range), collapse = " + "))
     ),
-    data      = reg_dt,
+    data      = copy(reg_dt),
     n_samples = 3000,
     warmup    = 1500,
     chains    = 4,
