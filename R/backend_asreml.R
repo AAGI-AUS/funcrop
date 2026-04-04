@@ -74,9 +74,11 @@
     for (nm in names(known_mats)) {
       assign(nm, known_mats[[nm]], envir = mat_env)
     }
-    # Ensure formulas use this environment
-    environment(asreml_args[["fixed"]])    <- mat_env
-    environment(asreml_args[["random"]])   <- mat_env
+    # Ensure formulas use this environment (skip NULLs)
+    environment(asreml_args[["fixed"]]) <- mat_env
+    if (!is.null(asreml_args[["random"]])) {
+      environment(asreml_args[["random"]]) <- mat_env
+    }
     if (!is.null(asreml_args[["residual"]])) {
       environment(asreml_args[["residual"]]) <- mat_env
     }

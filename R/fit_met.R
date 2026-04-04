@@ -639,12 +639,20 @@ fit_fda_met <- function(
   # Variance components from Stage 2
   # ---------------------------------------------------------------------------
 
-  std_result <- .standardise_result(
-    raw_result = raw_result,
-    engine     = engine,
-    model_spec = model_spec,
-    basis      = basis,
-    data       = stage2_dt
+  std_result <- tryCatch(
+    .standardise_result(
+      raw_result = raw_result,
+      engine     = engine,
+      model_spec = model_spec,
+      basis      = basis,
+      data       = stage2_dt
+    ),
+    error = function(e) {
+      warning("Stage 2 result standardisation failed: ", e$message,
+              call. = FALSE)
+      list(variance_components = data.table::data.table(),
+           residuals = numeric(0L))
+    }
   )
 
   # ---------------------------------------------------------------------------
