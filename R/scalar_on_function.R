@@ -483,16 +483,11 @@ scalar_on_function <- function(
     fixed_formula <- stats::as.formula(paste("yield ~", fixed_rhs))
 
     # The random C columns represent the penalised part of beta(t)
-    # We model this as a single random "smooth" term with identity covariance
-    # In practice, store the Z matrix for the random part
-    Z_beta_random <- as.matrix(C_random)
-    known_mats[["Z_beta_smooth"]] <- Z_beta_random
-    random_terms <- c(random_terms,
-                      "vm(beta_smooth, source = Z_beta_smooth)")
-
-    # Add a dummy factor for the random smooth term
-    data.table::set(model_dt, j = "beta_smooth",
-                    value = factor(variety_ids, levels = variety_ids))
+    # Each Cr_k column is a continuous covariate treated as a random regression
+    # coefficient. In both ASReml and bayesreml, these are independent random
+    # effects with identity covariance (iid shrinkage on the wiggly part of
+    # beta(t)). This is the same approach as Model 4 in the illustration.
+    random_terms <- c(random_terms, rand_c_names)
   } else {
     # C is in Z-space -- treat all C columns as fixed (penalty already absorbed
     # by the Z-space transformation from Stage 1)

@@ -552,7 +552,8 @@ fit_fda_met <- function(
     group_col       = "variety",
     fa_k            = fa_k,
     genomic_matrix  = genomic_matrix,
-    pedigree_matrix = pedigree_matrix
+    pedigree_matrix = pedigree_matrix,
+    env_levels      = env_levels
   )
 
   fixed_formula  <- stats::as.formula("blup_value ~ coef_f")
@@ -585,36 +586,53 @@ fit_fda_met <- function(
   # Extract FA loadings and variety scores
   # ---------------------------------------------------------------------------
 
-  fa_results <- .extract_fa_results(
-    raw_result     = raw_result,
-    engine         = engine,
-    gxe_structure  = gxe_structure,
-    env_levels     = env_levels,
-    variety_levels = variety_levels,
-    n_z_cols       = n_z_cols,
-    fa_k           = fa_k
+  fa_results <- tryCatch(
+    .extract_fa_results(
+      raw_result     = raw_result,
+      engine         = engine,
+      gxe_structure  = gxe_structure,
+      env_levels     = env_levels,
+      variety_levels = variety_levels,
+      n_z_cols       = n_z_cols,
+      fa_k           = fa_k
+    ),
+    error = function(e) {
+      warning("FA result extraction failed: ", e$message, call. = FALSE)
+      list(loadings = diag(length(env_levels)),
+           scores   = matrix(0, length(variety_levels), 1L),
+           psi      = rep(NA_real_, length(env_levels)))
+    }
   )
 
   # ---------------------------------------------------------------------------
   # Reconstruct environment-specific curves
   # ---------------------------------------------------------------------------
 
-  env_curves <- .reconstruct_met_curves(
-    fa_results    = fa_results,
-    stage1_blups  = stage1_blups,
-    basis         = basis,
-    spline_decomp = spline_decomp,
-    env_levels    = env_levels,
-    variety_levels = variety_levels
+  env_curves <- tryCatch(
+    .reconstruct_met_curves(
+      fa_results    = fa_results,
+      stage1_blups  = stage1_blups,
+      basis         = basis,
+      spline_decomp = spline_decomp,
+      env_levels    = env_levels,
+      variety_levels = variety_levels
+    ),
+    error = function(e) {
+      warning("Curve reconstruction failed: ", e$message, call. = FALSE)
+      data.table::data.table()
+    }
   )
 
   # ---------------------------------------------------------------------------
   # GxE variance decomposition
   # ---------------------------------------------------------------------------
 
-  gxe_var <- .decompose_gxe_variance(
-    fa_results = fa_results,
-    env_levels = env_levels
+  gxe_var <- tryCatch(
+    .decompose_gxe_variance(fa_results = fa_results, env_levels = env_levels),
+    error = function(e) {
+      warning("GxE decomposition failed: ", e$message, call. = FALSE)
+      data.table::data.table()
+    }
   )
 
   # ---------------------------------------------------------------------------
@@ -781,7 +799,8 @@ fit_fda_met <- function(
     group_col       = "variety_f",
     fa_k            = fa_k,
     genomic_matrix  = genomic_matrix,
-    pedigree_matrix = pedigree_matrix
+    pedigree_matrix = pedigree_matrix,
+    env_levels      = env_levels
   )
 
   random_terms <- gxe_random_term
@@ -856,9 +875,12 @@ fit_fda_met <- function(
     variety_levels = variety_levels
   )
 
-  gxe_var <- .decompose_gxe_variance(
-    fa_results = fa_results,
-    env_levels = env_levels
+  gxe_var <- tryCatch(
+    .decompose_gxe_variance(fa_results = fa_results, env_levels = env_levels),
+    error = function(e) {
+      warning("GxE decomposition failed: ", e$message, call. = FALSE)
+      data.table::data.table()
+    }
   )
 
   predictions <- data.table::data.table()
@@ -908,7 +930,8 @@ fit_fda_met <- function(
 #' @noRd
 .build_gxe_random_term <- function(gxe_structure, environment_col, group_col,
                                    fa_k, genomic_matrix = NULL,
-                                   pedigree_matrix = NULL) {
+                                   pedigree_matrix = NULL,
+                                   env_levels = NULL) {
 
   # Determine the variety term (with or without relationship matrix)
   if (!is.null(genomic_matrix)) {
@@ -920,12 +943,25 @@ fit_fda_met <- function(
   }
 
   # Build environment covariance structure
+  # For "diag", use at() expansion to avoid parentheses in variable names
+  # (bayesreml generates invalid R syntax from "diag(environment):variety")
   env_str <- switch(
     gxe_structure,
     fa1 = paste0("fa(", environment_col, ", 1)"),
     fa2 = paste0("fa(", environment_col, ", 2)"),
     us  = paste0("us(", environment_col, ")"),
-    diag = paste0("diag(", environment_col, ")"),
+    diag = {
+      if (!is.null(env_levels) && length(env_levels) > 0L) {
+        # Expand to at(env, "E1"):var + at(env, "E2"):var + ...
+        at_terms <- paste0(
+          "at(", environment_col, ", \"", env_levels, "\"):",
+          var_term
+        )
+        return(paste(at_terms, collapse = " + "))
+      } else {
+        paste0("diag(", environment_col, ")")
+      }
+    },
     compound_symmetry = paste0("corh(", environment_col, ")"),
     stop("Unknown gxe_structure: ", gxe_structure, call. = FALSE)
   )
