@@ -525,6 +525,12 @@ scalar_on_function <- function(
       stop("ASReml is not installed.", call. = FALSE)
     }
     fit_df <- as.data.frame(model_dt)
+    .msg(sprintf("ASReml direct call: %d rows, %d cols. Formula: %s",
+                 nrow(fit_df), ncol(fit_df),
+                 deparse(model_spec[["fixed"]])))
+    .msg(sprintf("Data columns: %s", paste(names(fit_df), collapse = ", ")))
+    .msg(sprintf("NAs per column: %s",
+                 paste(colSums(is.na(fit_df)), collapse = ", ")))
     raw_model <- asreml::asreml(
       fixed = model_spec[["fixed"]],
       data  = fit_df,

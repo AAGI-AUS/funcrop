@@ -442,8 +442,8 @@
   if (length(all_terms) == 0L) return(character(0L))
 
   # Filter for spline-related terms using naming conventions
-  spline_patterns <- c("spline", "basis", "bspline", "bs\\(", "str\\(",
-                        "spline_coef")
+  spline_patterns <- c("spline", "basis", "bspline", "Bsp", "bs\\(",
+                        "str\\(", "spline_coef")
   pattern <- paste(spline_patterns, collapse = "|")
   spline_terms <- all_terms[grepl(pattern, all_terms, ignore.case = TRUE)]
 
