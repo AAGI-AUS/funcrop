@@ -516,8 +516,21 @@ scalar_on_function <- function(
   # ===========================================================================
 
   .msg("Fitting scalar-on-function model via '", engine, "' engine...")
-  # Convert to data.frame for ASReml (data.table formula parsing differs)
-  fit_data <- if (engine == "asreml") as.data.frame(model_dt) else model_dt
+
+  # For ASReml: convert to data.frame AND set formula environment to a
+  # local env containing the data columns (ASReml formula parser is strict)
+  if (engine == "asreml") {
+    fit_data <- as.data.frame(model_dt)
+    # Set formula environments to find data columns
+    data_env <- list2env(fit_data, parent = globalenv())
+    environment(model_spec[["fixed"]]) <- data_env
+    if (!is.null(model_spec[["random"]])) {
+      environment(model_spec[["random"]]) <- data_env
+    }
+  } else {
+    fit_data <- model_dt
+  }
+
   raw_result <- .dispatch_fit(engine = engine, model_spec = model_spec,
                               data = fit_data, ...)
 
