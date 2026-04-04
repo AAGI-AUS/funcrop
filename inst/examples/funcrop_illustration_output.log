@@ -1,0 +1,394 @@
+Loading required package: viridisLite
+Online License checked out Sat Apr  4 19:44:47 2026
+Loading ASReml-R version 4.2
+
+bayesreml 0.1.0 -- Bayesian mixed models with ASReml syntax
+
+===== Dataset overview =====
+Rows: 480  | Varieties: 20  | Blocks: 3  | Time points: 8 
+Time points: 10 15 20 25 30 35 40 45 
+Grid: rows 1- 12  x cols 1- 5 
+
+====================================================================== 
+MODEL 0: Baseline RCBD for yield (no FDA)
+ ====================================================================== 
+
+--- ASReml ---
+Converged: TRUE 
+
+Variance components:
+        component std.error  z.ratio bound %ch
+variety 3.5097925 1.2248405 2.865510     P   0
+units!R 0.7828201 0.1795914 4.358894     P   0
+
+Top 5 varieties (BLUPs):
+   variety predicted.value std.error    status
+    <fctr>           <num>     <num>    <char>
+1:     V12        19.42433 0.4937459 Estimable
+2:     V03        19.25799 0.4937459 Estimable
+3:     V08        18.88267 0.4937459 Estimable
+4:     V19        17.62531 0.4937459 Estimable
+5:     V05        17.57012 0.4937459 Estimable
+
+--- bayesreml ---
+ℹ Initialising python and checking dependencies, this may take a moment.
+✔ Initialising python and checking dependencies ... done!
+
+
+
+Variance components (posterior):
+      component  estimate        sd      q2.5       q50    q97.5
+1 sigma_variety 1.8862373 0.3431486 1.3283441 1.8467510 2.712094
+2   sigma_e_atg 0.9094516 0.1070076 0.7307223 0.8980383 1.155491
+
+Top 5 varieties (posterior means):
+   variety predicted.value
+    <char>           <num>
+1:     V12        3.107344
+2:     V03        2.949582
+3:     V08        2.596871
+4:     V19        1.345304
+5:     V05        1.277634
+
+ ====================================================================== 
+MODEL 1: B-spline smoothing of grain-fill curves
+ ====================================================================== 
+Basis functions: 8  | Knots: 4  | Degree: 3 
+Fixed (null space) cols: 2  | Random (range space) cols: 6 
+Fitted 60 plot-level curves
+Plot 1 rendered.
+
+ ====================================================================== 
+MODEL 2: Variety-specific functional profiles (mixed model)
+ ====================================================================== 
+Constructing Z matrix: 20 varieties x 8 basis = 160 random effects
+
+--- ASReml ---
+Terms with zero df listed in attribute 'zerodf' of the wald table.
+Converged: TRUE 
+
+Variance components (first 5):
+              component std.error  z.ratio bound %ch
+variety:B1 2.672550e+00  1.330564 2.008584     P 0.0
+variety:B2 4.934232e-06        NA       NA     B  NA
+variety:B3 1.825811e+01  7.044558 2.591804     P 0.1
+variety:B4 9.127782e+00  4.084150 2.234928     P 0.2
+variety:B5 2.138651e+01  8.140468 2.627184     P 0.2
+... ( 9 total components)
+
+Random coefficients extracted: 160 
+
+--- bayesreml ---
+
+Variance components (posterior):
+            component  estimate        sd       q2.5       q50      q97.5
+1 sigma_B1_in_variety 6.1313980 3.5123513 2.42845014 4.4864190 12.1675571
+2 sigma_B2_in_variety 2.2904095 1.3577812 0.33326815 2.4747551  4.5122739
+3 sigma_B3_in_variety 2.7855358 3.6659649 0.12719020 0.8178608  9.1471064
+4 sigma_B4_in_variety 0.6828433 0.4079469 0.11380044 0.5606721  1.4252723
+5 sigma_B5_in_variety 0.4733547 0.2154604 0.10167637 0.5013716  0.8330682
+6 sigma_B6_in_variety 0.2639050 0.1271804 0.08158922 0.2116596  0.5847839
+7 sigma_B7_in_variety 0.8084273 0.3592715 0.20591182 0.7926928  1.5381797
+8 sigma_B8_in_variety 0.9474490 0.5057932 0.28628692 0.7515728  2.2068384
+9         sigma_e_atg 1.8922807 0.1605584 1.68249294 1.8359316  2.1609932
+
+Reconstructing variety curves from ASReml BLUPs...
+Plot 2 error: Discrete value supplied to a continuous scale. 
+Plot 2 rendered.
+
+ ====================================================================== 
+MODEL 3: Scalar-on-function -- yield ~ grain-fill curve
+ ====================================================================== 
+Recomputing per-plot OLS curves for M3 (from clean data copy)...
+alpha_hat NAs: 0 of 480 
+Inner product matrix J: 8 x 8 
+Condition number: 47.2819 
+Functional covariate C: 20 x 8 
+Yield NAs: 0 of 20 
+C NAs: 0 
+
+--- ASReml ---
+Converged: TRUE 
+
+Fixed effects (B-spline coefficients for beta(t)):
+     C1      C2      C3      C4      C5      C6      C7      C8 
+-0.5425  0.4282 -0.3336  0.0319  0.1308 -0.1308  0.2698 -0.4205 
+Log-likelihood: -31.63625 
+Fitted yield RMSE: 1.111 
+
+--- bayesreml ---
+
+Beta(t) coefficients (posterior means):
+beta_C1 beta_C2 beta_C3 beta_C4 beta_C5 beta_C6 beta_C7 beta_C8 
+ 0.3878 -0.1440 -0.0189 -0.1637  0.1792  0.1034 -0.1019 -0.0278 
+Plot 3 rendered.
+
+ ====================================================================== 
+MODEL 4: Penalised scalar-on-function (P-spline on beta(t))
+ ====================================================================== 
+C_null: 20 x 2 
+C_range: 20 x 6 
+
+--- ASReml ---
+Converged: FALSE 
+
+Variance components:
+           component  std.error    z.ratio bound    %ch
+Crange1 6.904183e+00 28.7117950 0.24046504     P   23.3
+Crange2 2.838898e-02  1.9118452 0.01484899     ? 1481.1
+Crange3 3.038492e-06         NA         NA     B     NA
+Crange4 3.206331e-06         NA         NA     B     NA
+Crange5 2.910328e-02  0.1675208 0.17372942     P   72.0
+Crange6 2.027862e-07         NA         NA     B     NA
+units!R 2.003957e+00  0.7497626 2.67278818     P    0.0
+Penalised beta(t) reconstructed.
+Warning messages:
+1: In asreml(fixed = fixed_pen, random = random_pen, data = reg_dt,  :
+  Log-likelihood not converged
+2: In asreml(fixed = fixed_pen, random = random_pen, data = reg_dt,  :
+  Some components changed by more than 1% on the last iteration
+
+--- bayesreml ---
+
+Variance components:
+      component  estimate        sd       q2.5       q50    q97.5
+1 sigma_Crange1 0.6931575 0.4697761 0.08102586 0.5919674 1.904385
+2 sigma_Crange2 0.5747000 0.3815207 0.09081926 0.4827835 1.521295
+3 sigma_Crange3 0.8422315 0.5065227 0.16719206 0.7610941 2.011545
+4 sigma_Crange4 0.5653717 0.4407336 0.08910602 0.4324824 1.584378
+5 sigma_Crange5 0.5627426 0.3983779 0.06675318 0.4790599 1.692402
+6 sigma_Crange6 0.7107429 0.5158578 0.15165131 0.5441070 1.930664
+7   sigma_e_atg 1.1280800 0.4031520 0.63384358 1.0232051 2.152305
+Plot 4 rendered.
+
+ ====================================================================== 
+MODEL 5: funcrop high-level API (two-stage FDA)
+ ====================================================================== 
+Using funcrop::fit_functional_profiles() + scalar_on_function()
+Engine: ASReml if available, else bayesreml
+
+
+--- funcrop with engine = 'asreml' ---
+Constructing B-spline basis: 4 knots, degree 3, penalty order 2.
+Dispatching to 'asreml' engine...
+Fitting model using 'asreml' engine...
+Error with engine ' asreml ': ASReml fitting failed with error:
+  object 'spline_coef' not found 
+
+--- funcrop with engine = 'bayesreml' ---
+Constructing B-spline basis: 4 knots, degree 3, penalty order 2.
+Dispatching to 'bayesreml' engine...
+Fitting model using 'bayesreml' engine...
+Running bayesreml MCMC: 2000 samples, 1000 warmup, 4 chains...
+Error with engine ' bayesreml ': bayesreml fitting failed with error:
+  unused argument (nsamples = 2000) 
+
+ ====================================================================== 
+MODEL 6: MET-FDA with GxE (using sim_met_fda)
+ ====================================================================== 
+MET data: 2160 rows | 30 varieties | 4 environments
+
+--- Single environment (E1) via ASReml ---
+Terms with zero df listed in attribute 'zerodf' of the wald table.
+E1 model converged: TRUE 
+Variance components:
+               component    std.error   z.ratio bound %ch
+variety:MB1 0.0059423722 0.0016789924 3.5392489     P 0.1
+variety:MB2 0.0137682354 0.0053207762 2.5876366     P 0.4
+variety:MB3 0.0066172019 0.0026938854 2.4563784     P 0.4
+variety:MB4 0.0074643390 0.0022393204 3.3333056     P 0.3
+variety:MB5 0.0002424288 0.0003696481 0.6558367     P 1.0
+
+--- Full MET-FDA via funcrop ---
+
+funcrop MET-FDA with engine = 'asreml'
+Constructing shared B-spline basis: 3 knots, degree 3, penalty order 2.
+=== Stage 1: Fitting per-environment functional profiles ===
+  Environment 1/4: 'E1'
+Dispatching to 'asreml' engine...
+Fitting model using 'asreml' engine...
+  Environment 2/4: 'E2'
+Dispatching to 'asreml' engine...
+Fitting model using 'asreml' engine...
+  Environment 3/4: 'E3'
+Dispatching to 'asreml' engine...
+Fitting model using 'asreml' engine...
+Error: subscript out of bounds 
+
+funcrop MET-FDA with engine = 'bayesreml'
+Constructing shared B-spline basis: 3 knots, degree 3, penalty order 2.
+=== Stage 1: Fitting per-environment functional profiles ===
+  Environment 1/4: 'E1'
+Dispatching to 'bayesreml' engine...
+Fitting model using 'bayesreml' engine...
+Running bayesreml MCMC: 2000 samples, 1000 warmup, 4 chains...
+  Environment 2/4: 'E2'
+Dispatching to 'bayesreml' engine...
+Fitting model using 'bayesreml' engine...
+Running bayesreml MCMC: 2000 samples, 1000 warmup, 4 chains...
+  Environment 3/4: 'E3'
+Dispatching to 'bayesreml' engine...
+Fitting model using 'bayesreml' engine...
+Running bayesreml MCMC: 2000 samples, 1000 warmup, 4 chains...
+Error: subscript out of bounds 
+Warning messages:
+1: Stage 1 fit failed for environment 'E1': ASReml fitting failed with error:
+  object 'spline_coef' not found 
+2: Stage 1 fit failed for environment 'E2': ASReml fitting failed with error:
+  object 'spline_coef' not found 
+3: Stage 1 fit failed for environment 'E3': ASReml fitting failed with error:
+  object 'spline_coef' not found 
+4: Stage 1 fit failed for environment 'E1': bayesreml fitting failed with error:
+  unused argument (nsamples = 2000) 
+5: Stage 1 fit failed for environment 'E2': bayesreml fitting failed with error:
+  unused argument (nsamples = 2000) 
+6: Stage 1 fit failed for environment 'E3': bayesreml fitting failed with error:
+  unused argument (nsamples = 2000) 
+
+
+ ====================================================================== 
+COMPARISON: ASReml (REML) vs bayesreml (Bayesian)
+====================================================================== 
+
+--- Model 0: Baseline RCBD for Yield ---
+  sigma_variety^2:  ASReml = 3.5098  |  bayesreml = 1.8862
+  sigma_resid^2:    ASReml = 0.7828  |  bayesreml = NA
+  BLUP correlation: r = 1.0000
+
+--- Model 3: Unpenalised Scalar-on-Function ---
+  B-spline coefficient comparison:
+    basis   ASReml bayesreml     diff
+   <char>    <num>     <num>    <num>
+1:     b1 -0.54251   0.38780 -0.93031
+2:     b2  0.42821  -0.14398  0.57218
+3:     b3 -0.33360  -0.01894 -0.31465
+4:     b4  0.03189  -0.16366  0.19555
+5:     b5  0.13077   0.17916 -0.04839
+6:     b6 -0.13083   0.10345 -0.23428
+7:     b7  0.26976  -0.10189  0.37166
+8:     b8 -0.42047  -0.02782 -0.39265
+  Max absolute difference: 0.93031
+  Correlation: -0.5773
+
+
+====================================================================== 
+SUMMARY TABLE: Key Results Across All Models
+====================================================================== 
+
+                        Model    Engine  LogLik
+                       <char>    <char>   <num>
+1:          M0: Baseline RCBD    ASReml  -51.39
+2:          M0: Baseline RCBD bayesreml      NA
+3:         M2: Variety curves    ASReml -641.28
+4:           M3: Yield ~ f(t)    ASReml  -31.64
+5: M4: Yield ~ f(t) penalised    ASReml      NA
+6:    M6: MET single env (E1)    ASReml 1459.30
+                               Note
+                             <char>
+1:             Scalar yield, no FDA
+2: Bayesian -- no log-lik, use WAIC
+3:            9 variance components
+4:              Unpenalised beta(t)
+5:            sigma_beta^2 = 6.9042
+6:            NDVI functional model
+
+
+====================================================================== 
+RECONCILIATION: Expected Differences Between REML and Bayesian
+====================================================================== 
+
+
+1. VARIANCE COMPONENTS
+   - ASReml (REML): point estimates via restricted maximum likelihood.
+     Can hit boundary (zero) for small variance components.
+   - bayesreml (Bayesian): posterior means with lognormal priors.
+     Priors shrink toward prior mean; never exactly zero.
+   - RECONCILIATION: For well-identified components, REML and posterior
+     means should be close. Divergence signals either weak data or
+     strong prior influence. Increase n_samples and check Rhat < 1.05.
+
+2. FIXED EFFECT ESTIMATES (including beta(t) coefficients)
+   - ASReml: generalised least squares conditional on REML variance estimates.
+   - bayesreml: posterior means marginalised over variance uncertainty.
+   - RECONCILIATION: Typically very close (< 5%% difference) for models
+     with moderate data. Bayesian estimates have slightly wider CIs
+     because they account for variance component uncertainty.
+
+3. BLUPs vs POSTERIOR MEANS
+   - ASReml BLUPs: conditional modes E[u|y, theta_hat].
+   - bayesreml: posterior means E[u|y] (integrated over theta).
+   - RECONCILIATION: Nearly identical for large datasets. For small
+     datasets, Bayesian estimates are slightly more shrunk toward zero
+     due to prior regularisation.
+
+4. MODEL FIT STATISTICS
+   - ASReml: log-likelihood, AIC, BIC (frequentist).
+   - bayesreml: WAIC, LOO-IC (Bayesian). Not directly comparable to AIC.
+   - RECONCILIATION: Both penalise complexity but with different
+     philosophies. Use each within its own framework for model selection.
+
+5. CONVERGENCE
+   - ASReml: REML iterations; may not converge for complex models.
+   - bayesreml: MCMC; convergence assessed via Rhat (< 1.05) and
+     ESS (> 400). Slow for high-dimensional random effects.
+   - RECONCILIATION: If ASReml converges but bayesreml has high Rhat,
+     increase warmup/chains. If ASReml doesn't converge, bayesreml
+     with informative priors may succeed.
+
+6. PENALTY / SMOOTHING PARAMETER
+   - ASReml: sigma_b^2 estimated by REML (ratio sigma_b^2 / sigma_e^2
+     controls smoothness). Can be zero (unpenalised) or very large
+     (fully penalised).
+   - bayesreml: sigma_b has a lognormal prior. Prior choice matters
+     when n_basis >> n_observations.
+   - RECONCILIATION: For Model 4 (20 obs, 6 random B-spline effects),
+     the prior matters. Sensitivity analysis recommended.
+
+7. COMPUTATIONAL COST
+   - ASReml: fast (seconds for simple models, minutes for MET-FA).
+   - bayesreml: slow (minutes for simple, hours for MET-FA with many
+     varieties and time points). Use ASReml for exploration,
+     bayesreml for final inference with full uncertainty.
+
+===== Script complete =====
+Timestamp: 2026-04-04 19:46:13 
+Session info:
+R version 4.5.2 (2025-10-31)
+Platform: aarch64-apple-darwin20
+Running under: macOS Tahoe 26.3.1
+
+Matrix products: default
+BLAS:   /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libBLAS.dylib 
+LAPACK: /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.1
+
+locale:
+[1] C.UTF-8/C.UTF-8/C.UTF-8/C/C.UTF-8/C.UTF-8
+
+time zone: Australia/Adelaide
+tzcode source: internal
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+[1] bayesreml_0.1.0     asreml_4.2.0.392    viridis_0.6.5      
+[4] viridisLite_0.4.3   ggplot2_4.0.2       Matrix_1.7-4       
+[7] data.table_1.18.2.1 funcrop_0.1.0      
+
+loaded via a namespace (and not attached):
+ [1] gtable_0.3.6       processx_3.8.6     lattice_0.22-7     callr_3.7.6       
+ [5] vctrs_0.7.2        tools_4.5.2        ps_1.9.2           tfruns_1.5.4      
+ [9] generics_0.1.4     parallel_4.5.2     sandwich_3.1-1     tibble_3.3.1      
+[13] pkgconfig_2.0.3    RColorBrewer_1.1-3 S7_0.2.1           lifecycle_1.0.5   
+[17] compiler_4.5.2     farver_2.1.2       progress_1.2.3     codetools_0.2-20  
+[21] pillar_1.11.1      crayon_1.5.3       whisker_0.4.1      MASS_7.3-65       
+[25] tfautograph_0.3.2  greta_0.5.1        abind_1.4-8        multcomp_1.4-29   
+[29] parallelly_1.46.1  tidyselect_1.2.1   digest_0.6.39      mvtnorm_1.3-6     
+[33] future_1.69.0      dplyr_1.2.0        listenv_0.10.0     labeling_0.4.3    
+[37] splines_4.5.2      grid_4.5.2         cli_3.6.5          magrittr_2.0.4    
+[41] base64enc_0.1-6    dichromat_2.0-0.1  survival_3.8-3     TH.data_1.1-5     
+[45] withr_3.0.2        prettyunits_1.2.0  scales_1.4.0       backports_1.5.0   
+[49] estimability_1.5.1 emmeans_2.0.2      globals_0.19.0     reticulate_1.45.0 
+[53] gridExtra_2.3      zoo_1.8-15         png_0.1-8          hms_1.1.4         
+[57] coda_0.19-4.1      rlang_1.1.7        Rcpp_1.1.1         glue_1.8.0        
+[61] jsonlite_2.0.0     R6_2.6.1           tensorflow_2.20.0 
