@@ -551,15 +551,18 @@ cat("Condition number:", kappa(J), "\n")
 C_mat <- alpha_variety %*% as.matrix(J)
 cat("Functional covariate C:", nrow(C_mat), "x", ncol(C_mat), "\n")
 
-# Build regression data.frame
-reg_dt <- merge(
-  data.table(variety = levels(dt$variety)),
-  yield_dt, by = "variety", sort = FALSE
-)
-# Add C columns
+# Build regression data.frame -- ensure variety order matches alpha_variety rows
+var_levels <- rownames(alpha_variety)  # same as levels(dt$variety)
+reg_dt <- data.table(variety = var_levels)
+# Match yield to varieties
+reg_dt[, yield := yield_dt[match(var_levels, yield_dt$variety), yield]]
+cat("Yield NAs:", sum(is.na(reg_dt$yield)), "of", nrow(reg_dt), "\n")
+
+# Add C columns (row order matches var_levels)
 for (k in seq_len(n_basis)) {
   set(reg_dt, j = paste0("C", k), value = C_mat[, k])
 }
+cat("C NAs:", sum(is.na(C_mat)), "\n")
 
 # ---- 3b. ASReml (scalar-on-function) ----
 if (HAS_ASREML) {
