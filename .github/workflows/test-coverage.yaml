@@ -24,7 +24,18 @@ jobs:
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          extra-packages: any::covr, local::.
+          extra-packages: |
+            any::covr
+            any::testthat
+            any::knitr
+            any::rmarkdown
+            any::lme4
+            any::mgcv
+            any::nlme
+            any::ggplot2
+            any::withr
+            local::.
+          dependencies: '"hard"'
           needs: coverage
 
       - name: Test coverage
