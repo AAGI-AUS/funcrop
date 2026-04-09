@@ -1,0 +1,281 @@
+# funcrop ![](reference/figures/logo.png)
+
+**Functional Data Analysis for Crop Variety Trials**
+
+funcrop integrates B-spline basis functions with linear mixed models to
+analyse functional traits (grain-fill curves, NDVI profiles, stay-green
+trajectories) in crop variety trials. It supports scalar-on-function
+regression, 2D functional surfaces, and multi-environment trial (MET)
+analyses with genotype-by-environment (GxE) interaction.
+
+## Key Features
+
+- **Scalar-on-function regression** – relate yield to the entire
+  grain-fill trajectory via a coefficient function beta(t)
+- **Multi-environment FDA** – FA1/FA2/US/diagonal GxE structures on
+  functional coefficients
+- **Genomic prediction** – VanRaden G-matrices, pedigree A-matrices,
+  blended H-matrices
+- **4 estimation backends** – mgcv, lme4, ASReml-R, bayesreml
+
+## Installation
+
+``` r
+# From GitHub
+remotes::install_github("AAGI-AUS/funcrop")
+```
+
+At least one backend must be installed:
+
+| Backend   | Install                                            | Notes                                      |
+|-----------|----------------------------------------------------|--------------------------------------------|
+| mgcv      | Ships with R                                       | Default. Open-source.                      |
+| lme4      | `install.packages("lme4")`                         | Open-source. GLMM support.                 |
+| ASReml-R  | [vsni.co.uk](https://vsni.co.uk/software/asreml-r) | Commercial licence. FA, AR1, genomic vm(). |
+| bayesreml | `install.packages("bayesreml")`                    | Open-source. Full posterior inference.     |
+
+## Quick Start
+
+``` r
+library(funcrop)
+data(sim_grain_fill)
+
+# Stage 1: Fit variety-specific grain-fill profiles
+profiles <- fit_functional_profiles(
+  data      = sim_grain_fill,
+  time_col  = "time",
+  value_col = "grain_weight",
+  id_col    = "plot_id",
+  group_col = "variety",
+  n_knots   = 6,
+  engine    = "auto"
+)
+
+# Stage 2: Scalar-on-function regression (yield ~ grain-fill curve)
+yield_vec <- setNames(
+  sim_grain_fill[, .(y = mean(yield)), by = variety]$y,
+  sim_grain_fill[, .(y = mean(yield)), by = variety]$variety
+)
+
+sof <- scalar_on_function(
+  primary_trait       = yield_vec,
+  functional_profiles = profiles,
+  engine              = "auto"
+)
+
+# Inspect the coefficient function beta(t)
+plot(sof, which = "coef")
+```
+
+## Backend Selection
+
+funcrop auto-detects the best available backend (mgcv \> lme4 \> ASReml
+\> bayesreml). Override with the `engine` argument or set a session
+default:
+
+``` r
+# Check available backends
+funcrop_engines()
+
+# Set default for the session
+funcrop_default_engine("asreml")
+
+# Or specify per call
+profiles <- fit_functional_profiles(..., engine = "lme4")
+```
+
+See
+[`vignette("choosing-backends")`](https://AAGI-AUS.github.io/funcrop/articles/choosing-backends.md)
+for a detailed comparison.
+
+## Core Functions
+
+| Function                                                                                               | Purpose                                     |
+|--------------------------------------------------------------------------------------------------------|---------------------------------------------|
+| [`fit_functional_profiles()`](https://AAGI-AUS.github.io/funcrop/reference/fit_functional_profiles.md) | Stage 1: variety-specific functional curves |
+| [`scalar_on_function()`](https://AAGI-AUS.github.io/funcrop/reference/scalar_on_function.md)           | Stage 2: coefficient function beta(t)       |
+| [`fit_fda_joint()`](https://AAGI-AUS.github.io/funcrop/reference/fit_fda_joint.md)                     | Single-stage joint scalar-functional model  |
+| `fit_2D_functional()`                                                                                  | 2D functional surfaces (time x depth)       |
+| [`fit_fda_met()`](https://AAGI-AUS.github.io/funcrop/reference/fit_fda_met.md)                         | Multi-environment FDA with GxE              |
+| [`bspline_basis()`](https://AAGI-AUS.github.io/funcrop/reference/bspline_basis.md)                     | B-spline basis construction                 |
+| [`make_Zspline()`](https://AAGI-AUS.github.io/funcrop/reference/make_Zspline.md)                       | Mixed model reparameterisation              |
+| [`make_genomic_matrix()`](https://AAGI-AUS.github.io/funcrop/reference/make_genomic_matrix.md)         | VanRaden genomic relationship matrix        |
+
+## Mathematical Foundation
+
+The package implements P-spline mixed models where the smoothing penalty
+is estimated as a variance ratio. For variety g at time t:
+
+f_g(t) = X_0(t)’ beta + Z(t)’ alpha_g, alpha_g ~ N(0, sigma^2_u I)
+
+where X_0 spans the unpenalised null space (population mean curve) and Z
+spans the penalised range space (variety-specific smooth deviations).
+
+A full mathematical specification (24 pages, LaTeX) is available in the
+project repository as `funcrop_mathematical_specification.pdf`.
+
+## Citation
+
+``` r
+citation("funcrop")
+```
+
+## Licence
+
+GPL (\>= 3)
+
+## Acknowledgements
+
+Funded by the [Analytics for the Australian Grains Industry
+(AAGI)](https://www.aagi.com.au/) project. Developed at the University
+of Adelaide.
+
+# Package index
+
+## B-Spline Basis Construction
+
+Functions for constructing B-spline bases, penalties, and design
+matrices
+
+- [`bspline_basis()`](https://AAGI-AUS.github.io/funcrop/reference/bspline_basis.md)
+  : Construct a B-Spline Basis with Difference Penalty
+- [`tensor_bspline_basis()`](https://AAGI-AUS.github.io/funcrop/reference/tensor_bspline_basis.md)
+  : Construct a Tensor Product B-Spline Basis
+- [`make_Zspline()`](https://AAGI-AUS.github.io/funcrop/reference/make_Zspline.md)
+  : Reparameterise B-Spline Basis for Mixed Model Representation
+- [`make_penalty()`](https://AAGI-AUS.github.io/funcrop/reference/make_penalty.md)
+  : Construct a Difference Penalty Matrix
+
+## Data Structures & S3 Methods
+
+S3 classes and methods for functional data objects
+
+- [`fda_data()`](https://AAGI-AUS.github.io/funcrop/reference/fda_data.md)
+  : Create a functional data object
+- [`print(`*`<fda_basis>`*`)`](https://AAGI-AUS.github.io/funcrop/reference/print.fda_basis.md)
+  : Print Method for fda_basis Objects
+- [`print(`*`<fda_comparison>`*`)`](https://AAGI-AUS.github.io/funcrop/reference/print.fda_comparison.md)
+  : Print method for fda_comparison
+- [`print(`*`<fda_data>`*`)`](https://AAGI-AUS.github.io/funcrop/reference/print.fda_data.md)
+  : Print method for fda_data
+- [`print(`*`<fda_model>`*`)`](https://AAGI-AUS.github.io/funcrop/reference/print.fda_model.md)
+  : Print method for fda_model
+- [`print(`*`<fda_tensor_basis>`*`)`](https://AAGI-AUS.github.io/funcrop/reference/print.fda_tensor_basis.md)
+  : Print Method for fda_tensor_basis Objects
+- [`summary(`*`<fda_comparison>`*`)`](https://AAGI-AUS.github.io/funcrop/reference/summary.fda_comparison.md)
+  : Summary method for fda_comparison
+- [`summary(`*`<fda_data>`*`)`](https://AAGI-AUS.github.io/funcrop/reference/summary.fda_data.md)
+  : Summary method for fda_data
+- [`summary(`*`<fda_model>`*`)`](https://AAGI-AUS.github.io/funcrop/reference/summary.fda_model.md)
+  : Summary method for fda_model
+- [`plot(`*`<fda_basis>`*`)`](https://AAGI-AUS.github.io/funcrop/reference/plot.fda_basis.md)
+  : Plot Method for fda_basis Objects
+- [`plot(`*`<fda_comparison>`*`)`](https://AAGI-AUS.github.io/funcrop/reference/plot.fda_comparison.md)
+  : Plot method for fda_comparison
+- [`plot(`*`<fda_data>`*`)`](https://AAGI-AUS.github.io/funcrop/reference/plot.fda_data.md)
+  : Plot method for fda_data (spaghetti plot)
+- [`plot(`*`<fda_model>`*`)`](https://AAGI-AUS.github.io/funcrop/reference/plot.fda_model.md)
+  : Plot method for fda_model
+- [`coef(`*`<fda_model>`*`)`](https://AAGI-AUS.github.io/funcrop/reference/coef.fda_model.md)
+  : Extract coefficient function beta(t) from fda_model
+- [`fitted(`*`<fda_model>`*`)`](https://AAGI-AUS.github.io/funcrop/reference/fitted.fda_model.md)
+  : Extract fitted curves from fda_model
+- [`residuals(`*`<fda_model>`*`)`](https://AAGI-AUS.github.io/funcrop/reference/residuals.fda_model.md)
+  : Extract residuals from fda_model
+- [`vcov(`*`<fda_model>`*`)`](https://AAGI-AUS.github.io/funcrop/reference/vcov.fda_model.md)
+  : Extract variance-covariance information from fda_model
+- [`as.data.table.fda_data()`](https://AAGI-AUS.github.io/funcrop/reference/as.data.table.fda_data.md)
+  : Coerce fda_data to data.table
+- [`` `[`( ``*`<fda_data>`*`)`](https://AAGI-AUS.github.io/funcrop/reference/sub-.fda_data.md)
+  : Subset method for fda_data
+
+## Model Fitting
+
+Core model fitting functions for FDA in crop trials
+
+- [`fit_functional_profiles()`](https://AAGI-AUS.github.io/funcrop/reference/fit_functional_profiles.md)
+  : Fit Variety-Specific Functional Profiles (Stage 1)
+- [`scalar_on_function()`](https://AAGI-AUS.github.io/funcrop/reference/scalar_on_function.md)
+  : Scalar-on-Function Regression (Stage 2)
+- [`fit_fda_joint()`](https://AAGI-AUS.github.io/funcrop/reference/fit_fda_joint.md)
+  : Fit a Joint Model for Primary and Functional Secondary Traits
+- [`fit_2d_functional()`](https://AAGI-AUS.github.io/funcrop/reference/fit_2d_functional.md)
+  : Fit 2D Functional Profiles via Tensor Product B-Splines
+- [`scalar_on_2d_function()`](https://AAGI-AUS.github.io/funcrop/reference/scalar_on_2d_function.md)
+  : Scalar-on-2D-Function Regression
+- [`fit_fda_met()`](https://AAGI-AUS.github.io/funcrop/reference/fit_fda_met.md)
+  : Fit Functional Data Analysis Model for Multi-Environment Trials
+
+## Prediction & Comparison
+
+Prediction, comparison, and inference tools
+
+- [`predict(`*`<fda_model>`*`)`](https://AAGI-AUS.github.io/funcrop/reference/predict.fda_model.md)
+  : Predict method for fda_model
+- [`predict_new_env()`](https://AAGI-AUS.github.io/funcrop/reference/predict_new_env.md)
+  : Predict Variety Performance in New Environments
+- [`compare_methods()`](https://AAGI-AUS.github.io/funcrop/reference/compare_methods.md)
+  : Compare Multiple FDA Model Fits
+
+## Visualisation
+
+Publication-ready plots for FDA results
+
+- [`plot_functional_profiles()`](https://AAGI-AUS.github.io/funcrop/reference/plot_functional_profiles.md)
+  : Plot Fitted Functional Profiles
+- [`plot_coefficient_function()`](https://AAGI-AUS.github.io/funcrop/reference/plot_coefficient_function.md)
+  : Plot the Coefficient Function
+- [`plot_gxe_heatmap()`](https://AAGI-AUS.github.io/funcrop/reference/plot_gxe_heatmap.md)
+  : Heatmap of Genotype-by-Environment Interaction
+- [`plot_fa_biplot()`](https://AAGI-AUS.github.io/funcrop/reference/plot_fa_biplot.md)
+  : Factor-Analytic Biplot for GxE Interaction
+- [`plot_backend_comparison()`](https://AAGI-AUS.github.io/funcrop/reference/plot_backend_comparison.md)
+  : Compare REML and Bayesian Model Fits
+
+## Backend Management
+
+Engine selection and backend utilities
+
+- [`funcrop_engines()`](https://AAGI-AUS.github.io/funcrop/reference/funcrop_engines.md)
+  : List Available Estimation Engines
+- [`funcrop_default_engine()`](https://AAGI-AUS.github.io/funcrop/reference/funcrop_default_engine.md)
+  : Get or Set the Default Estimation Engine
+
+## Genomic Integration
+
+Relationship matrix construction
+
+- [`make_genomic_matrix()`](https://AAGI-AUS.github.io/funcrop/reference/make_genomic_matrix.md)
+  : Construct a Genomic Relationship Matrix
+- [`make_pedigree_matrix()`](https://AAGI-AUS.github.io/funcrop/reference/make_pedigree_matrix.md)
+  : Construct a Pedigree-Based Relationship Matrix (A Matrix)
+- [`make_H_matrix()`](https://AAGI-AUS.github.io/funcrop/reference/make_H_matrix.md)
+  : Blend Genomic and Pedigree Relationship Matrices (H Matrix)
+- [`check_relationship_matrix()`](https://AAGI-AUS.github.io/funcrop/reference/check_relationship_matrix.md)
+  : Check and Repair a Relationship Matrix
+
+## Datasets
+
+Simulated datasets for tutorials and testing
+
+- [`sim_grain_fill`](https://AAGI-AUS.github.io/funcrop/reference/sim_grain_fill.md)
+  : Simulated Grain-Fill Trial Data
+- [`sim_met_fda`](https://AAGI-AUS.github.io/funcrop/reference/sim_met_fda.md)
+  : Simulated Multi-Environment Trial with Functional NDVI Trait
+
+# Articles
+
+### Getting Started
+
+- [Introduction to
+  funcrop](https://AAGI-AUS.github.io/funcrop/articles/introduction.md):
+
+### Case Studies
+
+- [Grain-Fill Case Study: FDA for Yield
+  Prediction](https://AAGI-AUS.github.io/funcrop/articles/grain-fill.md):
+
+### Backend Comparison
+
+- [Choosing and Using
+  Backends](https://AAGI-AUS.github.io/funcrop/articles/choosing-backends.md):
