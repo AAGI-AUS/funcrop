@@ -64,15 +64,14 @@
     stop("`engine` must be a single character string.", call. = FALSE)
   }
   engine <- tolower(engine)
-  valid_engines <- c("asreml", "bayesreml")
+  valid_engines <- c("asreml", "bayesreml", "lme4", "mgcv")
   if (!engine %in% valid_engines) {
     stop(sprintf("`engine` must be one of: %s. Got '%s'.",
                  paste(valid_engines, collapse = ", "), engine),
          call. = FALSE)
   }
   # Check availability
-
-if (engine == "asreml" && !.has_asreml()) {
+  if (engine == "asreml" && !.has_asreml()) {
     stop("Engine 'asreml' requested but the asreml package is not installed.\n",
          "See https://vsni.co.uk/software/asreml-r for installation.",
          call. = FALSE)
@@ -80,6 +79,14 @@ if (engine == "asreml" && !.has_asreml()) {
   if (engine == "bayesreml" && !.has_bayesreml()) {
     stop("Engine 'bayesreml' requested but the bayesreml package is not ",
          "installed.", call. = FALSE)
+  }
+  if (engine == "lme4" && !.has_lme4()) {
+    stop("Engine 'lme4' requested but the lme4 package is not installed.\n",
+         "Install via: install.packages('lme4')", call. = FALSE)
+  }
+  if (engine == "mgcv" && !.has_mgcv()) {
+    stop("Engine 'mgcv' requested but the mgcv package is not installed.\n",
+         "Install via: install.packages('mgcv')", call. = FALSE)
   }
   invisible(engine)
 }
@@ -98,6 +105,20 @@ if (engine == "asreml" && !.has_asreml()) {
 #' @noRd
 .has_bayesreml <- function() {
   requireNamespace("bayesreml", quietly = TRUE)
+}
+
+#' Check if lme4 is installed
+#' @return Logical scalar.
+#' @noRd
+.has_lme4 <- function() {
+  requireNamespace("lme4", quietly = TRUE)
+}
+
+#' Check if mgcv is installed
+#' @return Logical scalar.
+#' @noRd
+.has_mgcv <- function() {
+  requireNamespace("mgcv", quietly = TRUE)
 }
 
 # ---- Messaging ---------------------------------------------------------------

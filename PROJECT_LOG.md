@@ -4,15 +4,46 @@
 
 - **Objective**: R package for Functional Data Analysis in crop variety trials
 - **Core concept**: B-spline basis functions integrated with linear mixed models; scalar-on-function regression relating primary traits (yield) to secondary functional traits (grain-fill, stay-green)
-- **Technical approach**: Dual-backend (ASReml-R v4.2 REML + bayesreml Bayesian MCMC); P-splines with difference penalties; tensor products for 2D; FA models for GxE
+- **Technical approach**: Multi-backend (ASReml-R v4.2 REML, bayesreml Bayesian MCMC, lme4, mgcv); P-splines with difference penalties; tensor products for 2D; FA models for GxE
 - **Key assumptions**: B-splines sufficient (no need for wavelets/Fourier); ASReml v4.2 API stable; bayesreml v0.1.0 structures adequate for FDA
-- **Major adaptations**: Extending bayesreml's formula parser to handle funcrop's specialised B-spline structures
-- **Status**: Phases 0–7 implemented (~12,000 lines). All R files parse. 141+ unit/integration tests written. Awaiting R CMD check and real-data validation.
-- **Open issues**: Package name `funcrop` is provisional; need real datasets from CSIRO/QAAFI; NAMESPACE needs roxygen2 generation; vignettes not yet written
+- **Major adaptations**: Extensible engine registry; correct P-spline mixed-model reparameterisation throughout
+- **Status**: v0.2.0 — Major revision addressing reviewer feedback. 4 backends (mgcv, lme4, ASReml, bayesreml). 218 tests passing. R CMD check: 0 errors, 0 warnings.
+- **Open issues**: ASReml v3 backend (needs v3 installation for testing); mathematical specification document (in progress); real-data validation pending
 
 ---
 
 ## Log Entries
+
+### 2026-04-09 — v0.2.0 — Major Revision (Reviewer Feedback + Backend Expansion)
+
+**Summary of Changes**:
+- Complete revision addressing Jules' reviewer feedback (7 feedback documents)
+- Fixed critical implementation–specification gaps in 3 of 4 fitting functions
+- Added lme4 and mgcv backends (total: 4 backends)
+- Created extensible engine registration infrastructure
+- Produced comprehensive REVISION_LOG.md mapping all feedback to source fixes
+
+**Key Decisions & Rationale**:
+- Correct P-spline reparameterisation: null-space (fixed) + range-space (random)
+  — previous code used raw B-spline columns without penalisation
+- Engine priority changed to mgcv > lme4 > asreml > bayesreml (open-source first)
+- Registration-based engine architecture for future extensibility
+- bayesreml MCMC defaults doubled (4000/2000 from 2000/1000) for FDA convergence
+
+**Technical Updates**:
+- `fit_profiles.R`: Xnull_k (fixed) + Zrange_k (random) replace Bsp_k columns
+- `fit_joint.R`: z_spl columns now in random formula (shared latent link)
+- `.reconstruct_variety_curves()`: includes fixed-effect mean curve
+- `backend.R`: dispatch handles 4 engines
+- New files: `engine_registry.R`, `engine_lme4.R`, `engine_mgcv.R`
+- Tests: 218 passing (up from 214)
+- R CMD check: 0 errors, 0 warnings, 1 NOTE (CRAN new submission)
+
+**Next Steps**:
+1. Complete mathematical specification document (LaTeX, in progress)
+2. ASReml v3 backend (Phase 4 — needs v3 installation)
+3. Testing overhaul — argument combination tests, cross-backend validation
+4. Documentation — 7 vignettes, update README
 
 ### 2026-04-04 — v0.0.1 — Project Initialisation
 

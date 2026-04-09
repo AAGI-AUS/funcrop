@@ -486,29 +486,60 @@ fit_fda_met <- function(
   }
 
   # Check that at least 2 environments succeeded
-
   n_ok <- sum(!vapply(blup_list, is.null, logical(1L)))
   if (n_ok < 2L) {
     stop("Fewer than 2 environments produced valid Stage 1 fits. ",
          "Cannot proceed with MET analysis.", call. = FALSE)
   }
 
+  # Convergence quality gate: warn about environments with poor convergence
+  # before passing potentially unreliable BLUPs to Stage 2 (addresses F15)
+  for (e in seq_len(n_env)) {
+    if (is.null(stage1_models[[e]])) next
+    conv <- stage1_models[[e]]$extras$convergence
+    if (!is.null(conv) && !isTRUE(conv$converged)) {
+      warning(sprintf(
+        "Stage 1 fit for environment '%s' may not have converged. ",
+        env_levels[e]),
+        "BLUPs from this environment may be unreliable.",
+        call. = FALSE
+      )
+    }
+  }
+
   # ---------------------------------------------------------------------------
   # Assemble Stage 1 BLUPs into a long data.table
   # ---------------------------------------------------------------------------
 
-  blup_dt_list <- vector("list", n_env)
+  blup_dt_list <- vector("list", n_env * n_z_cols)
+  list_idx <- 0L
   for (e in seq_len(n_env)) {
     if (is.null(blup_list[[e]])) next
     mat <- blup_list[[e]]
     env_name <- env_levels[e]
 
-    # mat is n_varieties_e x n_z_cols; row names are variety levels
+    # mat is n_varieties_e x n_z_cols; row names are variety levels.
+    # Environments may have different subsets of varieties — use defensive
+    # indexing to avoid subscript out of bounds (F13 fix).
     var_names <- rownames(mat)
-    if (is.null(var_names)) var_names <- variety_levels[seq_len(nrow(mat))]
+    if (is.null(var_names)) {
+      # Fallback: use varieties present in this environment
+      env_varieties <- unique(as.character(
+        dt[dt[[environment_col]] == env_name, ][[group_col]]
+      ))
+      if (nrow(mat) <= length(env_varieties)) {
+        var_names <- env_varieties[seq_len(nrow(mat))]
+      } else {
+        var_names <- paste0("V", seq_len(nrow(mat)))
+      }
+    }
 
-    for (k in seq_len(n_z_cols)) {
-      blup_dt_list[[length(blup_dt_list) + 1L]] <- data.table::data.table(
+    # Defensive: ensure coef columns don't exceed matrix dimensions
+    n_cols_avail <- min(ncol(mat), n_z_cols)
+
+    for (k in seq_len(n_cols_avail)) {
+      list_idx <- list_idx + 1L
+      blup_dt_list[[list_idx]] <- data.table::data.table(
         environment = env_name,
         variety     = var_names,
         coef_idx    = k,
@@ -516,6 +547,8 @@ fit_fda_met <- function(
       )
     }
   }
+  # Remove unused list slots
+  blup_dt_list <- blup_dt_list[seq_len(list_idx)]
 
   stage1_blups <- data.table::rbindlist(blup_dt_list, use.names = TRUE)
   stage1_blups[, environment := factor(environment, levels = env_levels)]

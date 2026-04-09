@@ -1,10 +1,10 @@
-# funcrop: Engine dispatcher -- dual-backend architecture
+# funcrop: Legacy engine dispatcher (v0.1.0 compatibility shim)
 #
-# Provides the user-facing API for selecting and querying estimation engines,
-# plus the internal dispatch mechanism that routes model fitting to the
-# appropriate backend (ASReml-R v4.2 or bayesreml).
+# This file provides backward compatibility. The primary engine interface is
+# now in engine_interface.R (v0.2.0). Functions here delegate to the new
+# system but preserve the old API signatures.
 #
-# Engine auto-detection order: ASReml first (faster REML), bayesreml fallback.
+# For new code, use engine_interface.R functions directly.
 
 # ---- Exported functions ------------------------------------------------------
 
@@ -36,6 +36,12 @@
 #' @export
 funcrop_engines <- function() {
   engines <- character(0L)
+  if (.has_mgcv()) {
+    engines <- c(engines, "mgcv")
+  }
+  if (.has_lme4()) {
+    engines <- c(engines, "lme4")
+  }
   if (.has_asreml()) {
     engines <- c(engines, "asreml")
   }
@@ -119,7 +125,8 @@ funcrop_default_engine <- function(engine = NULL) {
 #' @param engine Character string: `"auto"`, `"asreml"`, or `"bayesreml"`.
 #' @return A single character string: `"asreml"` or `"bayesreml"`.
 #' @noRd
-.resolve_engine <- function(engine = c("auto", "asreml", "bayesreml")) {
+.resolve_engine <- function(engine = c("auto", "asreml", "bayesreml",
+                                       "lme4", "mgcv")) {
   engine <- match.arg(engine)
 
   if (engine == "auto") {
@@ -178,7 +185,7 @@ funcrop_default_engine <- function(engine = NULL) {
   # Defensive checks
   stopifnot(
     is.character(engine), length(engine) == 1L,
-    engine %in% c("asreml", "bayesreml")
+    engine %in% c("asreml", "bayesreml", "lme4", "mgcv")
   )
   if (!is.list(model_spec)) {
     stop("`model_spec` must be a list.", call. = FALSE)
@@ -199,8 +206,10 @@ funcrop_default_engine <- function(engine = NULL) {
 
   raw_result <- switch(
     engine,
-    asreml = .asreml_fit(model_spec = model_spec, data = data, ...),
+    asreml    = .asreml_fit(model_spec = model_spec, data = data, ...),
     bayesreml = .bayesreml_fit(model_spec = model_spec, data = data, ...),
+    lme4      = .lme4_fit(model_spec = model_spec, data = data, ...),
+    mgcv      = .mgcv_fit(model_spec = model_spec, data = data, ...),
     stop(sprintf("Unknown engine '%s'.", engine), call. = FALSE)
   )
 
@@ -215,12 +224,19 @@ raw_result[["engine"]] <- engine
 
 #' Auto-detect the best available engine
 #'
-#' Preference order: ASReml (faster REML) > bayesreml (Bayesian, open-source).
-#' Raises an informative error if no engine is available.
+#' Preference order (v0.2.0): mgcv > lme4 > asreml > bayesreml.
+#' Open-source, universally-available engines are preferred. ASReml is
+#' preferred over bayesreml for speed when both are installed.
 #'
-#' @return Character string: `"asreml"` or `"bayesreml"`.
+#' @return Character string: engine name.
 #' @noRd
 .auto_detect_engine <- function() {
+  if (.has_mgcv()) {
+    return("mgcv")
+  }
+  if (.has_lme4()) {
+    return("lme4")
+  }
   if (.has_asreml()) {
     return("asreml")
   }
@@ -230,6 +246,8 @@ raw_result[["engine"]] <- engine
   stop(
     "No estimation engine available.\n",
     "Install at least one of:\n",
+    "  - mgcv (ships with R): install.packages('mgcv')\n",
+    "  - lme4: install.packages('lme4')\n",
     "  - asreml (>= 4.2.0): https://vsni.co.uk/software/asreml-r\n",
     "  - bayesreml (>= 0.1.0): install.packages('bayesreml')\n",
     "See ?funcrop_engines for details.",
@@ -248,6 +266,8 @@ raw_result[["engine"]] <- engine
     engine,
     asreml    = .has_asreml(),
     bayesreml = .has_bayesreml(),
+    lme4      = .has_lme4(),
+    mgcv      = .has_mgcv(),
     FALSE
   )
 }

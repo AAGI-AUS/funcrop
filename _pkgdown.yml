@@ -22,29 +22,19 @@ reference:
       - make_Zspline
       - make_penalty
 
-  - title: "Data Structures"
-    desc: "S3 classes for functional data objects"
-    contents:
-      - fda_basis
-      - fda_data
-      - fda_model
-
   - title: "Model Fitting"
     desc: "Core model fitting functions for FDA in crop trials"
     contents:
       - fit_functional_profiles
       - scalar_on_function
       - fit_fda_joint
-      - fit_2d_functional
-      - scalar_on_2d_function
       - fit_fda_met
 
-  - title: "Prediction & Inference"
+  - title: "Prediction & Comparison"
     desc: "Prediction, comparison, and inference tools"
     contents:
       - starts_with("predict")
       - compare_methods
-      - posterior_draws
 
   - title: "Visualisation"
     desc: "Publication-ready plots for FDA results"
@@ -61,8 +51,16 @@ reference:
       - funcrop_engines
       - funcrop_default_engine
 
+  - title: "Genomic Integration"
+    desc: "Relationship matrix construction"
+    contents:
+      - make_genomic_matrix
+      - make_pedigree_matrix
+      - make_H_matrix
+      - check_relationship_matrix
+
   - title: "Datasets"
-    desc: "Example datasets for tutorials and testing"
+    desc: "Simulated datasets for tutorials and testing"
     contents:
       - sim_grain_fill
       - sim_met_fda
@@ -71,17 +69,9 @@ articles:
   - title: "Getting Started"
     contents:
       - introduction
-  - title: "Background"
-    contents:
-      - literature-review
   - title: "Case Studies"
     contents:
       - grain-fill
-      - stay-green
-      - 2d-functional
-      - met-fda
-      - genomic-fda
-  - title: "Advanced Topics"
+  - title: "Backend Comparison"
     contents:
-      - bayesian-fda
-      - asreml-vs-bayesreml
+      - choosing-backends

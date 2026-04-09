@@ -1,8 +1,8 @@
 ---
-title: "ASReml vs bayesreml: Dual-Backend Comparison"
+title: "Choosing and Using Backends"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{ASReml vs bayesreml: Dual-Backend Comparison}
+  %\VignetteIndexEntry{Choosing and Using Backends}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -16,20 +16,27 @@ knitr::opts_chunk$set(
 )
 HAS_ASREML <- requireNamespace("asreml", quietly = TRUE)
 HAS_BAYESREML <- requireNamespace("bayesreml", quietly = TRUE)
+HAS_LME4 <- requireNamespace("lme4", quietly = TRUE)
+HAS_MGCV <- requireNamespace("mgcv", quietly = TRUE)
 ```
 
 ## Overview
 
-funcrop supports two estimation backends:
+funcrop v0.2.0 supports four estimation backends:
 
-| Feature | ASReml (REML) | bayesreml (Bayesian) |
-|---------|:------------:|:-------------------:|
-| Estimation | Restricted maximum likelihood | MCMC via greta/TensorFlow |
-| Speed | Fast (seconds) | Slow (minutes) |
-| Licence | Commercial | Open source (GPL-3) |
-| Uncertainty | Approx. SE | Full posterior distributions |
-| Boundary VCs | Can be zero | Always positive (prior) |
-| Model comparison | AIC/BIC | WAIC/LOO-IC |
+| Feature | mgcv | lme4 | ASReml | bayesreml |
+|---------|:----:|:----:|:------:|:---------:|
+| Estimation | REML (GAM) | REML (LMM) | REML | Bayesian MCMC |
+| Speed | Fast | Fast | Fast | Slow (minutes) |
+| Licence | Open (GPL) | Open (GPL) | Commercial | Open (GPL) |
+| Availability | Ships with R | CRAN | VSNi licence | CRAN + greta |
+| Uncertainty | Approx. SE | Approx. SE | Approx. SE | Full posterior |
+| AR1 residuals | Via gamm() | No | Yes | Yes |
+| FA covariance | No | No | Yes | Partial |
+| Genomic G-matrix | No | Cholesky trick | vm() | vm() |
+| Tensor products | Native te() | No | Manual | Manual |
+| GLMM | Yes | Yes | No | Yes |
+| Large data (>50K) | bam() | Yes | Yes | Slow |
 
 ## Check Available Engines
 

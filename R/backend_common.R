@@ -43,6 +43,8 @@
     engine,
     asreml    = .asreml_extract_vc(raw_result[["model"]]),
     bayesreml = .bayesreml_extract_vc(raw_result[["model"]]),
+    lme4      = .lme4_extract_vc(raw_result[["model"]]),
+    mgcv      = .mgcv_extract_vc(raw_result[["model"]]),
     stop(sprintf("Unknown engine '%s'.", engine), call. = FALSE)
   )
 
@@ -51,7 +53,9 @@
   blups <- switch(
     engine,
     asreml    = .asreml_extract_blups(raw_result[["model"]], random_terms),
-    bayesreml = .bayesreml_extract_blups(raw_result[["model"]], random_terms)
+    bayesreml = .bayesreml_extract_blups(raw_result[["model"]], random_terms),
+    lme4      = .lme4_extract_blups(raw_result[["model"]], random_terms),
+    mgcv      = .mgcv_extract_blups(raw_result[["model"]], random_terms)
   )
 
   # --- Fitted curves (variety-specific functional profiles) ---
@@ -183,10 +187,13 @@
   blup_dt <- switch(
     engine,
     asreml    = .asreml_extract_blups(raw_result[["model"]], spline_terms),
-    bayesreml = .bayesreml_extract_blups(raw_result[["model"]], spline_terms)
+    bayesreml = .bayesreml_extract_blups(raw_result[["model"]], spline_terms),
+    lme4      = .lme4_extract_blups(raw_result[["model"]], spline_terms),
+    mgcv      = .mgcv_extract_blups(raw_result[["model"]], spline_terms),
+    data.table::data.table()
   )
 
-  if (nrow(blup_dt) == 0L) {
+  if (is.null(blup_dt) || !is.data.frame(blup_dt) || nrow(blup_dt) == 0L) {
     return(data.table::data.table())
   }
 
@@ -432,8 +439,12 @@
     if (engine == "asreml" && .has_asreml()) {
       names(model$G.param)
     } else if (engine == "bayesreml" && .has_bayesreml()) {
-      # bayesreml may store random term names differently
       names(model$ranef)
+    } else if (engine == "lme4" && .has_lme4()) {
+      names(lme4::ranef(model))
+    } else if (engine == "mgcv" && .has_mgcv()) {
+      # mgcv stores smooth terms; extract labels
+      vapply(model$smooth, function(s) s$label, character(1L))
     } else {
       character(0L)
     }
@@ -442,8 +453,10 @@
   if (length(all_terms) == 0L) return(character(0L))
 
   # Filter for spline-related terms using naming conventions
-  spline_patterns <- c("spline", "basis", "bspline", "Bsp", "bs\\(",
-                        "str\\(", "spline_coef")
+  # Includes Zrange_ (v0.2.0 decomposed basis), Zspline_ (MET single-stage),
+  # and legacy Bsp_ / spline_coef patterns for backward compatibility.
+  spline_patterns <- c("Zrange_", "Zspline_", "spline", "basis", "bspline",
+                        "Bsp", "bs\\(", "str\\(", "spline_coef")
   pattern <- paste(spline_patterns, collapse = "|")
   spline_terms <- all_terms[grepl(pattern, all_terms, ignore.case = TRUE)]
 

@@ -374,8 +374,14 @@ fit_fda_joint <- function(
 
   # ---- Build model specification ----------------------------------------------
 
-  # Fixed effects: trait-specific intercept
-  fixed_formula <- stats::as.formula("response ~ trait_type")
+  # Fixed effects: trait-specific intercept + population mean spline terms.
+  # The z_spl columns capture the population-level functional relationship:
+  # for secondary rows these are the spline basis values Z(t), for primary
+  # rows these are the integrated basis values c_k. Including them as fixed
+  # effects estimates the population mean curve + population-level coefficient
+  # function.
+  fixed_rhs <- paste(c("trait_type", z_col_names), collapse = " + ")
+  fixed_formula <- stats::as.formula(paste("response ~", fixed_rhs))
 
   # Random effects: variety B-spline coefficients correlated across traits
   # For ASReml: us(trait_type):group + at(trait_type, 'secondary'):id:spline
@@ -429,17 +435,26 @@ fit_fda_joint <- function(
   }
 
   # Build model_spec for dispatch
-  # Random formula: correlated variety effects across traits + spline effects
+  # Random formula: variety-specific spline coefficients shared across traits.
+  #
+  # The key innovation of the joint model is that both traits are driven by
+  # the same latent coefficient vector alpha_g:
+  #   Secondary: s(t) = z(t)' alpha_g  (spline basis at observed time)
+  #   Primary:   y    = c'   alpha_g  (integrated basis: c_k = int z_k(t) dt)
+  #
+  # The z_spl columns already encode this: secondary rows have Z(t) values,
+  # primary rows have the integrated c_k values. So using variety:z_spl_k
+  # as the random terms creates the shared latent structure automatically.
+  #
+  # Previous implementation (v0.1.0) used us(trait_type):variety which gave
+  # only a trait-by-variety intercept — the spline link was not active.
   random_parts <- character(0L)
 
-  # Variety main effect (correlated across traits)
-  random_parts <- c(random_parts,
-                     sprintf("us(trait_type):%s", group_col))
-
-  # Variety-specific B-spline random effects for the secondary trait
-  # These are at(trait_type, 'secondary'):group:z_spl terms
-  random_parts <- c(random_parts,
-                     sprintf("at(trait_type, 'secondary'):%s", group_col))
+  # Shared variety-specific spline coefficients (the functional link)
+  for (k in seq_len(ncol(Z_spline))) {
+    random_parts <- c(random_parts,
+                       sprintf("%s:%s", group_col, z_col_names[k]))
+  }
 
   random_formula <- stats::as.formula(
     paste("~", paste(random_parts, collapse = " + "))

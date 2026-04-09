@@ -13,4 +13,9 @@
 ^PROJECT_LOG\.md$
 ^PROJECT_LOG_ARCHIVE\.md$
 ^IMPLEMENTATION_PLAN\.md$
+^funcrop_revision_plan.*$
+^funcrop_mathematical_specification.*$
 ^\.DS_Store$
+^README\.Rmd$
+^Rplots\.pdf$
+^figure$

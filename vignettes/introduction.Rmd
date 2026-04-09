@@ -20,10 +20,12 @@ knitr::opts_chunk$set(
 
 **funcrop** provides Functional Data Analysis (FDA) methods for crop variety
 trials, integrating B-spline basis functions with linear mixed models. It
-supports a dual-backend architecture:
+supports four estimation backends:
 
-- **ASReml-R** (REML estimation) -- fast, production-proven
-- **bayesreml** (Bayesian MCMC via greta) -- full posterior inference
+- **mgcv** -- GAM/BAM via `gam()`, `bam()`, `gamm()`. Ships with R. Default.
+- **lme4** -- LMM/GLMM via `lmer()`, `glmer()`. Open-source, CRAN.
+- **ASReml-R** -- REML estimation. Commercial licence. Advanced structures (FA, AR1).
+- **bayesreml** -- Bayesian MCMC via greta/TensorFlow. Full posterior inference.
 
 The package handles:
 

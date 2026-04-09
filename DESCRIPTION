@@ -1,15 +1,13 @@
 Package: funcrop
 Title: Functional Data Analysis for Crop Variety Trials
-Version: 0.1.0
+Version: 0.2.0
 Authors@R: c(
     person("Maksym", "Gaidashenko", role = c("aut", "cre"),
            email = "maksym.gaidashenko@adelaide.edu.au",
            comment = c(ORCID = "")),
     person("Joanne", "De Faveri", role = "aut"),
     person("Ari", "Verbyla", role = "aut"),
-    person("AAGI", role = "fnd"),
-    person("Claude", "Anthropic", role = "ctb",
-           comment = "AI-assisted development")
+    person("AAGI", role = "fnd")
     )
 Description: Functional data analysis methods for crop variety trials using
     B-spline basis functions integrated with linear mixed models. Supports
@@ -39,6 +37,9 @@ Suggests:
     asreml (>= 4.2.0),
     bayesreml (>= 0.1.0),
     greta (>= 0.4.0),
+    lme4 (>= 1.1.30),
+    mgcv (>= 1.9.0),
+    nlme,
     ggplot2 (>= 3.4.0),
     ggrepel,
     viridis,
@@ -51,7 +52,6 @@ Suggests:
     emmeans,
     marginaleffects,
     sommer,
-    lme4,
     withr
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)

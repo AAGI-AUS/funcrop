@@ -381,17 +381,19 @@ test_that("check_relationship_matrix enforces symmetry", {
 test_that("funcrop_engines returns character vector", {
   engines <- funcrop_engines()
   expect_type(engines, "character")
-  # Could be empty if neither engine installed, but must be character
+  # Could be empty if no engine installed, but must be character
   if (length(engines) > 0L) {
-    expect_true(all(engines %in% c("asreml", "bayesreml")))
+    expect_true(all(engines %in% c("mgcv", "lme4", "asreml", "bayesreml")))
   }
 })
 
 test_that(".resolve_engine('auto') returns valid engine or errors gracefully", {
-  # Mock both engines as unavailable, expect informative error
+  # Mock all engines as unavailable, expect informative error
   local_mocked_bindings(
     .has_asreml    = function() FALSE,
     .has_bayesreml = function() FALSE,
+    .has_lme4      = function() FALSE,
+    .has_mgcv      = function() FALSE,
     .package = "funcrop"
   )
 
@@ -403,10 +405,27 @@ test_that(".resolve_engine('auto') returns valid engine or errors gracefully", {
   )
 })
 
-test_that(".resolve_engine('auto') returns asreml when available", {
+test_that(".resolve_engine('auto') prefers mgcv (open-source first)", {
   local_mocked_bindings(
     .has_asreml    = function() TRUE,
     .has_bayesreml = function() FALSE,
+    .has_lme4      = function() TRUE,
+    .has_mgcv      = function() TRUE,
+    .package = "funcrop"
+  )
+
+  withr::local_options(list(funcrop.engine = NULL))
+
+  engine <- .resolve_engine("auto")
+  expect_equal(engine, "mgcv")
+})
+
+test_that(".resolve_engine('auto') falls back to lme4 then asreml", {
+  local_mocked_bindings(
+    .has_asreml    = function() TRUE,
+    .has_bayesreml = function() FALSE,
+    .has_lme4      = function() FALSE,
+    .has_mgcv      = function() FALSE,
     .package = "funcrop"
   )
 
@@ -420,6 +439,8 @@ test_that(".resolve_engine('auto') falls back to bayesreml", {
   local_mocked_bindings(
     .has_asreml    = function() FALSE,
     .has_bayesreml = function() TRUE,
+    .has_lme4      = function() FALSE,
+    .has_mgcv      = function() FALSE,
     .package = "funcrop"
   )
 
@@ -433,6 +454,8 @@ test_that("funcrop_default_engine set/get works with mocked backend", {
   local_mocked_bindings(
     .has_asreml    = function() FALSE,
     .has_bayesreml = function() TRUE,
+    .has_lme4      = function() FALSE,
+    .has_mgcv      = function() FALSE,
     .package = "funcrop"
   )
 
@@ -450,6 +473,8 @@ test_that("funcrop_default_engine errors on unavailable engine", {
   local_mocked_bindings(
     .has_asreml    = function() FALSE,
     .has_bayesreml = function() FALSE,
+    .has_lme4      = function() FALSE,
+    .has_mgcv      = function() FALSE,
     .package = "funcrop"
   )
 
@@ -461,15 +486,20 @@ test_that("funcrop_default_engine errors on unavailable engine", {
   )
 })
 
-test_that("funcrop_engines with mocked availability", {
+test_that("funcrop_engines lists all available backends", {
   local_mocked_bindings(
     .has_asreml    = function() TRUE,
     .has_bayesreml = function() TRUE,
+    .has_lme4      = function() TRUE,
+    .has_mgcv      = function() TRUE,
     .package = "funcrop"
   )
 
   engines <- funcrop_engines()
-  expect_equal(engines, c("asreml", "bayesreml"))
+  expect_true("mgcv" %in% engines)
+  expect_true("lme4" %in% engines)
+  expect_true("asreml" %in% engines)
+  expect_true("bayesreml" %in% engines)
 })
 
 

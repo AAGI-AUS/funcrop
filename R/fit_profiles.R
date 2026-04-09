@@ -374,19 +374,32 @@ fit_functional_profiles <- function(
     }
   }
 
-  # -- Build model using direct B-spline columns --
-  # This approach adds B-spline basis columns (B1, B2, ...) directly to the
+  # -- Build model using mixed-model reparameterised basis --
+  # The P-spline penalty is converted to a mixed-model form via eigendecomposition:
+  #   B = [X_null, Z_range]
+  # where X_null spans the unpenalised null space (fixed effects for population
+  # mean curve) and Z_range spans the penalised range space (random effects for
+  # variety-specific smooth deviations, with smoothing controlled by sigma^2_u).
+  #
+  # This is the correct P-spline mixed model representation (Eilers & Marx, 1996;
+  # Wand & Ormerod, 2008). The previous approach using raw B-spline columns as
+  # both fixed and random effects did not apply the smoothing penalty.
 
-  # data and uses variety:B1 + variety:B2 + ... as random terms.
-  # This is more portable than str() syntax across both backends.
+  null_dim <- ncol(spline_decomp$X)  # typically = degree - penalty_order + 1
 
-  # Add B-spline basis columns to the data
-  B_col_names <- paste0("Bsp_", seq_len(n_basis))
-  for (k in seq_len(n_basis)) {
-    data.table::set(model_dt, j = B_col_names[k], value = B_obs[, k])
+  # Add null-space columns (fixed effects for population mean curve)
+  Xnull_col_names <- paste0("Xnull_", seq_len(null_dim))
+  for (k in seq_len(null_dim)) {
+    data.table::set(model_dt, j = Xnull_col_names[k], value = X_obs[, k])
   }
 
-  # Fixed effects formula
+  # Add range-space columns (random effects for variety-specific deviations)
+  Zrange_col_names <- paste0("Zrange_", seq_len(n_z_cols))
+  for (k in seq_len(n_z_cols)) {
+    data.table::set(model_dt, j = Zrange_col_names[k], value = Z_obs[, k])
+  }
+
+  # Fixed effects formula: intercept + block + null-space spline terms
   fixed_rhs <- "1"
   if (!is.null(block_col)) {
     if (!is.factor(model_dt[[block_col]])) {
@@ -395,13 +408,16 @@ fit_functional_profiles <- function(
     }
     fixed_rhs <- paste0(fixed_rhs, " + ", block_col)
   }
-  # Add B-spline columns as fixed (population mean curve)
+  # Null-space terms represent the unpenalised population mean curve
   fixed_rhs <- paste0(fixed_rhs, " + ",
-                       paste(B_col_names, collapse = " + "))
+                       paste(Xnull_col_names, collapse = " + "))
   fixed_formula <- stats::as.formula(paste(value_col, "~", fixed_rhs))
 
-  # Random effects: variety-specific deviations for each B-spline column
-  random_terms <- paste0("variety_f:", B_col_names, collapse = " + ")
+  # Random effects: variety-specific penalised spline deviations
+  # Each variety_f:Zrange_k term gives a separate random coefficient per variety
+  # for the k-th range-space basis function. Under the mixed-model representation,
+  # alpha_v ~ N(0, sigma^2_u * I), which is equivalent to P-spline smoothing.
+  random_terms <- paste0("variety_f:", Zrange_col_names, collapse = " + ")
 
   # Spatial term
   spatial_term <- NULL
@@ -468,26 +484,26 @@ fit_functional_profiles <- function(
   )
 
   # -- Extract variety-specific spline coefficient BLUPs --
-  # Direct extraction from raw model (bypasses .standardise_result which may
-  # not recognise the variety_f:Bsp_k naming convention)
+  # Extract from the raw model using the Zrange_k naming convention.
+  # These are the penalised range-space coefficients alpha_v (n_z_cols per variety).
   spline_blups <- tryCatch({
     model_obj <- raw_result[["model"]]
     if (engine == "asreml" && !is.null(model_obj)) {
       co <- coef(model_obj)$random
       rn <- rownames(co)
-      # Pattern: variety_f_VNAME:Bsp_K
-      bsp_idx <- grep("Bsp_", rn)
-      if (length(bsp_idx) > 0) {
+      # Pattern: variety_f_VNAME:Zrange_K
+      zr_idx <- grep("Zrange_", rn)
+      if (length(zr_idx) > 0) {
         # Parse into variety x basis coefficient matrix
-        parts <- strsplit(rn[bsp_idx], ":", fixed = TRUE)
+        parts <- strsplit(rn[zr_idx], ":", fixed = TRUE)
         var_ids <- sub("^variety_f_", "", vapply(parts, `[`, character(1), 1L))
-        bsp_ids <- as.integer(sub("^Bsp_", "", vapply(parts, `[`, character(1), 2L)))
-        mat <- matrix(0, nrow = n_varieties, ncol = n_basis)
+        zr_ids <- as.integer(sub("^Zrange_", "", vapply(parts, `[`, character(1), 2L)))
+        mat <- matrix(0, nrow = n_varieties, ncol = n_z_cols)
         rownames(mat) <- variety_levels
-        for (i in seq_along(bsp_idx)) {
+        for (i in seq_along(zr_idx)) {
           v_row <- match(var_ids[i], variety_levels)
-          if (!is.na(v_row) && bsp_ids[i] <= n_basis) {
-            mat[v_row, bsp_ids[i]] <- co[bsp_idx[i], 1]
+          if (!is.na(v_row) && zr_ids[i] <= n_z_cols) {
+            mat[v_row, zr_ids[i]] <- co[zr_idx[i], 1]
           }
         }
         mat
@@ -501,15 +517,29 @@ fit_functional_profiles <- function(
     }
   }, error = function(e) {
     warning("BLUP extraction failed: ", e$message, call. = FALSE)
-    matrix(0, nrow = n_varieties, ncol = n_basis)
+    matrix(0, nrow = n_varieties, ncol = n_z_cols)
   })
 
+  # -- Extract fixed-effect coefficients for mean curve reconstruction --
+  fixed_coefs <- tryCatch({
+    model_obj <- raw_result[["model"]]
+    if (engine == "asreml" && !is.null(model_obj)) {
+      co_fixed <- coef(model_obj)$fixed
+      stats::setNames(co_fixed[, 1], rownames(co_fixed))
+    } else {
+      NULL
+    }
+  }, error = function(e) NULL)
+
   # -- Reconstruct fitted curves on a fine grid --
+  # Includes both the population mean curve (fixed null-space) and
+  # variety-specific deviations (random range-space BLUPs)
   fitted_curves <- .reconstruct_variety_curves(
     spline_blups   = spline_blups,
     spline_decomp  = spline_decomp,
     basis          = basis,
-    variety_levels = variety_levels
+    variety_levels = variety_levels,
+    fixed_coefs    = fixed_coefs
   )
 
   # -- Predictions (variety means across time, if primary trait available) --
@@ -652,16 +682,26 @@ fit_functional_profiles <- function(
 #'
 #' Evaluates the B-spline basis at a fine grid and multiplies by the
 #' variety-specific coefficient BLUPs to produce smooth fitted curves.
+#' Includes the fixed-effect population mean curve (null-space component)
+#' so that returned curves are on the absolute scale, not centred at zero.
+#'
+#' The full prediction for variety v at time t is:
+#'   f_hat_v(t) = X_null(t)' beta_hat + Z_range(t)' alpha_hat_v
 #'
 #' @param spline_blups Numeric matrix (n_varieties x n_z_cols) of BLUPs.
 #' @param spline_decomp List from [make_Zspline()] with X and Z components.
 #' @param basis An `fda_basis` object.
 #' @param variety_levels Character vector of variety names.
+#' @param fixed_coefs Optional named numeric vector of fixed-effect estimates.
+#'   If supplied, null-space coefficients (matching "Xnull_" pattern) are used
+#'   to reconstruct the population mean curve. If NULL, only random deviations
+#'   are returned (centred at zero).
 #'
 #' @return data.table with columns: `id`, `time`, `fitted`, `se`.
 #' @noRd
 .reconstruct_variety_curves <- function(spline_blups, spline_decomp,
-                                        basis, variety_levels) {
+                                        basis, variety_levels,
+                                        fixed_coefs = NULL) {
   # Fine evaluation grid
   n_grid <- 200L
   t_grid <- seq(basis$boundary[1L], basis$boundary[2L], length.out = n_grid)
@@ -679,13 +719,17 @@ fit_functional_profiles <- function(
     outer.ok = TRUE
   )
 
-  # Apply the same eigendecomposition to get Z at fine grid
+  # Apply the same eigendecomposition to get X_null and Z_range at fine grid
   P_dense <- as.matrix(basis$P)
   eig <- eigen(P_dense, symmetric = TRUE)
   tol <- max(eig$values) * .Machine$double.eps * basis$n_basis * 10
   idx_range <- which(eig$values > tol)
+  idx_null  <- which(eig$values <= tol)
+  U_null    <- eig$vectors[, idx_null, drop = FALSE]
   U_range   <- eig$vectors[, idx_range, drop = FALSE]
   scaling   <- 1 / sqrt(eig$values[idx_range])
+
+  X_fine    <- B_fine %*% U_null
   Z_fine    <- B_fine %*% (U_range %*% diag(scaling, nrow = length(scaling)))
 
   n_varieties <- nrow(spline_blups)
@@ -705,15 +749,25 @@ fit_functional_profiles <- function(
     spline_blups <- spline_blups[, seq_len(k), drop = FALSE]
   }
 
-  # Reconstruct curves: fitted_v(t) = Z_fine %*% alpha_v
+  # Reconstruct the population mean curve from fixed-effect null-space coefficients
+  # f_hat_v(t) = mu(t) + u_v(t) = X_null(t)' beta + Z_range(t)' alpha_v
+  mean_curve <- rep(0, n_grid)
+  if (!is.null(fixed_coefs)) {
+    # Extract null-space coefficients from the fixed effects vector
+    xnull_idx <- grep("^Xnull_", names(fixed_coefs))
+    if (length(xnull_idx) > 0 && length(xnull_idx) == ncol(X_fine)) {
+      beta_null <- fixed_coefs[xnull_idx]
+      mean_curve <- as.numeric(X_fine %*% beta_null)
+    }
+  }
+
+  # Reconstruct curves: fitted_v(t) = mu(t) + Z_fine %*% alpha_v
   curve_list <- vector("list", n_varieties)
 
   for (v in seq_len(n_varieties)) {
     alpha_v  <- spline_blups[v, ]
-    fitted_v <- as.numeric(Z_fine %*% alpha_v)
+    fitted_v <- mean_curve + as.numeric(Z_fine %*% alpha_v)
 
-    # Approximate SE: sqrt(Z^2 %*% diag_var) -- not available without
-    # the full posterior/variance of BLUPs; set to NA for now
     curve_list[[v]] <- data.table::data.table(
       id     = variety_levels[v],
       time   = t_grid,

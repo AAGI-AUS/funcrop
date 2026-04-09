@@ -58,12 +58,16 @@
   # Build bayesreml-compatible formulas
   formulas <- .bayesreml_build_formulas(model_spec)
 
-  # MCMC configuration with sensible defaults
-  n_samples     <- mcmc_control[["n_samples"]]     %||% 2000L
-  warmup        <- mcmc_control[["warmup"]]         %||% 1000L
+  # MCMC configuration with defaults tuned for FDA models.
+  # FDA models with variety x spline coefficients have many correlated
+  # parameters — they need more warmup than simple random-intercept models.
+  # Previous defaults (2000 samples, 1000 warmup) caused poor convergence
+  # (Rhat > 3, ESS < 20) on MET-FDA models (see R_Console_review2.txt).
+  n_samples     <- mcmc_control[["n_samples"]]     %||% 4000L
+  warmup        <- mcmc_control[["warmup"]]         %||% 2000L
   chains        <- mcmc_control[["chains"]]         %||% 4L
   prior_fixed_sd <- mcmc_control[["prior_fixed_sd"]] %||% 10
-  prior_vc_sd   <- mcmc_control[["prior_vc_sd"]]    %||% 1
+  prior_vc_sd   <- mcmc_control[["prior_vc_sd"]]    %||% 2
 
   # Construct the bayesreml call arguments
   bayesreml_args <- list(
@@ -95,6 +99,19 @@
   # Prior specification (bayesreml-specific arguments)
   bayesreml_args[["prior_fixed_sd"]] <- prior_fixed_sd
   bayesreml_args[["prior_vc_sd"]]    <- prior_vc_sd
+
+  # Filter bayesreml_args to only include valid parameters.
+  # This prevents errors from stray arguments passed via ... (e.g., user
+  # passing 'nsamples' instead of 'n_samples', or ASReml-specific args like
+  # 'maxiter' or 'workspace' leaking through).
+  valid_params <- names(formals(bayesreml::bayesreml))
+  extra_args <- setdiff(names(bayesreml_args), valid_params)
+  if (length(extra_args) > 0L) {
+    .msg(sprintf("Ignoring arguments not accepted by bayesreml: %s",
+                 paste(extra_args, collapse = ", ")))
+    bayesreml_args <- bayesreml_args[intersect(names(bayesreml_args),
+                                                valid_params)]
+  }
 
   # Execute the bayesreml call with error trapping
   .msg(sprintf(

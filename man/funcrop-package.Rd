@@ -28,7 +28,6 @@ Authors:
 Other contributors:
 \itemize{
   \item AAGI [funder]
-  \item Claude Anthropic (AI-assisted development) [contributor]
 }
 
 }
