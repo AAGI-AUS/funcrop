@@ -22,19 +22,19 @@ reference:
       - make_Zspline
       - make_penalty
 
-  - title: "Data Structures"
-    desc: "S3 classes for functional data objects"
+  - title: "Data Structures & S3 Methods"
+    desc: "S3 classes and methods for functional data objects"
     contents:
       - fda_data
-      - starts_with("print.")
-      - starts_with("summary.")
-      - starts_with("plot.")
-      - starts_with("coef.")
-      - starts_with("fitted.")
-      - starts_with("residuals.")
-      - starts_with("vcov.")
-      - starts_with("[.")
-      - starts_with("as.")
+      - matches("^print\\.")
+      - matches("^summary\\.")
+      - matches("^plot\\.")
+      - matches("^coef\\.")
+      - matches("^fitted\\.")
+      - matches("^residuals\\.")
+      - matches("^vcov\\.")
+      - matches("^as\\.")
+      - matches("^\\[\\.")
 
   - title: "Model Fitting"
     desc: "Core model fitting functions for FDA in crop trials"
