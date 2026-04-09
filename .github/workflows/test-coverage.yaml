@@ -34,6 +34,7 @@ jobs:
             any::nlme
             any::ggplot2
             any::withr
+            any::xml2
             local::.
           dependencies: '"hard"'
           needs: coverage
