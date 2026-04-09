@@ -51,7 +51,6 @@ Suggests:
     covr,
     emmeans,
     marginaleffects,
-    sommer,
     withr
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)

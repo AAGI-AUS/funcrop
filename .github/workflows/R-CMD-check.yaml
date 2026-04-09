@@ -56,7 +56,7 @@ jobs:
             any::patchwork
             any::emmeans
             any::marginaleffects
-            any::sommer
+            any::emmeans
             any::withr
           dependencies: '"hard"'
           needs: check
