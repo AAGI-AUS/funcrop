@@ -8,7 +8,7 @@
 # Model: y_{ijk}(t) = f_v(t) + block_j + spatial(row, col) + epsilon_{ijk}(t)
 # where f_v(t) = sum_k alpha_{vk} * B_k(t) via B-spline basis
 #
-# Author: Maksym Gaidashenko
+# Author: Max Moldovan
 # Licence: GPL (>= 3)
 
 

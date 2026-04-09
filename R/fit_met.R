@@ -12,7 +12,7 @@
 #   All environments fitted simultaneously with fa(env) on variety spline
 #   coefficients and per-environment spatial effects.
 #
-# Author: Maksym Gaidashenko
+# Author: Max Moldovan
 # Licence: GPL (>= 3)
 
 

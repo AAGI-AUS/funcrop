@@ -6,7 +6,7 @@
 # throughout. Designed to handle both ASReml (REML) and bayesreml (Bayesian)
 # model objects transparently.
 #
-# Author: Maksym Gaidashenko
+# Author: Max Moldovan
 # Licence: GPL (>= 3)
 
 

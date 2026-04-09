@@ -4,7 +4,7 @@
 # (genomic G, pedigree A, blended H) for use with mixed model fitting in
 # multi-environment trial analyses.
 #
-# Author: Maksym Gaidashenko
+# Author: Max Moldovan
 # Licence: GPL (>= 3)
 
 

@@ -3,7 +3,7 @@
 # Constructs B-spline basis matrices with integrated difference penalty
 # matrices for use in P-spline and mixed model representations.
 #
-# Author: Maksym Gaidashenko
+# Author: Max Moldovan
 # Licence: GPL (>= 3)
 
 

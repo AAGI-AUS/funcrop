@@ -4,7 +4,7 @@
 #   1. sim_grain_fill  — single-trial grain-fill experiment (RCBD)
 #   2. sim_met_fda     — multi-environment trial with functional NDVI trait
 #
-# Author: Maksym Gaidashenko
+# Author: Max Moldovan
 # Date:   2026-04-04
 # Licence: GPL (>= 3)
 

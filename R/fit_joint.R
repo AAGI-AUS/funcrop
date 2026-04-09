@@ -5,7 +5,7 @@
 # propagation issues of the two-stage approach. Also provides 2D functional
 # profiling via tensor product B-splines and scalar-on-2D-function regression.
 #
-# Author: Maksym Gaidashenko
+# Author: Max Moldovan
 # Licence: GPL (>= 3)
 
 

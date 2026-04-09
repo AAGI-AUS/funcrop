@@ -8,7 +8,7 @@
 #    - What FDA adds beyond standard approaches
 #    - Biological/agronomic interpretation in the grain-fill context
 #
-#  Author: Maksym Gaidashenko
+#  Author: Max Moldovan
 #  Date:   2026-04-04
 #  Licence: GPL (>= 3)
 #

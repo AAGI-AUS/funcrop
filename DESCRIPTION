@@ -2,8 +2,8 @@ Package: funcrop
 Title: Functional Data Analysis for Crop Variety Trials
 Version: 0.2.0
 Authors@R: c(
-    person("Maksym", "Gaidashenko", role = c("aut", "cre"),
-           email = "maksym.gaidashenko@adelaide.edu.au",
+    person("Max", "Moldovan", role = c("aut", "cre"),
+           email = "max.moldovan@adelaide.edu.au",
            comment = c(ORCID = "")),
     person("Joanne", "De Faveri", role = "aut"),
     person("Ari", "Verbyla", role = "aut"),

@@ -11,13 +11,13 @@ Functional data analysis methods for crop variety trials using B-spline basis fu
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://github.com/max578/funcrop}
-  \item Report bugs at \url{https://github.com/max578/funcrop/issues}
+  \item \url{https://github.com/AAGI-AUS/funcrop}
+  \item Report bugs at \url{https://github.com/AAGI-AUS/funcrop/issues}
 }
 
 }
 \author{
-\strong{Maintainer}: Maksym Gaidashenko \email{maksym.gaidashenko@adelaide.edu.au}
+\strong{Maintainer}: Max Moldovan \email{max.moldovan@adelaide.edu.au}
 
 Authors:
 \itemize{

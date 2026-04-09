@@ -9,7 +9,7 @@
 #
 # Also provides compare_methods() for comparing multiple fda_model fits.
 #
-# Author: Maksym Gaidashenko
+# Author: Max Moldovan
 # Licence: GPL (>= 3)
 
 

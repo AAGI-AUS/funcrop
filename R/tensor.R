@@ -6,7 +6,7 @@
 #
 # This is used for 2D functional traits: time x depth, time x wavelength, etc.
 #
-# Author: Maksym Gaidashenko
+# Author: Max Moldovan
 # Licence: GPL (>= 3)
 
 

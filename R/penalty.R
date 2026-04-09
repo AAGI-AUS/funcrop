@@ -4,7 +4,7 @@
 # eigendecomposition/Cholesky reparameterisation that maps penalised splines
 # to mixed model random effects (null space -> X, range space -> Z).
 #
-# Author: Maksym Gaidashenko
+# Author: Max Moldovan
 # Licence: GPL (>= 3)
 
 
