@@ -1,4 +1,4 @@
-url: https://max578.github.io/funcrop/
+url: https://AAGI-AUS.github.io/funcrop/
 
 template:
   bootstrap: 5
@@ -11,7 +11,7 @@ navbar:
   components:
     github:
       icon: fa-github
-      href: https://github.com/max578/funcrop
+      href: https://github.com/AAGI-AUS/funcrop
 
 reference:
   - title: "B-Spline Basis Construction"
