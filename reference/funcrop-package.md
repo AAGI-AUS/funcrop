@@ -16,13 +16,13 @@ profiles, coefficient functions, and GxE patterns.
 
 Useful links:
 
-- <https://github.com/max578/funcrop>
+- <https://github.com/AAGI-AUS/funcrop>
 
-- Report bugs at <https://github.com/max578/funcrop/issues>
+- Report bugs at <https://github.com/AAGI-AUS/funcrop/issues>
 
 ## Author
 
-**Maintainer**: Maksym Gaidashenko <maksym.gaidashenko@adelaide.edu.au>
+**Maintainer**: Max Moldovan <max.moldovan@adelaide.edu.au>
 
 Authors:
 
