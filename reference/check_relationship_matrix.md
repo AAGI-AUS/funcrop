@@ -56,9 +56,9 @@ Science*, 86(2), 677–679.
 
 ## See also
 
-[`make_genomic_matrix()`](https://AAGI-AUS.github.io/funcrop/reference/make_genomic_matrix.md),
-[`make_pedigree_matrix()`](https://AAGI-AUS.github.io/funcrop/reference/make_pedigree_matrix.md),
-[`make_H_matrix()`](https://AAGI-AUS.github.io/funcrop/reference/make_H_matrix.md)
+[`make_genomic_matrix()`](https://biometryhub.github.io/funcrop/reference/make_genomic_matrix.md),
+[`make_pedigree_matrix()`](https://biometryhub.github.io/funcrop/reference/make_pedigree_matrix.md),
+[`make_H_matrix()`](https://biometryhub.github.io/funcrop/reference/make_H_matrix.md)
 
 ## Examples
 

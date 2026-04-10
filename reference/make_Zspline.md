@@ -17,7 +17,7 @@ make_Zspline(basis, constraint = c("decompose", "absorb"))
 - basis:
 
   An object of class `"fda_basis"` (as returned by
-  [`bspline_basis()`](https://AAGI-AUS.github.io/funcrop/reference/bspline_basis.md)).
+  [`bspline_basis()`](https://biometryhub.github.io/funcrop/reference/bspline_basis.md)).
 
 - constraint:
 
@@ -100,8 +100,8 @@ Wood, S.N. (2017). *Generalized Additive Models: An Introduction with R*
 
 ## See also
 
-[`bspline_basis()`](https://AAGI-AUS.github.io/funcrop/reference/bspline_basis.md),
-[`make_penalty()`](https://AAGI-AUS.github.io/funcrop/reference/make_penalty.md).
+[`bspline_basis()`](https://biometryhub.github.io/funcrop/reference/bspline_basis.md),
+[`make_penalty()`](https://biometryhub.github.io/funcrop/reference/make_penalty.md).
 
 ## Examples
 

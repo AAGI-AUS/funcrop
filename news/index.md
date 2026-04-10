@@ -4,13 +4,13 @@
 
 ### Breaking changes
 
-- [`fit_functional_profiles()`](https://AAGI-AUS.github.io/funcrop/reference/fit_functional_profiles.md):
+- [`fit_functional_profiles()`](https://biometryhub.github.io/funcrop/reference/fit_functional_profiles.md):
   Model now uses the correct P-spline mixed model reparameterisation
   (null-space fixed effects + range-space random effects). Previously
   used raw B-spline columns without penalisation. Fitted curves and
   BLUPs will differ from v0.1.0 — the new results are statistically
   correct.
-- [`fit_fda_joint()`](https://AAGI-AUS.github.io/funcrop/reference/fit_fda_joint.md):
+- [`fit_fda_joint()`](https://biometryhub.github.io/funcrop/reference/fit_fda_joint.md):
   Random formula now includes shared spline coefficients linking
   secondary and primary traits. Previously used only trait-by-variety
   random intercepts, defeating the functional link.
@@ -27,7 +27,7 @@
   `bam()` for large datasets.
 - **Engine registry**: Extensible registration system for custom
   backends via `.register_engine()`.
-- [`funcrop_engines()`](https://AAGI-AUS.github.io/funcrop/reference/funcrop_engines.md)
+- [`funcrop_engines()`](https://biometryhub.github.io/funcrop/reference/funcrop_engines.md)
   now lists all 4 available backends.
 
 ### Bug fixes
@@ -58,11 +58,11 @@
 
 - Initial release.
 - B-spline basis construction with penalty matrices
-  ([`bspline_basis()`](https://AAGI-AUS.github.io/funcrop/reference/bspline_basis.md)).
+  ([`bspline_basis()`](https://biometryhub.github.io/funcrop/reference/bspline_basis.md)).
 - Tensor product B-splines for 2D functional data
-  ([`tensor_bspline_basis()`](https://AAGI-AUS.github.io/funcrop/reference/tensor_bspline_basis.md)).
+  ([`tensor_bspline_basis()`](https://biometryhub.github.io/funcrop/reference/tensor_bspline_basis.md)).
 - Mixed model reparameterisation
-  ([`make_Zspline()`](https://AAGI-AUS.github.io/funcrop/reference/make_Zspline.md)).
+  ([`make_Zspline()`](https://biometryhub.github.io/funcrop/reference/make_Zspline.md)).
 - Dual-backend architecture: ASReml-R v4.2 (REML) and bayesreml
   (Bayesian MCMC).
 - S3 classes: `fda_basis`, `fda_data`, `fda_model`.

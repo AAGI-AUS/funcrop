@@ -80,7 +80,7 @@ fit_fda_joint(
 - basis:
 
   An `fda_basis` object (from
-  [`bspline_basis()`](https://AAGI-AUS.github.io/funcrop/reference/bspline_basis.md)).
+  [`bspline_basis()`](https://biometryhub.github.io/funcrop/reference/bspline_basis.md)).
   If `NULL` (default), a basis is constructed from the data using
   `n_knots`, `degree`, and `penalty_order`.
 
@@ -118,7 +118,7 @@ fit_fda_joint(
 
   Character; estimation engine. One of `"auto"` (default), `"asreml"`,
   or `"bayesreml"`. See
-  [`funcrop_engines()`](https://AAGI-AUS.github.io/funcrop/reference/funcrop_engines.md).
+  [`funcrop_engines()`](https://biometryhub.github.io/funcrop/reference/funcrop_engines.md).
 
 - ...:
 
@@ -203,11 +203,11 @@ and penalties. *Statistical Science*, 11(2), 89–121.
 
 ## See also
 
-[`fit_functional_profiles()`](https://AAGI-AUS.github.io/funcrop/reference/fit_functional_profiles.md)
+[`fit_functional_profiles()`](https://biometryhub.github.io/funcrop/reference/fit_functional_profiles.md)
 for Stage 1 of the two-stage approach,
-[`scalar_on_function()`](https://AAGI-AUS.github.io/funcrop/reference/scalar_on_function.md)
+[`scalar_on_function()`](https://biometryhub.github.io/funcrop/reference/scalar_on_function.md)
 for Stage 2,
-[`bspline_basis()`](https://AAGI-AUS.github.io/funcrop/reference/bspline_basis.md)
+[`bspline_basis()`](https://biometryhub.github.io/funcrop/reference/bspline_basis.md)
 for basis construction.
 
 ## Examples

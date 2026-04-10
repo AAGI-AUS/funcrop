@@ -88,7 +88,7 @@ source files, 3 test files, 1 data-raw script
 **Key Decisions & Rationale**: - `row_kronecker` consolidated into
 utils.R (`.row_kronecker`) — single source of truth - Two-stage MET-FDA
 uses per-environment
-[`fit_functional_profiles()`](https://AAGI-AUS.github.io/funcrop/reference/fit_functional_profiles.md)
+[`fit_functional_profiles()`](https://biometryhub.github.io/funcrop/reference/fit_functional_profiles.md)
 then FA on coefficients - Single-stage MET-FDA uses stacked data with
 `at(environment)` structures - Genomic matrices: VanRaden Method 1/2,
 Henderson tabular A, Legarra H-matrix - All fitting functions accept

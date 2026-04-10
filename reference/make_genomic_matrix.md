@@ -64,9 +64,9 @@ VanRaden, P.M. (2008). Efficient methods to compute genomic predictions.
 
 ## See also
 
-[`make_pedigree_matrix()`](https://AAGI-AUS.github.io/funcrop/reference/make_pedigree_matrix.md),
-[`make_H_matrix()`](https://AAGI-AUS.github.io/funcrop/reference/make_H_matrix.md),
-[`check_relationship_matrix()`](https://AAGI-AUS.github.io/funcrop/reference/check_relationship_matrix.md)
+[`make_pedigree_matrix()`](https://biometryhub.github.io/funcrop/reference/make_pedigree_matrix.md),
+[`make_H_matrix()`](https://biometryhub.github.io/funcrop/reference/make_H_matrix.md),
+[`check_relationship_matrix()`](https://biometryhub.github.io/funcrop/reference/check_relationship_matrix.md)
 
 ## Examples
 

@@ -70,8 +70,8 @@ Metrics computed:
 
 ## See also
 
-[`fit_functional_profiles()`](https://AAGI-AUS.github.io/funcrop/reference/fit_functional_profiles.md),
-[`scalar_on_function()`](https://AAGI-AUS.github.io/funcrop/reference/scalar_on_function.md),
+[`fit_functional_profiles()`](https://biometryhub.github.io/funcrop/reference/fit_functional_profiles.md),
+[`scalar_on_function()`](https://biometryhub.github.io/funcrop/reference/scalar_on_function.md),
 `new_fda_comparison()`.
 
 ## Examples

@@ -82,7 +82,7 @@ fit_fda_met(
 - basis:
 
   An `fda_basis` object (from
-  [`bspline_basis()`](https://AAGI-AUS.github.io/funcrop/reference/bspline_basis.md)).
+  [`bspline_basis()`](https://biometryhub.github.io/funcrop/reference/bspline_basis.md)).
   If `NULL` (default), a basis is constructed automatically. A single
   basis is used across all environments (ensuring coefficient
   comparability).
@@ -136,7 +136,7 @@ fit_fda_met(
 - ...:
 
   Additional arguments passed to backend fitting functions or to
-  [`fit_functional_profiles()`](https://AAGI-AUS.github.io/funcrop/reference/fit_functional_profiles.md)
+  [`fit_functional_profiles()`](https://biometryhub.github.io/funcrop/reference/fit_functional_profiles.md)
   (in two-stage mode).
 
 ## Value
@@ -176,7 +176,7 @@ An `fda_model` object with the following extras:
 ### Two-stage approach
 
 **Stage 1**: For each environment,
-[`fit_functional_profiles()`](https://AAGI-AUS.github.io/funcrop/reference/fit_functional_profiles.md)
+[`fit_functional_profiles()`](https://biometryhub.github.io/funcrop/reference/fit_functional_profiles.md)
 extracts variety-specific B-spline coefficient BLUPs
 \\\hat{\alpha}\_{ve}\\.
 
@@ -229,14 +229,14 @@ Science*, 66(9), 947–962.
 
 ## See also
 
-[`fit_functional_profiles()`](https://AAGI-AUS.github.io/funcrop/reference/fit_functional_profiles.md)
+[`fit_functional_profiles()`](https://biometryhub.github.io/funcrop/reference/fit_functional_profiles.md)
 for per-environment profiling,
-[`scalar_on_function()`](https://AAGI-AUS.github.io/funcrop/reference/scalar_on_function.md)
+[`scalar_on_function()`](https://biometryhub.github.io/funcrop/reference/scalar_on_function.md)
 for scalar-on-function regression,
-[`predict_new_env()`](https://AAGI-AUS.github.io/funcrop/reference/predict_new_env.md)
+[`predict_new_env()`](https://biometryhub.github.io/funcrop/reference/predict_new_env.md)
 for predicting into new environments,
-[`make_genomic_matrix()`](https://AAGI-AUS.github.io/funcrop/reference/make_genomic_matrix.md),
-[`make_pedigree_matrix()`](https://AAGI-AUS.github.io/funcrop/reference/make_pedigree_matrix.md)
+[`make_genomic_matrix()`](https://biometryhub.github.io/funcrop/reference/make_genomic_matrix.md),
+[`make_pedigree_matrix()`](https://biometryhub.github.io/funcrop/reference/make_pedigree_matrix.md)
 
 ## Examples
 

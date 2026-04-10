@@ -68,9 +68,9 @@ evaluation of Holstein final score. *Journal of Dairy Science*, 93(2),
 
 ## See also
 
-[`make_genomic_matrix()`](https://AAGI-AUS.github.io/funcrop/reference/make_genomic_matrix.md),
-[`make_pedigree_matrix()`](https://AAGI-AUS.github.io/funcrop/reference/make_pedigree_matrix.md),
-[`check_relationship_matrix()`](https://AAGI-AUS.github.io/funcrop/reference/check_relationship_matrix.md)
+[`make_genomic_matrix()`](https://biometryhub.github.io/funcrop/reference/make_genomic_matrix.md),
+[`make_pedigree_matrix()`](https://biometryhub.github.io/funcrop/reference/make_pedigree_matrix.md),
+[`check_relationship_matrix()`](https://biometryhub.github.io/funcrop/reference/check_relationship_matrix.md)
 
 ## Examples
 

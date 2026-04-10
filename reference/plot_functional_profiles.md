@@ -25,10 +25,10 @@ plot_functional_profiles(
 - model:
 
   An `fda_model` object (e.g., from
-  [`fit_functional_profiles()`](https://AAGI-AUS.github.io/funcrop/reference/fit_functional_profiles.md),
-  [`fit_fda_joint()`](https://AAGI-AUS.github.io/funcrop/reference/fit_fda_joint.md),
+  [`fit_functional_profiles()`](https://biometryhub.github.io/funcrop/reference/fit_functional_profiles.md),
+  [`fit_fda_joint()`](https://biometryhub.github.io/funcrop/reference/fit_fda_joint.md),
   or
-  [`fit_2d_functional()`](https://AAGI-AUS.github.io/funcrop/reference/fit_2d_functional.md)).
+  [`fit_2d_functional()`](https://biometryhub.github.io/funcrop/reference/fit_2d_functional.md)).
 
 - varieties:
 

@@ -21,7 +21,7 @@
 
 ``` r
 # Install funcrop (if not already installed)
-remotes::install_github("AAGI-AUS/funcrop", build_vignettes = TRUE)
+remotes::install_github("biometryhub/funcrop", build_vignettes = TRUE)
 ```
 
 ``` r
@@ -524,7 +524,7 @@ NDVI trajectories across 4 environments for 30 varieties. Each
 environment shows a different seasonal pattern.
 
 The key function is
-[`fit_fda_met()`](https://AAGI-AUS.github.io/funcrop/reference/fit_fda_met.md),
+[`fit_fda_met()`](https://biometryhub.github.io/funcrop/reference/fit_fda_met.md),
 supporting:
 
 - **Two-stage**: per-environment profiles $\rightarrow$ model
@@ -655,7 +655,7 @@ matrix. The full specification (24 pages) is in
 
 - [`help(package = "funcrop")`](https://rdrr.io/pkg/funcrop/man)
 - `browseVignettes("funcrop")`
-- [github.com/AAGI-AUS/funcrop](https://github.com/AAGI-AUS/funcrop)
+- [github.com/biometryhub/funcrop](https://github.com/biometryhub/funcrop)
 
 ------------------------------------------------------------------------
 

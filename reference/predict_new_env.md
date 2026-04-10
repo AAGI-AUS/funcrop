@@ -22,7 +22,7 @@ predict_new_env(
 - model:
 
   An `fda_model` object from
-  [`fit_fda_met()`](https://AAGI-AUS.github.io/funcrop/reference/fit_fda_met.md).
+  [`fit_fda_met()`](https://biometryhub.github.io/funcrop/reference/fit_fda_met.md).
   Must contain `environment_loadings` and `variety_scores` in its
   extras.
 
@@ -104,7 +104,7 @@ multi-environment plant breeding trials. *Crop Science*, 47(3),
 
 ## See also
 
-[`fit_fda_met()`](https://AAGI-AUS.github.io/funcrop/reference/fit_fda_met.md)
+[`fit_fda_met()`](https://biometryhub.github.io/funcrop/reference/fit_fda_met.md)
 
 ## Examples
 

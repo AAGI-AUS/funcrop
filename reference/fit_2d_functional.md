@@ -113,9 +113,9 @@ generalized additive mixed models. *Biometrics*, 62(4), 1025–1036.
 
 ## See also
 
-[`tensor_bspline_basis()`](https://AAGI-AUS.github.io/funcrop/reference/tensor_bspline_basis.md)
+[`tensor_bspline_basis()`](https://biometryhub.github.io/funcrop/reference/tensor_bspline_basis.md)
 for tensor product basis construction,
-[`scalar_on_2d_function()`](https://AAGI-AUS.github.io/funcrop/reference/scalar_on_2d_function.md)
+[`scalar_on_2d_function()`](https://biometryhub.github.io/funcrop/reference/scalar_on_2d_function.md)
 for relating 2D profiles to a scalar response.
 
 ## Examples

@@ -16,9 +16,9 @@ plot_coefficient_function(model, ci = TRUE, n_grid = 200L, ...)
 - model:
 
   An `fda_model` object from
-  [`scalar_on_function()`](https://AAGI-AUS.github.io/funcrop/reference/scalar_on_function.md)
+  [`scalar_on_function()`](https://biometryhub.github.io/funcrop/reference/scalar_on_function.md)
   or
-  [`scalar_on_2d_function()`](https://AAGI-AUS.github.io/funcrop/reference/scalar_on_2d_function.md).
+  [`scalar_on_2d_function()`](https://biometryhub.github.io/funcrop/reference/scalar_on_2d_function.md).
 
 - ci:
 
@@ -43,7 +43,7 @@ A `ggplot` object (invisibly), or `NULL` for base R fallback.
 For 1D models, the plot shows \\\beta(t)\\ as a line with a ribbon for
 the CI/credible interval and a dashed horizontal line at zero. For 2D
 models (from
-[`scalar_on_2d_function()`](https://AAGI-AUS.github.io/funcrop/reference/scalar_on_2d_function.md)),
+[`scalar_on_2d_function()`](https://biometryhub.github.io/funcrop/reference/scalar_on_2d_function.md)),
 a heatmap of \\\beta(t, d)\\ is drawn using
 [`ggplot2::geom_tile()`](https://ggplot2.tidyverse.org/reference/geom_tile.html)
 with a viridis continuous fill scale, overlaid with contour lines.

@@ -30,7 +30,7 @@ scalar_on_2d_function(
 - functional_profiles_2d:
 
   An `fda_model` object from
-  [`fit_2d_functional()`](https://AAGI-AUS.github.io/funcrop/reference/fit_2d_functional.md),
+  [`fit_2d_functional()`](https://biometryhub.github.io/funcrop/reference/fit_2d_functional.md),
   or a list containing `fitted_surfaces` (a
   [data.table::data.table](https://rdrr.io/pkg/data.table/man/data.table.html)
   with columns `group`, `time`, `depth`, `fitted`) and `basis` (an
@@ -83,9 +83,9 @@ regression. *Technometrics*, 47(1), 13–22.
 
 ## See also
 
-[`fit_2d_functional()`](https://AAGI-AUS.github.io/funcrop/reference/fit_2d_functional.md)
+[`fit_2d_functional()`](https://biometryhub.github.io/funcrop/reference/fit_2d_functional.md)
 for 2D profile estimation,
-[`scalar_on_function()`](https://AAGI-AUS.github.io/funcrop/reference/scalar_on_function.md)
+[`scalar_on_function()`](https://biometryhub.github.io/funcrop/reference/scalar_on_function.md)
 for the 1D equivalent.
 
 ## Examples

@@ -111,11 +111,11 @@ generalized additive mixed models. *Biometrics*, 62(4), 1025–1036.
 
 ## See also
 
-[`bspline_basis()`](https://AAGI-AUS.github.io/funcrop/reference/bspline_basis.md)
+[`bspline_basis()`](https://biometryhub.github.io/funcrop/reference/bspline_basis.md)
 for marginal basis construction,
-[`make_penalty()`](https://AAGI-AUS.github.io/funcrop/reference/make_penalty.md)
+[`make_penalty()`](https://biometryhub.github.io/funcrop/reference/make_penalty.md)
 for penalty matrices,
-[`make_Zspline()`](https://AAGI-AUS.github.io/funcrop/reference/make_Zspline.md)
+[`make_Zspline()`](https://biometryhub.github.io/funcrop/reference/make_Zspline.md)
 for mixed model reparameterisation.
 
 ## Examples

@@ -16,9 +16,9 @@ profiles, coefficient functions, and GxE patterns.
 
 Useful links:
 
-- <https://github.com/AAGI-AUS/funcrop>
+- <https://github.com/biometryhub/funcrop>
 
-- Report bugs at <https://github.com/AAGI-AUS/funcrop/issues>
+- Report bugs at <https://github.com/biometryhub/funcrop/issues>
 
 ## Author
 

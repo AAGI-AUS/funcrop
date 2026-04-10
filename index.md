@@ -22,7 +22,7 @@ analyses with genotype-by-environment (GxE) interaction.
 
 ``` r
 # From GitHub
-remotes::install_github("AAGI-AUS/funcrop")
+remotes::install_github("biometryhub/funcrop")
 ```
 
 At least one backend must be installed:
@@ -85,21 +85,21 @@ profiles <- fit_functional_profiles(..., engine = "lme4")
 ```
 
 See
-[`vignette("choosing-backends")`](https://AAGI-AUS.github.io/funcrop/articles/choosing-backends.md)
+[`vignette("choosing-backends")`](https://biometryhub.github.io/funcrop/articles/choosing-backends.md)
 for a detailed comparison.
 
 ## Core Functions
 
-| Function                                                                                               | Purpose                                     |
-|--------------------------------------------------------------------------------------------------------|---------------------------------------------|
-| [`fit_functional_profiles()`](https://AAGI-AUS.github.io/funcrop/reference/fit_functional_profiles.md) | Stage 1: variety-specific functional curves |
-| [`scalar_on_function()`](https://AAGI-AUS.github.io/funcrop/reference/scalar_on_function.md)           | Stage 2: coefficient function beta(t)       |
-| [`fit_fda_joint()`](https://AAGI-AUS.github.io/funcrop/reference/fit_fda_joint.md)                     | Single-stage joint scalar-functional model  |
-| `fit_2D_functional()`                                                                                  | 2D functional surfaces (time x depth)       |
-| [`fit_fda_met()`](https://AAGI-AUS.github.io/funcrop/reference/fit_fda_met.md)                         | Multi-environment FDA with GxE              |
-| [`bspline_basis()`](https://AAGI-AUS.github.io/funcrop/reference/bspline_basis.md)                     | B-spline basis construction                 |
-| [`make_Zspline()`](https://AAGI-AUS.github.io/funcrop/reference/make_Zspline.md)                       | Mixed model reparameterisation              |
-| [`make_genomic_matrix()`](https://AAGI-AUS.github.io/funcrop/reference/make_genomic_matrix.md)         | VanRaden genomic relationship matrix        |
+| Function                                                                                                  | Purpose                                     |
+|-----------------------------------------------------------------------------------------------------------|---------------------------------------------|
+| [`fit_functional_profiles()`](https://biometryhub.github.io/funcrop/reference/fit_functional_profiles.md) | Stage 1: variety-specific functional curves |
+| [`scalar_on_function()`](https://biometryhub.github.io/funcrop/reference/scalar_on_function.md)           | Stage 2: coefficient function beta(t)       |
+| [`fit_fda_joint()`](https://biometryhub.github.io/funcrop/reference/fit_fda_joint.md)                     | Single-stage joint scalar-functional model  |
+| `fit_2D_functional()`                                                                                     | 2D functional surfaces (time x depth)       |
+| [`fit_fda_met()`](https://biometryhub.github.io/funcrop/reference/fit_fda_met.md)                         | Multi-environment FDA with GxE              |
+| [`bspline_basis()`](https://biometryhub.github.io/funcrop/reference/bspline_basis.md)                     | B-spline basis construction                 |
+| [`make_Zspline()`](https://biometryhub.github.io/funcrop/reference/make_Zspline.md)                       | Mixed model reparameterisation              |
+| [`make_genomic_matrix()`](https://biometryhub.github.io/funcrop/reference/make_genomic_matrix.md)         | VanRaden genomic relationship matrix        |
 
 ## Mathematical Foundation
 

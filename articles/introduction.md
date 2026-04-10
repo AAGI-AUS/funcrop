@@ -130,6 +130,6 @@ cat("Mean diagonal:", round(mean(diag(G)), 3), "\n")
 
 See the **Grain-Fill Case Study** vignette for a complete worked example
 using
-[`fit_functional_profiles()`](https://AAGI-AUS.github.io/funcrop/reference/fit_functional_profiles.md)
+[`fit_functional_profiles()`](https://biometryhub.github.io/funcrop/reference/fit_functional_profiles.md)
 and
-[`scalar_on_function()`](https://AAGI-AUS.github.io/funcrop/reference/scalar_on_function.md).
+[`scalar_on_function()`](https://biometryhub.github.io/funcrop/reference/scalar_on_function.md).

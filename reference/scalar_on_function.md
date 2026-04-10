@@ -3,7 +3,7 @@
 Fits a scalar-on-function regression model that relates a scalar primary
 trait (e.g., yield) to the variety-specific functional profiles
 estimated in Stage 1 (via
-[`fit_functional_profiles()`](https://AAGI-AUS.github.io/funcrop/reference/fit_functional_profiles.md)).
+[`fit_functional_profiles()`](https://biometryhub.github.io/funcrop/reference/fit_functional_profiles.md)).
 The key output is the coefficient function \\\beta(t)\\, which
 identifies the time periods during which the secondary trait most
 strongly predicts the primary trait.
@@ -43,7 +43,7 @@ scalar_on_function(
   One of:
 
   - An `fda_model` object from
-    [`fit_functional_profiles()`](https://AAGI-AUS.github.io/funcrop/reference/fit_functional_profiles.md)
+    [`fit_functional_profiles()`](https://biometryhub.github.io/funcrop/reference/fit_functional_profiles.md)
     (preferred).
 
   - A numeric matrix of B-spline coefficients (varieties x basis
@@ -52,7 +52,7 @@ scalar_on_function(
 - basis:
 
   An `fda_basis` object (from
-  [`bspline_basis()`](https://AAGI-AUS.github.io/funcrop/reference/bspline_basis.md)).
+  [`bspline_basis()`](https://biometryhub.github.io/funcrop/reference/bspline_basis.md)).
   Required when `functional_profiles` is a raw matrix; ignored when it
   is an `fda_model` (the basis is extracted from the model object).
 
@@ -77,7 +77,7 @@ scalar_on_function(
 
   Character; estimation engine. One of `"auto"` (default), `"asreml"`,
   or `"bayesreml"`. See
-  [`funcrop_engines()`](https://AAGI-AUS.github.io/funcrop/reference/funcrop_engines.md).
+  [`funcrop_engines()`](https://biometryhub.github.io/funcrop/reference/funcrop_engines.md).
 
 - ...:
 
@@ -180,11 +180,11 @@ sampled signals and curves: a P-spline approach. *Technometrics*, 41(1),
 
 ## See also
 
-[`fit_functional_profiles()`](https://AAGI-AUS.github.io/funcrop/reference/fit_functional_profiles.md)
+[`fit_functional_profiles()`](https://biometryhub.github.io/funcrop/reference/fit_functional_profiles.md)
 for Stage 1,
-[`compare_methods()`](https://AAGI-AUS.github.io/funcrop/reference/compare_methods.md)
+[`compare_methods()`](https://biometryhub.github.io/funcrop/reference/compare_methods.md)
 for model comparison,
-[`bspline_basis()`](https://AAGI-AUS.github.io/funcrop/reference/bspline_basis.md)
+[`bspline_basis()`](https://biometryhub.github.io/funcrop/reference/bspline_basis.md)
 for basis construction.
 
 ## Examples

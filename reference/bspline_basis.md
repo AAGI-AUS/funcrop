@@ -121,11 +121,11 @@ and penalties. *Statistical Science*, 11(2), 89–121.
 
 ## See also
 
-[`make_penalty()`](https://AAGI-AUS.github.io/funcrop/reference/make_penalty.md)
+[`make_penalty()`](https://biometryhub.github.io/funcrop/reference/make_penalty.md)
 for standalone penalty construction,
-[`make_Zspline()`](https://AAGI-AUS.github.io/funcrop/reference/make_Zspline.md)
+[`make_Zspline()`](https://biometryhub.github.io/funcrop/reference/make_Zspline.md)
 for mixed model reparameterisation,
-[`tensor_bspline_basis()`](https://AAGI-AUS.github.io/funcrop/reference/tensor_bspline_basis.md)
+[`tensor_bspline_basis()`](https://biometryhub.github.io/funcrop/reference/tensor_bspline_basis.md)
 for 2D tensor product bases.
 
 ## Examples

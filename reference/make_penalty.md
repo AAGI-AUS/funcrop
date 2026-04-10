@@ -45,9 +45,9 @@ and penalties. *Statistical Science*, 11(2), 89–121.
 
 ## See also
 
-[`bspline_basis()`](https://AAGI-AUS.github.io/funcrop/reference/bspline_basis.md)
+[`bspline_basis()`](https://biometryhub.github.io/funcrop/reference/bspline_basis.md)
 for basis construction,
-[`make_Zspline()`](https://AAGI-AUS.github.io/funcrop/reference/make_Zspline.md)
+[`make_Zspline()`](https://biometryhub.github.io/funcrop/reference/make_Zspline.md)
 for mixed model reparameterisation.
 
 ## Examples

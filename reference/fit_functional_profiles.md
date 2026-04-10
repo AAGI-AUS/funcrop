@@ -5,7 +5,7 @@ variety-specific functional profiles (smooth curves) from repeated
 measurements of a secondary trait. This is the first stage of the
 two-stage FDA approach: Stage 1 recovers the shape of each variety's
 functional response; Stage 2 (via
-[`scalar_on_function()`](https://AAGI-AUS.github.io/funcrop/reference/scalar_on_function.md))
+[`scalar_on_function()`](https://biometryhub.github.io/funcrop/reference/scalar_on_function.md))
 regresses a primary trait (e.g., yield) onto these profiles.
 
 ## Usage
@@ -34,7 +34,7 @@ fit_functional_profiles(
 - data:
 
   An `fda_data` object (from
-  [`fda_data()`](https://AAGI-AUS.github.io/funcrop/reference/fda_data.md))
+  [`fda_data()`](https://biometryhub.github.io/funcrop/reference/fda_data.md))
   or a data.frame / data.table containing the observations. If a raw
   data.frame, the column mapping arguments below must be specified.
 
@@ -72,7 +72,7 @@ fit_functional_profiles(
 - basis:
 
   An `fda_basis` object (from
-  [`bspline_basis()`](https://AAGI-AUS.github.io/funcrop/reference/bspline_basis.md)).
+  [`bspline_basis()`](https://biometryhub.github.io/funcrop/reference/bspline_basis.md)).
   If `NULL` (default), a basis is constructed automatically from the
   unique time points in `data` using `n_knots`, `degree`, and
   `penalty_order`.
@@ -104,7 +104,7 @@ fit_functional_profiles(
 
   Character; estimation engine. One of `"auto"` (default), `"asreml"`,
   or `"bayesreml"`. See
-  [`funcrop_engines()`](https://AAGI-AUS.github.io/funcrop/reference/funcrop_engines.md).
+  [`funcrop_engines()`](https://biometryhub.github.io/funcrop/reference/funcrop_engines.md).
 
 - ...:
 
@@ -157,7 +157,7 @@ An `fda_model` object (see `new_fda_model()`) containing:
 
   List with `spline_blups` (variety x basis coefficient matrix),
   `spline_decomposition` (from
-  [`make_Zspline()`](https://AAGI-AUS.github.io/funcrop/reference/make_Zspline.md)),
+  [`make_Zspline()`](https://biometryhub.github.io/funcrop/reference/make_Zspline.md)),
   `raw_model` (backend model object), and `convergence` diagnostics.
 
 ## Details
@@ -183,7 +183,7 @@ where:
 The variety-specific B-spline random effects are structured as a
 Kronecker product: \\Z = I_V \otimes Z\_{spline}\\, where
 \\Z\_{spline}\\ comes from
-[`make_Zspline()`](https://AAGI-AUS.github.io/funcrop/reference/make_Zspline.md)
+[`make_Zspline()`](https://biometryhub.github.io/funcrop/reference/make_Zspline.md)
 and \\I_V\\ is the identity over varieties. This yields \\V \times K\\
 random effect levels (V varieties, K spline coefficients).
 
@@ -207,11 +207,11 @@ Science*, 66(9), 947–962.
 
 ## See also
 
-[`scalar_on_function()`](https://AAGI-AUS.github.io/funcrop/reference/scalar_on_function.md)
+[`scalar_on_function()`](https://biometryhub.github.io/funcrop/reference/scalar_on_function.md)
 for Stage 2,
-[`bspline_basis()`](https://AAGI-AUS.github.io/funcrop/reference/bspline_basis.md)
+[`bspline_basis()`](https://biometryhub.github.io/funcrop/reference/bspline_basis.md)
 for basis construction,
-[`make_Zspline()`](https://AAGI-AUS.github.io/funcrop/reference/make_Zspline.md)
+[`make_Zspline()`](https://biometryhub.github.io/funcrop/reference/make_Zspline.md)
 for mixed model reparameterisation.
 
 ## Examples

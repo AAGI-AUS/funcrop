@@ -46,9 +46,9 @@ numerator relationship matrix used in prediction of breeding values.
 
 ## See also
 
-[`make_genomic_matrix()`](https://AAGI-AUS.github.io/funcrop/reference/make_genomic_matrix.md),
-[`make_H_matrix()`](https://AAGI-AUS.github.io/funcrop/reference/make_H_matrix.md),
-[`check_relationship_matrix()`](https://AAGI-AUS.github.io/funcrop/reference/check_relationship_matrix.md)
+[`make_genomic_matrix()`](https://biometryhub.github.io/funcrop/reference/make_genomic_matrix.md),
+[`make_H_matrix()`](https://biometryhub.github.io/funcrop/reference/make_H_matrix.md),
+[`check_relationship_matrix()`](https://biometryhub.github.io/funcrop/reference/check_relationship_matrix.md)
 
 ## Examples
 
