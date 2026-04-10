@@ -4,6 +4,8 @@
 
 - [Introduction to
   funcrop](https://AAGI-AUS.github.io/funcrop/articles/introduction.md):
+- [Functional Data Analysis for Crop Trials with
+  funcrop](https://AAGI-AUS.github.io/funcrop/articles/fda-tutorial.md):
 
 ### Case Studies
 

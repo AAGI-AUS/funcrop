@@ -3,9 +3,10 @@ pkgdown: 2.2.0
 pkgdown_sha: ~
 articles:
   choosing-backends: choosing-backends.html
+  fda-tutorial: fda-tutorial.html
   grain-fill: grain-fill.html
   introduction: introduction.html
-last_built: 2026-04-09T22:05Z
+last_built: 2026-04-10T02:15Z
 urls:
   reference: https://AAGI-AUS.github.io/funcrop/reference
   article: https://AAGI-AUS.github.io/funcrop/articles
