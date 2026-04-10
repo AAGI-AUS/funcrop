@@ -21,8 +21,8 @@ Description: Functional data analysis methods for crop variety trials using
     relationship matrix support. Includes publication-ready visualisation
     tools for functional profiles, coefficient functions, and GxE patterns.
 License: GPL (>= 3)
-URL: https://github.com/AAGI-AUS/funcrop
-BugReports: https://github.com/AAGI-AUS/funcrop/issues
+URL: https://github.com/biometryhub/funcrop
+BugReports: https://github.com/biometryhub/funcrop/issues
 Depends:
     R (>= 4.1.0)
 Imports:

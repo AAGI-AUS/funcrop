@@ -10,5 +10,5 @@ bibentry(
   ),
   year     = "2025",
   note     = "R package version 0.2.0",
-  url      = "https://github.com/AAGI-AUS/funcrop"
+  url      = "https://github.com/biometryhub/funcrop"
 )

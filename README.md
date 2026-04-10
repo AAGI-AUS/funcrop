@@ -1,7 +1,7 @@
 # funcrop <img src="man/figures/logo.png" align="right" height="139" />
 
 <!-- badges: start -->
-[![R-CMD-check](https://github.com/AAGI-AUS/funcrop/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/AAGI-AUS/funcrop/actions/workflows/R-CMD-check.yaml)
+[![R-CMD-check](https://github.com/biometryhub/funcrop/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/biometryhub/funcrop/actions/workflows/R-CMD-check.yaml)
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 <!-- badges: end -->
 
@@ -27,7 +27,7 @@ analyses with genotype-by-environment (GxE) interaction.
 
 ```r
 # From GitHub
-remotes::install_github("AAGI-AUS/funcrop")
+remotes::install_github("biometryhub/funcrop")
 ```
 
 At least one backend must be installed:

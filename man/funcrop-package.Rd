@@ -11,8 +11,8 @@ Functional data analysis methods for crop variety trials using B-spline basis fu
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://github.com/AAGI-AUS/funcrop}
-  \item Report bugs at \url{https://github.com/AAGI-AUS/funcrop/issues}
+  \item \url{https://github.com/biometryhub/funcrop}
+  \item Report bugs at \url{https://github.com/biometryhub/funcrop/issues}
 }
 
 }

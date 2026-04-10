@@ -48,7 +48,7 @@ knitr::opts_chunk$set(
 
 ```{r install-note, eval=FALSE}
 # Install funcrop (if not already installed)
-remotes::install_github("AAGI-AUS/funcrop", build_vignettes = TRUE)
+remotes::install_github("biometryhub/funcrop", build_vignettes = TRUE)
 ```
 
 ```{r load-packages}
@@ -619,7 +619,7 @@ The full specification (24 pages) is in `funcrop_mathematical_specification.pdf`
 
 -   `help(package = "funcrop")`
 -   `browseVignettes("funcrop")`
--   [github.com/AAGI-AUS/funcrop](https://github.com/AAGI-AUS/funcrop)
+-   [github.com/biometryhub/funcrop](https://github.com/biometryhub/funcrop)
 
 ------------------------------------------------------------------------
 
