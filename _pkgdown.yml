@@ -85,6 +85,7 @@ articles:
   - title: "Getting Started"
     contents:
       - introduction
+      - fda-tutorial
   - title: "Case Studies"
     contents:
       - grain-fill
