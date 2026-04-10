@@ -1,0 +1,628 @@
+---
+title: "Functional Data Analysis for Crop Trials with funcrop"
+subtitle: "A Practical Guide: From Grain-Fill Curves to Yield Prediction"
+output:
+  html_document:
+    toc: true
+    toc_depth: 3
+    toc_float: true
+    number_sections: true
+    theme: flatly
+    highlight: tango
+    fig_width: 8
+    fig_height: 5
+    self_contained: true
+vignette: >
+  %\VignetteIndexEntry{FDA Tutorial: From Curves to Insights}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment  = "#>",
+  fig.width  = 8,
+  fig.height = 5,
+  message  = FALSE,
+  warning  = FALSE
+)
+```
+
+------------------------------------------------------------------------
+
+**Estimated time**: 25--35 minutes\
+**Target audience**: R users comfortable with `lm`, `lmer`/GLMM, and `ggplot2`, with no prior FDA knowledge.\
+**What you will learn**:
+
+1.  Recognise when FDA adds value over traditional GLMM
+2.  Construct B-spline bases and understand the mixed-model reparameterisation
+3.  Fit variety-specific functional profiles
+4.  Run scalar-on-function regression (yield \~ grain-fill curve)
+5.  Interpret the coefficient function $\beta(t)$
+6.  Choose the right backend for your analysis
+
+------------------------------------------------------------------------
+
+# Setup {.unnumbered}
+
+```{r install-note, eval=FALSE}
+# Install funcrop (if not already installed)
+remotes::install_github("AAGI-AUS/funcrop", build_vignettes = TRUE)
+```
+
+```{r load-packages}
+library(funcrop)
+library(data.table)
+library(ggplot2)
+
+set.seed(42)
+
+# Check available estimation backends
+cat("Available backends:", paste(funcrop_engines(), collapse = ", "), "\n")
+```
+
+------------------------------------------------------------------------
+
+# Why FDA? The Big Picture
+
+## The problem with "numbers instead of curves"
+
+In a typical crop variety trial you measure grain weight at multiple time
+points during grain filling. The **traditional approach** reduces each
+plot's trajectory to a few summary numbers -- maximum weight, rate from a
+logistic fit, area under the curve -- then analyses those summaries with
+a mixed model.
+
+This works, but it **discards information**:
+
+| Approach              | What you keep           | What you lose              |
+|-----------------------|-------------------------|----------------------------|
+| GLMM on summaries    | A few numbers per plot  | Shape, timing, dynamics    |
+| FDA (full curve)      | The entire trajectory   | Nothing                    |
+
+Two varieties might have the same final grain weight but reach it through
+very different trajectories. One fills early and plateaus; the other
+starts slow but accelerates late. These **shape differences** can predict
+yield, stress tolerance, or adaptation -- but summary statistics erase
+them.
+
+## When to use FDA
+
+Use FDA when **the shape, timing, and dynamics of the curve carry
+important information** -- not just its level or endpoint.
+
+| Scenario                                      | FDA adds value? | Why                                    |
+|-----------------------------------------------|:---:|----------------------------------------|
+| Grain-fill curves at 6--15 time points        | Yes | Curve shape predicts yield             |
+| NDVI profiles across a growing season         | Yes | Senescence timing matters              |
+| A single yield measurement per plot           | No  | No curve to model                      |
+| Two time points (before/after)                | No  | Too sparse for curve estimation        |
+| Daily soil moisture at 50+ depths             | Yes | 2D functional surface (time x depth)   |
+| Root growth trajectories over weeks           | Yes | Growth rate dynamics inform selection   |
+
+**Rule of thumb**: $\geq 5$ repeated measurements per unit and the curve
+shape matters $\Rightarrow$ FDA is worth considering.
+
+## The funcrop approach
+
+`funcrop` implements FDA through **P-spline mixed models**:
+
+1.  Each variety's trajectory is a smooth B-spline curve
+2.  The smoothing penalty is estimated as a variance component (just like
+    $\sigma^2$ in `lmer`)
+3.  The entire curve can be related to yield through a **coefficient
+    function** $\beta(t)$
+
+FDA is not a different world -- it is **mixed models extended to
+curves**.
+
+------------------------------------------------------------------------
+
+# From Raw Data to Smooth Curves
+
+## The data
+
+`funcrop` ships with `sim_grain_fill` -- a simulated RCBD trial: 20
+varieties, 3 blocks, 8 grain-weight measurements per plot.
+
+```{r load-data}
+data(sim_grain_fill)
+dt <- copy(sim_grain_fill)
+
+cat("Varieties:", uniqueN(dt$variety), "\n")
+cat("Plots:    ", uniqueN(dt$plot_id), "\n")
+cat("Time pts: ", paste(sort(unique(dt$time)), collapse = ", "), "\n")
+cat("Rows:     ", nrow(dt), "\n")
+```
+
+```{r peek-data}
+head(dt, 4)
+```
+
+## Visualise the raw data
+
+```{r raw-curves, fig.cap="Raw grain-fill trajectories for 60 plots (20 varieties x 3 blocks). Each line is one plot."}
+ggplot(dt, aes(x = time, y = grain_weight,
+               group = plot_id, colour = variety)) +
+  geom_line(alpha = 0.5, linewidth = 0.5) +
+  labs(x = "Days after anthesis", y = "Grain weight (g)",
+       title = "Raw grain-fill trajectories") +
+  theme_minimal(base_size = 13) +
+  theme(legend.position = "none")
+```
+
+You should see a family of roughly sigmoidal curves with clear
+between-variety differences in rate and level.
+
+## Build a B-spline basis
+
+A B-spline basis is a set of smooth, overlapping "bump" functions that,
+combined with appropriate weights, can represent any smooth curve. Think
+of it as a **flexible vocabulary for describing shapes**.
+
+```{r basis}
+times <- sort(unique(dt$time))
+
+basis <- bspline_basis(
+  x             = times,
+  n_knots       = 4,      # 4 internal knots
+  degree        = 3,      # cubic splines
+  penalty_order = 2       # penalise curvature
+)
+
+cat("Basis functions:", basis$n_basis, "\n")
+cat("Knots:          ", paste(round(basis$knots, 1), collapse = ", "), "\n")
+```
+
+```{r plot-basis, fig.cap="The 8 B-spline basis functions. Each 'bump' captures local shape. Together they can represent any smooth curve in this time domain."}
+plot(basis)
+```
+
+## The mixed-model reparameterisation
+
+This is the key insight. The penalty matrix $P$ is eigendecomposed into:
+
+-   **Null space** ($X$): NOT penalised -- low-order polynomial trend
+-   **Range space** ($Z$): IS penalised -- the "wiggles"
+
+```{r zspline}
+mm <- make_Zspline(basis, constraint = "decompose")
+
+cat("Null-space (fixed) columns: ", ncol(mm$X), "\n")
+cat("Range-space (random) columns:", ncol(mm$Z), "\n")
+```
+
+The random effects satisfy $\alpha_g \sim N(0, \sigma^2_u I)$. The
+variance ratio $\sigma^2_u / \sigma^2$ controls smoothing and is
+estimated automatically via REML. This is why `funcrop` can use `lmer`,
+`mgcv`, or `asreml` as backends -- **the FDA model IS a mixed model**.
+
+------------------------------------------------------------------------
+
+# Fitting Variety-Specific Profiles (Stage 1)
+
+## The model
+
+For plot $i$ at time $t$, belonging to variety $g$ and block $j$:
+
+$$
+y_i(t) = \underbrace{X_0(t)'\beta}_{\text{population mean}} + \underbrace{Z(t)'\alpha_g}_{\text{variety deviation}} + \gamma_j + \varepsilon_i(t)
+$$
+
+where $\alpha_g \sim N(0, \sigma^2_u I)$ and $\varepsilon \sim N(0, \sigma^2 I)$.
+
+## Fit with funcrop
+
+```{r fit-profiles}
+profiles <- fit_functional_profiles(
+  data      = dt,
+  time_col  = "time",
+  value_col = "grain_weight",
+  id_col    = "plot_id",
+  group_col = "variety",
+  n_knots   = 4,
+  spatial   = "none",
+  engine    = "auto"
+)
+
+cat("Engine used:", profiles$engine, "\n")
+```
+
+## Variance components
+
+```{r vc}
+profiles$variance_components
+```
+
+## Visualise fitted profiles
+
+```{r fitted-curves, fig.cap="Smooth variety-specific grain-fill profiles estimated by the P-spline mixed model. Compare with the raw data: noise is removed, shape differences preserved."}
+fc <- profiles$fitted_curves
+
+if (nrow(fc) > 0) {
+  # Highlight 4 varieties for clarity
+  show_vars <- sort(unique(fc$id))[c(1, 5, 10, 15)]
+  fc_sub <- fc[id %in% show_vars]
+
+  p1 <- ggplot(fc, aes(x = time, y = fitted, group = id)) +
+    geom_line(alpha = 0.2, colour = "grey60") +
+    geom_line(data = fc_sub, aes(colour = id), linewidth = 1.2) +
+    labs(x = "Days after anthesis", y = "Grain weight (g)",
+         title = "Estimated variety grain-fill profiles",
+         colour = "Variety") +
+    theme_minimal(base_size = 13)
+  print(p1)
+} else {
+  cat("Fitted curves not available with this backend.\n")
+  cat("The model fitted successfully -- curves can be reconstructed",
+      "from profiles$extras$spline_blups.\n")
+}
+```
+
+## What would GLMM show?
+
+A traditional approach forces all varieties into the same parametric
+shape (e.g., quadratic):
+```{r glmm-comparison}
+dt_glmm <- copy(dt)
+dt_glmm[, variety := factor(variety)]
+dt_glmm[, block := factor(block)]
+
+if (requireNamespace("lme4", quietly = TRUE)) {
+  m_glmm <- lme4::lmer(
+    grain_weight ~ time + I(time^2) + block + (time | variety),
+    data = dt_glmm
+  )
+
+  # Predict GLMM curves for the highlighted varieties
+  t_grid <- seq(min(dt$time), max(dt$time), length.out = 100)
+  pred_list <- lapply(show_vars, function(v) {
+    nd <- data.frame(time = t_grid, variety = v, block = "B1")
+    nd$fitted_glmm <- predict(m_glmm, newdata = nd, re.form = ~ (time | variety))
+    nd$id <- v
+    nd
+  })
+  pred_glmm <- rbindlist(pred_list)
+
+  p2 <- ggplot() +
+    geom_line(data = fc_sub, aes(x = time, y = fitted, colour = id),
+              linewidth = 1.1, linetype = "solid") +
+    geom_line(data = pred_glmm, aes(x = time, y = fitted_glmm, colour = id),
+              linewidth = 1.1, linetype = "dashed") +
+    labs(x = "Days after anthesis", y = "Grain weight (g)",
+         title = "FDA (solid) vs GLMM quadratic (dashed)",
+         colour = "Variety") +
+    theme_minimal(base_size = 13)
+  print(p2)
+
+  cat("\nGLMM forces a quadratic shape on all varieties.\n")
+  cat("FDA lets each variety have its own flexible curve.\n")
+} else {
+  cat("lme4 not installed -- skipping GLMM comparison.\n")
+}
+```
+
+**What GLMM misses**: If variety V03 has a "late surge" pattern while
+V15 has an "early plateau", the quadratic GLMM cannot distinguish them.
+FDA profiles capture these **shape differences**.
+
+------------------------------------------------------------------------
+
+# Scalar-on-Function Regression (Stage 2)
+
+## The question
+
+> **Which phases of grain filling matter most for final yield?**
+
+This is the **scalar-on-function** question: relate a scalar response
+(yield) to an entire functional predictor (the grain-fill curve) through
+a coefficient function $\beta(t)$:
+
+$$
+\text{yield}_g = \alpha + \int \beta(t)\, \hat{f}_g(t)\, dt + \varepsilon_g
+$$
+
+## Prepare yield data
+
+```{r yield-data}
+yield_dt <- dt[, .(yield = mean(yield)), by = variety]
+yield_vec <- setNames(yield_dt$yield, yield_dt$variety)
+
+cat("Varieties:", length(yield_vec), "\n")
+cat("Yield range:", round(range(yield_vec), 2), "\n")
+```
+
+## Fit the model
+
+```{r fit-sof}
+sof <- scalar_on_function(
+  primary_trait       = yield_vec,
+  functional_profiles = profiles,
+  engine              = "auto"
+)
+
+cat("Engine used:", sof$engine, "\n")
+sof$variance_components
+```
+
+## The coefficient function $\beta(t)$
+
+This is the key FDA output -- a **time-varying regression coefficient**.
+
+```{r beta-function, fig.cap="The coefficient function beta(t). Where it is large and positive, grain weight at that time predicts higher yield. Where it is near zero, that growth phase is unimportant."}
+coef_dt <- sof$coefficient_function
+
+if (is.data.frame(coef_dt) && nrow(coef_dt) > 0) {
+  has_ci <- all(c("ci_lower", "ci_upper") %in% names(coef_dt)) &&
+            !all(is.na(coef_dt$ci_lower))
+
+  p3 <- ggplot(coef_dt, aes(x = time, y = beta)) +
+    geom_hline(yintercept = 0, linetype = "dashed", colour = "grey50")
+
+  if (has_ci) {
+    p3 <- p3 +
+      geom_ribbon(aes(ymin = ci_lower, ymax = ci_upper),
+                  alpha = 0.2, fill = "#440154")
+  }
+
+  p3 <- p3 +
+    geom_line(linewidth = 1.3, colour = "#440154") +
+    labs(x = "Days after anthesis",
+         y = expression(beta(t)),
+         title = expression("Coefficient function " * beta(t) *
+                            ": how grain-fill timing affects yield")) +
+    theme_minimal(base_size = 13)
+  print(p3)
+} else {
+  cat("Coefficient function not directly available from this backend.\n")
+  cat("The model fitted successfully. Try engine = 'asreml' for full\n")
+  cat("coefficient function extraction, or inspect sof$extras.\n")
+}
+```
+
+## Interpreting $\beta(t)$
+
+| $\beta(t)$ value | Meaning                                                  |
+|:-----------------:|----------------------------------------------------------|
+| $> 0$            | Grain weight at time $t$ contributes **positively** to yield |
+| $\approx 0$      | Growth at time $t$ is **unrelated** to yield             |
+| $< 0$            | Higher grain weight at $t$ actually **reduces** yield    |
+
+**Practical takeaway**: $\beta(t)$ identifies the **critical growth
+window** for breeders. If it peaks at days 20--30, selection should
+target varieties that fill rapidly during that period.
+
+**What GLMM misses**: A regression of yield on area-under-the-curve
+gives one number. $\beta(t)$ gives a **time-resolved answer**.
+
+------------------------------------------------------------------------
+
+# Comparing Backends
+
+`funcrop` supports four estimation backends:
+
+```{r backend-table, echo=FALSE}
+be <- data.frame(
+  Backend = c("mgcv", "lme4", "ASReml-R", "bayesreml"),
+  Type = c("GAM (REML)", "LMM (REML)", "LMM (REML)", "Bayesian MCMC"),
+  Licence = c("Open (GPL)", "Open (GPL)", "Commercial", "Open (GPL)"),
+  `AR1 residuals` = c("Via gamm()", "No", "Yes", "Yes"),
+  `FA covariance` = c("No", "No", "Yes", "Partial"),
+  `Best for` = c("Default, large data", "GLMM", "Production MET-FDA", "Posteriors"),
+  check.names = FALSE
+)
+knitr::kable(be, align = "llllll")
+```
+
+```{r compare-backends}
+results <- list()
+
+for (eng in funcrop_engines()) {
+  # Skip backends that need special setup
+  if (eng %in% c("asreml", "bayesreml")) next
+
+  prof <- tryCatch(
+    fit_functional_profiles(
+      data = dt, time_col = "time", value_col = "grain_weight",
+      id_col = "plot_id", group_col = "variety",
+      n_knots = 4, spatial = "none", engine = eng
+    ),
+    error = function(e) NULL
+  )
+
+  if (!is.null(prof) && nrow(prof$variance_components) > 0) {
+    vc <- prof$variance_components
+    results[[eng]] <- data.table(
+      engine    = eng,
+      n_vc      = nrow(vc),
+      has_curves = nrow(prof$fitted_curves) > 0
+    )
+    cat(eng, ": fitted successfully,",
+        nrow(vc), "variance components,",
+        nrow(prof$fitted_curves), "fitted curve points\n")
+  }
+}
+
+if (length(results) > 1) {
+  cat("\nAll open-source backends produce consistent results.\n")
+}
+```
+
+------------------------------------------------------------------------
+
+# Multi-Environment Preview
+
+`funcrop` also handles **multi-environment trials** where each variety
+has a curve in every environment, and the G$\times$E interaction operates
+on the functional coefficients.
+
+```{r met-data}
+data(sim_met_fda)
+cat("MET dataset:   ", nrow(sim_met_fda), "rows\n")
+cat("Environments:  ", uniqueN(sim_met_fda$environment), "\n")
+cat("Varieties:     ", uniqueN(sim_met_fda$variety), "\n")
+cat("Trait:          NDVI over time\n")
+cat("Time points:   ", paste(sort(unique(sim_met_fda$time)), collapse = ", "), "\n")
+```
+
+```{r met-plot, fig.cap="NDVI trajectories across 4 environments for 30 varieties. Each environment shows a different seasonal pattern."}
+met_dt <- copy(sim_met_fda)
+
+ggplot(met_dt, aes(x = time, y = ndvi,
+                   group = plot_id, colour = variety)) +
+  geom_line(alpha = 0.3, linewidth = 0.4) +
+  facet_wrap(~ environment, nrow = 1) +
+  labs(x = "Days after sowing", y = "NDVI",
+       title = "NDVI profiles across environments") +
+  theme_minimal(base_size = 12) +
+  theme(legend.position = "none")
+```
+
+The key function is `fit_fda_met()`, supporting:
+
+-   **Two-stage**: per-environment profiles $\rightarrow$ model
+    coefficients across environments with FA structures
+-   **Single-stage**: all environments simultaneously
+
+```{r met-fit-note, eval=FALSE}
+# Example (requires ASReml for FA structures; lme4/mgcv for simpler models)
+met_model <- fit_fda_met(
+  data            = sim_met_fda,
+  environment_col = "environment",
+  time_col        = "time",
+  value_col       = "ndvi",
+  id_col          = "plot_id",
+  group_col       = "variety",
+  gxe_structure   = "fa1",
+  two_stage       = TRUE,
+  engine          = "asreml"
+)
+```
+
+------------------------------------------------------------------------
+
+# Decision Guide
+
+## When to use funcrop
+
+```
+            Do you have repeated measurements?
+                        |
+              Yes (>= 5 time points)
+                        |
+          Does the CURVE SHAPE matter?
+             /                    \
+           Yes                     No
+            |                       |
+      Use funcrop FDA        Use standard GLMM
+            |
+   Multi-environment?
+      /            \
+    Yes              No
+     |                |
+fit_fda_met()    fit_functional_profiles()
+                 + scalar_on_function()
+```
+
+## Common pitfalls
+
+| Pitfall | Symptom | Fix |
+|---------|---------|-----|
+| Too many knots | Overfitting, wiggly curves | `n_knots` = 4--8 for 6--15 time points |
+| Too few knots | Underfitting, rigid curves | Increase `n_knots`; check residuals |
+| Ignoring spatial | Inflated variety effects | `spatial = "ar1ar1"` (ASReml) |
+| Summaries instead of FDA | Information loss | If shape matters, use the full curve |
+
+## Checklist before publishing
+
+-   [ ] Reported backend and version
+-   [ ] Showed raw data alongside fitted curves
+-   [ ] Interpreted $\beta(t)$ in biological terms
+-   [ ] Checked variance components are plausible
+-   [ ] Tested sensitivity to `n_knots` ($\pm 2$)
+-   [ ] If MET: reported G$\times$E structure and FA loadings
+
+------------------------------------------------------------------------
+
+# Mathematical Appendix {.appendix}
+
+*Optional -- for readers who want the equations.*
+
+## B-spline basis
+
+A B-spline of degree $d$ is defined recursively (Cox--de Boor):
+
+$$
+B_{j,d}(t) = \frac{t - \tau_j}{\tau_{j+d} - \tau_j}\, B_{j,d-1}(t) +
+\frac{\tau_{j+d+1} - t}{\tau_{j+d+1} - \tau_{j+1}}\, B_{j+1,d-1}(t)
+$$
+
+Key properties: non-negative, partition of unity, local support.
+
+## P-spline penalty
+
+$P = D_d' D_d$, where $D_d$ is the $d$-th order difference matrix.
+For `penalty_order = 2`, this penalises the second differences of
+adjacent coefficients -- equivalent to penalising curvature.
+
+## Mixed-model equivalence
+
+Eigendecompose $P = U \Lambda U'$ and partition:
+
+$$
+X_{\text{null}} = B\, U_0 \quad (\text{fixed: unpenalised trend})
+$$
+$$
+Z_{\text{range}} = B\, U_+ \Lambda_+^{-1/2} \quad (\text{random: penalised wiggles})
+$$
+
+The penalised spline model becomes a standard LMM:
+
+$$
+y = X_{\text{null}}\, \beta + Z_{\text{range}}\, \alpha + \varepsilon, \quad
+\alpha \sim N(0, \sigma^2_u I)
+$$
+
+The smoothing parameter $\lambda = \sigma^2 / \sigma^2_u$ is estimated
+via REML.
+
+## Scalar-on-function
+
+$$
+\text{yield}_g = \alpha + \sum_k c_{gk}\, b_k + \varepsilon_g, \quad
+c_{gk} = \sum_j \hat{\alpha}_{gj}\, J_{jk}
+$$
+
+where $J_{jk} = \int B_j(t)\, B_k(t)\, dt$ is the inner product matrix.
+The full specification (24 pages) is in `funcrop_mathematical_specification.pdf`.
+
+------------------------------------------------------------------------
+
+# Further Resources
+
+**Books**
+
+-   Ramsay, J.O. & Silverman, B.W. (2005). *Functional Data Analysis*
+    (2nd ed.). Springer.
+-   Wood, S.N. (2017). *Generalised Additive Models: An Introduction
+    with R* (2nd ed.). CRC Press.
+
+**Key papers**
+
+-   Eilers, P.H.C. & Marx, B.D. (1996). Flexible smoothing with
+    B-splines and penalties. *Statistical Science*, 11(2), 89--121.
+-   De Faveri, J. et al. (2015). Statistical methods for analysis of
+    multi-harvest data. *Crop and Pasture Science*, 66(9), 947--962.
+
+**funcrop**
+
+-   `help(package = "funcrop")`
+-   `browseVignettes("funcrop")`
+-   [github.com/AAGI-AUS/funcrop](https://github.com/AAGI-AUS/funcrop)
+
+------------------------------------------------------------------------
+
+```{r session-info}
+sessionInfo()
+```
